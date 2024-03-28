@@ -340,16 +340,16 @@ const ListEmployee = () => {
                             </div>
                             <div className="text">
                               <h3>ສະມາຊິກ O</h3>
-                              <span>3000 ຄົນ</span>
+                              <span>0 ຄົນ</span>
                             </div>
                           </div>
-                          <div className="member-card active">
+                          <div className="member-card">
                             <div className="icons">
                               <img src={S} alt="" />
                             </div>
                             <div className="text">
                               <h3>ສະມາຊິກ S</h3>
-                              <span>3000 ຄົນ</span>
+                              <span>0 ຄົນ</span>
                             </div>
                           </div>
                           <div className="member-card">
@@ -358,7 +358,7 @@ const ListEmployee = () => {
                             </div>
                             <div className="text">
                               <h3>ສະມາຊິກ M</h3>
-                              <span>3000 ຄົນ</span>
+                              <span>0 ຄົນ</span>
                             </div>
                           </div>
                           <div className="member-card">
@@ -367,7 +367,7 @@ const ListEmployee = () => {
                             </div>
                             <div className="text">
                               <h3>ສະມາຊິກ L</h3>
-                              <span>3000 ຄົນ</span>
+                              <span>0 ຄົນ</span>
                             </div>
                           </div>
                         </div>

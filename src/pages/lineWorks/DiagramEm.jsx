@@ -34,7 +34,7 @@ const DiagramEm = () => {
       });
   };
 
-  console.log("LineWork", linework.children);
+  console.log("LineWork", linework);
 
   const [show, setShow] = useState(false);
   const handleShow = () => {
@@ -73,7 +73,7 @@ const DiagramEm = () => {
                       <div className="member-image">
                         <img src={imagePreview} alt="Member" />
                         <div className="member-details">
-                          <h3>Level is {linework.level}</h3>
+                          <h3>{linework.user_id && linework.user_id.firstName }</h3>
                         </div>
                       </div>
                     </div>
@@ -92,7 +92,7 @@ const DiagramEm = () => {
                                     <div className="member-image">
                                       <img src={imagePreview} alt="Member" />
                                       <div className="member-details">
-                                        <h3>Member {level_1.level}</h3>
+                                        <h3>{level_1.user_id && level_1.user_id.firstName}</h3>
                                       </div>
                                     </div>
                                   </div>
@@ -113,7 +113,7 @@ const DiagramEm = () => {
                                                 />
                                                 <div className="member-details">
                                                   <h3>
-                                                    Member {level_2.level}
+                                                   {level_2.user_id && level_2.user_id.firstName}
                                                   </h3>
                                                 </div>
                                               </div>
@@ -136,8 +136,7 @@ const DiagramEm = () => {
                                                             />
                                                             <div className="member-details">
                                                               <h3>
-                                                                Member{" "}
-                                                                {level_3.level}
+                                                                {level_3.user_id && level_3.user_id.firstName}
                                                               </h3>
                                                             </div>
                                                           </div>

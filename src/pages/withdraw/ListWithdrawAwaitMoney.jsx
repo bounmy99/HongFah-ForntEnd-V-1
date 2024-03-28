@@ -372,7 +372,19 @@ const ListWithdrawAwaitMoney = () => {
   return (
     <div className="card-main">
       {loading ? (
-        <h1>ກຳລັງໂຫຼດຂໍ້ມູນ........</h1>
+        <div className="empty-card">
+        <Empty
+          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+          imageStyle={{
+            height: 60,
+          }}
+          description={
+            <span>
+              <a>ກຳລັງໂຫຼດ....</a><Spin/>
+            </span>
+          }
+        ></Empty>
+      </div>
       ) : (
         <>
           <div className="withdraw-table">

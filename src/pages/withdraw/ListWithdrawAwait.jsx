@@ -110,51 +110,52 @@ const ListWithdrawAwait = () => {
 
     console.log("Data In form", Data);
 
-    ApprovedWithDraw(users.token, Data, infoWithDraw._id).then(res => {
+    ApprovedWithDraw(users.token, Data, infoWithDraw._id)
+      .then((res) => {
         if (res.data.message === "success") {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: "ອະນຸມັດສຳເລັດແລ້ວ"
-            });
-            setImage("")
-            loadData();
-            setLoadingAwait(false);
-            setOpenModal(false);
-            navigate('/withdraw', { state: { key: 3 } })
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "ອະນຸມັດສຳເລັດແລ້ວ",
+          });
+          setImage("");
+          loadData();
+          setLoadingAwait(false);
+          setOpenModal(false);
+          navigate("/withdraw", { state: { key: 3 } });
         }
-
-    }).catch(err => {
+      })
+      .catch((err) => {
         setLoadingAwait(false);
         if (err) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: err.response.data.message
-            });
-            loadData();
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: err.response.data.message,
+          });
+          loadData();
         }
-    })
+      });
   };
 
   const handleModalCancel = () => {
@@ -374,7 +375,19 @@ const ListWithdrawAwait = () => {
   return (
     <div className="card-main">
       {loading ? (
-        <h1>ກຳລັງໂຫຼດຂໍ້ມູນ........</h1>
+        <div className="empty-card">
+          <Empty
+            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            imageStyle={{
+              height: 60,
+            }}
+            description={
+              <span>
+                <a>ກຳລັງໂຫຼດ....</a><Spin/>
+              </span>
+            }
+          ></Empty>
+        </div>
       ) : (
         <>
           <div className="withdraw-table">
@@ -610,20 +623,20 @@ const ListWithdrawAwait = () => {
                 </button>
                 <button type="submit" className="modal-withdraw-btn btn-info">
                   {loadingAwait ? (
-                    <><span>ກຳລັງ....</span>
-                     <Spin
-                      indicator={
-                        <LoadingOutlined
-                          style={{
-                            fontSize: 24,
-                            color : "white"
-                          }}
-                          spin
-                        />
-                      }
-                    />
+                    <>
+                      <span>ກຳລັງ....</span>
+                      <Spin
+                        indicator={
+                          <LoadingOutlined
+                            style={{
+                              fontSize: 24,
+                              color: "white",
+                            }}
+                            spin
+                          />
+                        }
+                      />
                     </>
-                   
                   ) : (
                     "ຢືນຢັນ"
                   )}

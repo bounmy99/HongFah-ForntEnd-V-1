@@ -1030,11 +1030,11 @@ body {
 .dashboard .top .nav-right {
   display: flex;
   align-items: center;
+  gap: 1.5rem;
 }
 
 .bell-notification {
   position: relative;
-  margin-right: 25px;
   width: 40px;
   height: 40px;
   padding: 5px;
@@ -1058,7 +1058,6 @@ body {
 
 .image-auth img {
   margin-top: 5px;
-  margin-right: 25px;
   width: 50px;
   height: 50px;
   padding: 5px;
@@ -1080,7 +1079,7 @@ body {
 }
 
 .icon-logout {
-  margin-right: 25px;
+  margin-right: 20px;
 }
 
 .icon-logout i {
@@ -1364,6 +1363,15 @@ body {
   height: 7.5rem;
   flex-shrink: 0;
   border-radius: 1.5625rem;
+  cursor: pointer;
+}
+.dash-content .boxes .box:hover {
+  box-shadow: 0 0px 1px rgba(0, 0, 0, 0.07),
+        0 1px 2px rgba(0, 0, 0, 0.07),
+        0 4px 6px rgba(0, 0, 0, 0.07),
+        0 6px 8px rgba(0, 0, 0, 0.07),
+        0 8px 16px rgba(0, 0, 0, 0.07),
+        0 16px 32px rgba(0, 0, 0, 0.07);
 }
 
 .dash-content .boxes .box .titie-box {
@@ -7140,7 +7148,8 @@ body {
   }
 
   .dashboard .top .nav-right {
-    margin-left: 15rem;
+    display: flex;
+    gap: 1.5rem;
   }
 
   .dashboard .dash-content {
