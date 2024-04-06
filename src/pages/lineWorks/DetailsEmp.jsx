@@ -95,7 +95,29 @@ const columns = [
         setLoading(false)
       })
       .catch((err) => {
-        console.log(err);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
         setLoading(false)
       });
   }, []);
@@ -107,7 +129,7 @@ const columns = [
         <button
           className="btn"
           style={{ width: "100px" }}
-          onClick={() => navigate("/listEmployee", { state: { key: 2 } })}
+          onClick={() => navigate("/lineWork", { state: { key: 2 } })}
         >
           ຍ້ອນກັບ
         </button>

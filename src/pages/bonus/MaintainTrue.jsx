@@ -3,7 +3,7 @@ import DataTable from "react-data-table-component";
 import { Empty, Spin } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { GetAllMaintain, Paybonus } from "../../functions/Bonus";
+import { GetAllBonus } from "../../functions/Bonus";
 
 const formatPrice = (value) => {
   let val = (value / 1).toFixed(0).replace(",", ".");
@@ -109,7 +109,7 @@ const columns = [
   },
 ];
 
-const MaintainTrue = ({ setStatusClick, setSelectableRow }) => {
+const MaintainTrue = ({setSelectableRow }) => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,15 +123,30 @@ const MaintainTrue = ({ setStatusClick, setSelectableRow }) => {
 
   const loadData = () => {
     setLoading(true);
-    GetAllMaintain(users.token, "true")
+    GetAllBonus(users.token)
       .then((res) => {
         setMainTain(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
         setEmptyData(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -184,7 +199,6 @@ const MaintainTrue = ({ setStatusClick, setSelectableRow }) => {
           selectableRows
           onSelectedRowsChange={(row) => {
             setSelectableRow(row.selectedRows);
-            setStatusClick((statusClick) => !statusClick);
           }}
         />
       )}

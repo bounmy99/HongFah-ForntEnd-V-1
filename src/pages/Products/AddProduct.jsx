@@ -12,15 +12,16 @@ import { CreateProduct } from '../../functions/Products';
 import { CaruselAdd } from '../../components/CaroselAdd';
 
 import Swal from 'sweetalert2';
+import { Spin } from 'antd';
 const initialState = {
-    name: "ຄີມອາບນ້ຳ",
+    name: "",
     productType: [],
-    detail: "ຄີມອາບນ້ຳ",
-    price: 500000,
-    point: 200,
-    amount: 200,
+    detail: "",
+    price: "",
+    point: "",
+    amount: "",
     images: [],
-    cashback: 5000,
+    cashback: "",
     unit: []
 }
 const AddProduct = () => {
@@ -50,6 +51,30 @@ const AddProduct = () => {
     const loadAllProductType = () => {
         GetAllProductType(users.token).then(res => {
             setProductTypes(res.data.data)
+        }).catch(err=>{
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "warning",
+                title: err.response.data.message,
+              });
+              
+              if (err.response.data.message === "unauthorized") {
+                dispatch({
+                  type: "USER_LOGOUT",
+                  payload: null,
+                });
+                navigate("/");
+              }
         })
     }
 
@@ -65,6 +90,9 @@ const AddProduct = () => {
         if (files) {
             let allFile = product.images;
             let allPreview = image
+
+            console.log("All File", allFile)
+            console.log("allPreview", allPreview)
             for (let i = 0; i < files.length; i++) {
 
                 // Preview
@@ -78,7 +106,9 @@ const AddProduct = () => {
         }
     }
 
-    console.log("New images Select", image)
+    // console.log("images",images)
+
+    // console.log("New images Select", image)
 
     const handleSubmit = (e) => {
         setLoading(true);
@@ -95,8 +125,10 @@ const AddProduct = () => {
         formData.append('unit', unit);
 
         images.forEach(file => {
-            formData.append('images', file); // Use 'images[]' to create an array on the server
+            formData.append('images', file); 
+            console.log("file looped",file)
         });
+
         for (const [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`);
             if (!value) {
@@ -107,10 +139,12 @@ const AddProduct = () => {
                     showConfirmButton: false,
                     timer: 3500
                 });
+               
                 return;
             }
         
         }
+        // return;
         CreateProduct(users.token, formData).then(res => {
             console.log(res.data.data);
             if (res.status === 200) {
@@ -136,7 +170,29 @@ const AddProduct = () => {
             }
         }).catch(err => {
             setLoading(false);
-            console.log(err)
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "warning",
+                title: err.response.data.message,
+              });
+              
+              if (err.response.data.message === "unauthorized") {
+                dispatch({
+                  type: "USER_LOGOUT",
+                  payload: null,
+                });
+                navigate("/");
+              }
         })
 
     }
@@ -148,22 +204,14 @@ const AddProduct = () => {
 
     return (
         <div className="card-main">
+            <Spin spinning={loading} >
             <div className="Card">
                 <div className="card-header">
                     <div className="text-tilte">
-                        {loading
-
-                            ? 
-                            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-                                <p>ກຳລັງບັນທຶກຂໍ້ມູນ.......</p><CircularProgress style={{ color: '#008BCB' }} />
-                            </Stack>
-                            :
                             <button onClick={()=>navigate('/ListProducts')} className="text-link">
                                 <i className='bx bx-chevron-left'></i>
                                 ກັບໄປໜ້າກ່ອນ
                             </button>
-                        }
-
                     </div>
                 </div>
                 <form onSubmit={handleSubmit}>
@@ -185,6 +233,7 @@ const AddProduct = () => {
                                     ))}
                                 </Carousel> */
                                 }
+
                             </div>
                             <div className="btn-button">
                                 <button type="button" className="btn-info-outline" onClick={handleReset}>ຍົກເລິກການເພີ່ມ</button>
@@ -237,6 +286,7 @@ const AddProduct = () => {
                     </div>
                 </form>
             </div>
+            </Spin>
         </div>
     )
 }

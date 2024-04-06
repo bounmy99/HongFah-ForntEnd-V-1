@@ -142,14 +142,29 @@ const CancelOrders = () => {
     GetAllOrders(users.token, "cancel").then(res => {
       setCancelOrder(res.data.data);
     }).catch(err => {
-      console.log(err)
       setCancelOrderEmpty(err.response.data.message);
-      if(err.response.data.message === 'unauthorized'){
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: err.response.data.message,
+      });
+      
+      if (err.response.data.message === "unauthorized") {
         dispatch({
-          type: 'USER_LOGOUT',
-          payload: null
-        })
-        navigate('/')
+          type: "USER_LOGOUT",
+          payload: null,
+        });
+        navigate("/");
       }
     })
   }, []);

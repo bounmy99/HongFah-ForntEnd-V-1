@@ -4,17 +4,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import { read, writeFileXLSX, utils } from "xlsx";
-import { Empty, Flex, Spin } from "antd";
+import { Empty, Flex, Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../components/DataTable";
-import previewIMG from "../../assets/image/upload.png";
-import {
-  GetWallet,
-  GetOneWithDraw,
-  ApprovedWithDraw,
-  RejectWithDraw,
-} from "../../functions/WithDraw";
+import { GetAllUsers,ResetPassword,DeleteUsers } from "../../functions/Users";
+import noImage from "../../assets/image/no-image.png"
 
 const ListWithdrawAwait = () => {
   const navigate = useNavigate();
@@ -32,7 +27,7 @@ const ListWithdrawAwait = () => {
   const [infoWithDraw, setinfoWithDraw] = useState([]);
   const [withdrawEmpty, setWithWrawEmpty] = useState(null);
 
-  const DataFilter = [15000, 30000, 50000, 100000];
+  // const DataFilter = [15000, 30000, 50000, 100000];
 
   useEffect(() => {
     setLoading(true);
@@ -40,14 +35,30 @@ const ListWithdrawAwait = () => {
   }, []);
 
   const loadData = () => {
-    GetWallet(users.token, "await", "withdraw")
+    GetAllUsers(users.token)
       .then((res) => {
+        console.log(res.data)
         setWithDraw(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err.response.data.message);
         setWithWrawEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -59,25 +70,19 @@ const ListWithdrawAwait = () => {
       });
   };
 
-  const handleClickOpenDrop = () => {
-    setIsActiveDropdownFilter(
-      (isActiveDropdownFilter) => !isActiveDropdownFilter
-    );
-  };
-  let openDrop = isActiveDropdownFilter ? "active" : "";
+  // const handleClickOpenDrop = () => {
+  //   setIsActiveDropdownFilter(
+  //     (isActiveDropdownFilter) => !isActiveDropdownFilter
+  //   );
+  // };
+  // let openDrop = isActiveDropdownFilter ? "active" : "";
 
-  const handleClick = (e) => {
-    setSelected(e.target.textContent);
-    setIsActiveDropdownFilter(false);
-  };
+  // const handleClick = (e) => {
+  //   setSelected(e.target.textContent);
+  //   setIsActiveDropdownFilter(false);
+  // };
 
-  const handleModal = (id) => {
-    GetOneWithDraw(users.token, id)
-      .then((res) => {
-        setinfoWithDraw(res.data.data);
-      })
-      .catch((err) => console.log(err));
-
+  const handleModal = () => {
     setOpenModal(true);
   };
   const handleSubmit = (e) => {
@@ -110,7 +115,7 @@ const ListWithdrawAwait = () => {
 
     console.log("Data In form", Data);
 
-    ApprovedWithDraw(users.token, Data, infoWithDraw._id)
+    ResetPassword(users.token, Data)
       .then((res) => {
         if (res.data.message === "success") {
           const Toast = Swal.mixin({
@@ -126,13 +131,12 @@ const ListWithdrawAwait = () => {
           });
           Toast.fire({
             icon: "success",
-            title: "ອະນຸມັດສຳເລັດແລ້ວ",
+            title: "ອັບເດດລະຫັດຜ່ານສຳເລັດ",
           });
           setImage("");
           loadData();
           setLoadingAwait(false);
           setOpenModal(false);
-          navigate("/withdraw", { state: { key: 3 } });
         }
       })
       .catch((err) => {
@@ -164,10 +168,11 @@ const ListWithdrawAwait = () => {
     setImage("");
     setinfoWithDraw([]);
   };
-  const handleReject = (id) => {
+
+  const handleDelete = (id) => {
     Swal.fire({
-      title: "ຢືນຢັນການປະຕິເສດ",
-      text: "ທ່ານຕ້ອງການປະຕິເສດແທ້ບໍ່ ?",
+      title: "ຢືນຢັນລົບ",
+      text: "ທ່ານຕ້ອງລົບແທ້ບໍ່ ?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -176,7 +181,7 @@ const ListWithdrawAwait = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
-        RejectWithDraw(users.token, id)
+        DeleteUsers(users.token, id)
           .then((res) => {
             if (res.status === 200) {
               const Toast = Swal.mixin({
@@ -192,7 +197,7 @@ const ListWithdrawAwait = () => {
               });
               Toast.fire({
                 icon: "success",
-                title: "ປະຕິເສດສຳເລັດແລ້ວ",
+                title: "ລົບສຳເລັດແລ້ວ",
               });
               loadData();
             }
@@ -204,12 +209,9 @@ const ListWithdrawAwait = () => {
     });
   };
 
+
   let openModals = openModal ? "open" : "";
 
-  const formatPrice = (value) => {
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
 
   const customStyles = {
     rows: {
@@ -240,132 +242,104 @@ const ListWithdrawAwait = () => {
 
   const columns = [
     {
-      name: "ສະຖານະ",
+      name: "ຮູບພາບ",
       cell: (row) => (
-        <div className="withdraw-status">
-          {row.status === "success" ? (
-            <div className="status-approved">
-              <p>ຢືນຢັນສຳເລັດ</p>
-            </div>
-          ) : (
-            <>
-              <div
-                className="status-success"
-                onClick={() => handleModal(row._id)}
-              >
-                <p>ເບີກຈ່າຍ</p>
-              </div>
-              <div
-                className="status-danger"
-                onClick={() => handleReject(row._id)}
-              >
-                <p>ປະຕິເສດ</p>
-              </div>
-            </>
-          )}
+        <div className="images-users"> 
+          <Tooltip title="ກົດເພື່ອເບິ່ງລະອຽດ" color="#00A5E8">
+            <Link to={`/users/detail/${row._id}`}>
+                {row.profile ?<img src={row.profile} alt={row.userCode} /> :<img src={noImage} alt={row.userCode} />}
+            </Link>
+          </Tooltip>
         </div>
       ),
       sortable: true,
-      width: "150px",
+      width: "100px",
     },
     {
       name: "ລະຫັດສະມາຊິກ",
       selector: (row) => row.userCode,
       cell: (row) => <p>{row.userCode}</p>,
       sortable: true,
-      width: "150px",
+      width: "120px",
     },
     {
-      name: "ຕຳແໜ່ງ",
-      selector: (row) => row.userPosition,
+      name: "ຊື່ແລະນາມສະກຸນ",
       cell: (row) => (
-        <div className="position">
-          {row.userPosition === "Gold" && (
-            <p className="posit-gold">{row.userPosition}</p>
-          )}
-          {row.userPosition === "Silver" && (
-            <p className="posit-silver">{row.userPosition}</p>
-          )}
-          {row.userPosition === "Bronze" && (
-            <p className="posit-bronze">{row.userPosition}</p>
-          )}
+        <div>
+            <p className="posit-gold">{`${row.firstName} ${row.lastName}`}</p>
         </div>
       ),
       sortable: true,
-      width: "80px",
+      width: "150px",
     },
     {
-      name: "ຊື່ບັນຊີ",
-      selector: (row) => row.accountName,
+      name: "ເບີໂທ",
+      selector: (row) => row.phoneNumber,
       cell: (row) => (
-        <p className="posit-text-acount-name">{row.accountName}</p>
+        <p className="posit-text-acount-name">{row.phoneNumber}</p>
       ),
       sortable: true,
       width: "210px",
     },
     {
-      name: "ເລກບັນຊີທະນາຄານ",
-      sortable: true,
-      selector: (row) => row.accountNo,
+      name: "ທີ່ຢູ່",
       cell: (row) => (
-        <p className="posit-text-acount-number">{row.accountNo}</p>
+        <p className="posit-text-acount-name">{row.address && `${row.address.village}, ${row.address.district}, ${row.address.province}`}</p>
       ),
-      width: "180px",
-    },
-    {
-      name: "ເງິນທີ່ຖອນ",
       sortable: true,
-      selector: (row) => row.amount,
-      cell: (row) => (
-        <p className="posit-text-withdraw">{formatPrice(row.amount)}.00</p>
-      ),
-      width: "100px",
-    },
-    {
-      name: "ປະເພດການຖອນ",
-      sortable: true,
-      selector: (row) => row.transactionType,
-      cell: (row) => (
-        <p className="posit-text-withdraw">{row.transactionType}</p>
-      ),
-      width: "100px",
-    },
-    {
-      name: "ວັນທີຮ້ອງຂໍ",
-      sortable: true,
-      selector: (row) => row.createdAt,
-      cell: (row) => <p>{new Date(row.createdAt).toLocaleDateString()}</p>,
-      width: "180px",
+      width: "210px",
     },
     {
       name: "ສະຖານະ",
       sortable: true,
-      selector: (row) => row.status,
-      cell: (row) => <>{<p style={{ color: "darksalmon" }}>{row.status}</p>}</>,
+      selector: (row) => row.role,
+      cell: (row) => (<p>{row.role}</p>),
+      width: "180px",
+    },
+    {
+      name: "ຈັດການ",
+      cell: (row) => (
+            <>
+              <button
+                style={{width:"50px", height:"30px", margin:"5px"}}
+                className="btn-success"
+                onClick={() => handleModal(row._id)}
+              >
+                ແກ້ໄຂ
+              </button>
+              <button
+                style={{width:"50px", height:"30px", margin:"5px"}}
+                className="btn-danger"
+                onClick={() => handleDelete(row._id)}
+              >
+                ລົບ
+              </button>
+            </>
+      ),
       width: "180px",
     },
   ];
 
-  const handleExport = () => {
-    const heading = [
-      [
-        "ລະຫັດສະມາຊິກ",
-        "ຕຳແໜ່ງ",
-        "ບັນຊີ",
-        "ຊື່ບັນຊີ",
-        "ເລກບັນຊີທະນາຄານ",
-        "ເງິນທີ່ຖອນ",
-        "ວັນທີຮ້ອງຂໍ",
-        "ສະຖານະ",
-      ],
-    ];
-    const wb = utils.book_new();
-    const ws = utils.json_to_sheet([]);
-    utils.sheet_add_aoa(ws, heading);
-    utils.sheet_add_json(ws, withDraw, { origin: "A4", skipHeader: true });
-    utils.book_append_sheet(wb, ws, "ການຖອນເງິນ");
-    writeFileXLSX(wb, "ການຖອນເງິນ.xlsx");
-  };
+  // const handleExport = () => {
+  //   const heading = [
+  //     [
+  //       "ລະຫັດສະມາຊິກ",
+  //       "ຕຳແໜ່ງ",
+  //       "ບັນຊີ",
+  //       "ຊື່ບັນຊີ",
+  //       "ເລກບັນຊີທະນາຄານ",
+  //       "ເງິນທີ່ຖອນ",
+  //       "ວັນທີຮ້ອງຂໍ",
+  //       "ສະຖານະ",
+  //     ],
+  //   ];
+  //   const wb = utils.book_new();
+  //   const ws = utils.json_to_sheet([]);
+  //   utils.sheet_add_aoa(ws, heading);
+  //   utils.sheet_add_json(ws, withDraw, { origin: "A4", skipHeader: true });
+  //   utils.book_append_sheet(wb, ws, "ການຖອນເງິນ");
+  //   writeFileXLSX(wb, "ການຖອນເງິນ.xlsx");
+  // };
 
   const handleChange = (e) => {
     setinfoWithDraw({ ...infoWithDraw, [e.target.name]: e.target.value });
@@ -424,7 +398,7 @@ const ListWithdrawAwait = () => {
                   </svg>
                 </div>
               </div>
-              <div class="button">
+              {/* <div class="button">
                 <div className="datepicker">
                   <i className="bx bx-calendar icons-left"></i>
                   <span className="text-date">ວັນທີ</span>
@@ -478,7 +452,7 @@ const ListWithdrawAwait = () => {
                     <i class="bx bxs-file-export bx-rotate-90"></i> ນຳອອກຂໍ້ມູນ
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
             {withdrawEmpty ? (
               <div className="empty-card">
@@ -513,7 +487,7 @@ const ListWithdrawAwait = () => {
               <div className="modal-input-withdraw">
                 <div className="modal-withdraw-input">
                   <div className="withdraw-title">
-                    <h3>ຂໍ້ມູນລູກຄ້າ</h3>
+                    <h3>Reset Password</h3>
                   </div>
                   <div className="modal-withdraw-form-group">
                     <div className="input-group-withdraw">
@@ -521,95 +495,19 @@ const ListWithdrawAwait = () => {
                       <input
                         type="text"
                         name="userCode"
-                        value={infoWithDraw && infoWithDraw.userCode}
                         className="form-modal-control-withdraw"
                         onChange={handleChange}
                       />
                     </div>
                     <div className="input-group-withdraw">
-                      <label htmlFor="">ເບີໂທລະສັບ</label>
+                      <label htmlFor="">ລະຫັດຜ່ານ</label>
                       <input
-                        type="text"
-                        name="phoneNumber"
-                        value={infoWithDraw && infoWithDraw.phoneNumber}
+                        type="password"
+                        name="newPassword"
                         className="form-modal-control-withdraw"
                         onChange={handleChange}
                       />
                     </div>
-                    <div className="input-group-withdraw">
-                      <label htmlFor="">ຊື່ບັນຊີ</label>
-                      <input
-                        type="text"
-                        name="accountName"
-                        value={infoWithDraw && infoWithDraw.accountName}
-                        className="form-modal-control-withdraw"
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="input-group-withdraw">
-                      <label htmlFor="">ເລກບັນຊີ</label>
-                      <input
-                        type="text"
-                        name="accountNo"
-                        value={infoWithDraw && infoWithDraw.accountNo}
-                        className="form-modal-control-withdraw"
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="input-group-withdraw">
-                      <label htmlFor="">ເງິນທີ່ຖອນ</label>
-                      <input
-                        type="text"
-                        name="amount"
-                        value={infoWithDraw && infoWithDraw.amount}
-                        className="form-modal-control-withdraw"
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-withdraw-image">
-                  <div className="withdraw-title">
-                    <h3>ອັບໂຫຼດໃບບິນ</h3>
-                  </div>
-                  <div className="withdraw-image">
-                    {image ? (
-                      <img
-                        src={image}
-                        alt={fileName}
-                        className="uploadImage-withdraw"
-                      />
-                    ) : (
-                      <img
-                        src={
-                          infoWithDraw.slip !== ""
-                            ? infoWithDraw.slip
-                            : previewIMG
-                        }
-                        className="uploadImage-withdraw-preview"
-                      />
-                    )}
-                    <input
-                      type="file"
-                      name="slip"
-                      className="input-file"
-                      hidden
-                      onChange={({ target: { files } }) => {
-                        files[0] && setFileName(files[0].name);
-                        if (files) {
-                          setImage(URL.createObjectURL(files[0]));
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        document.querySelector(".input-file").click()
-                      }
-                      className="btn-withdraw-browse"
-                    >
-                      Browse File
-                    </button>
                   </div>
                 </div>
               </div>

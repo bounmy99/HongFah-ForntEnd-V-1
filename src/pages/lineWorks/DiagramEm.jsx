@@ -5,25 +5,50 @@ import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import imagePreview from "../../assets/avatar/image-avatar.jpeg";
 import { GetOneEmployee, GetRootLineWork } from "../../functions/Employee";
+import {Spin} from "antd"
 const DiagramEm = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const [levelOne, setLavelOne] = useState([]);
   const [linework, setLinework] = useState([]);
   const [detail, setDetail] = useState([]);
+  const [loading, setLoading] = useState(false)
+  const [position,setPosition] = useState([])
+
+  console.log("position",position)
+  
 
   useEffect(() => {
     loadingGetRoot();
   }, []);
 
   const loadingGetRoot = () => {
+    setLoading(true)
     GetRootLineWork(users.token)
       .then((res) => {
-        setLinework(res.data.data);
-        setLavelOne(res.data.data.children);
+        setLoading(false)
+        setPosition(res.data.data.positionCount);
+        setLinework(res.data.data.tree);
+        setLavelOne(res.data.data.tree.children);
       })
       .catch((err) => {
-        console.log(err);
+        setLoading(false)
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -34,17 +59,42 @@ const DiagramEm = () => {
       });
   };
 
-  console.log("LineWork", linework);
+  // console.log("LineWork", linework);
 
   const [show, setShow] = useState(false);
   const handleShow = () => {
     setShow((show) => !show);
+    setLoading(true)
     GetOneEmployee(users.token, linework._id)
       .then((res) => {
+        setLoading(false)
         setDetail(res.data.data);
       })
       .catch((err) => {
-        console.log(err);
+        setLoading(false)
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
       });
   };
 
@@ -52,6 +102,7 @@ const DiagramEm = () => {
 
   return (
     <div className="plan-card-emp genealogy-scroll">
+      <Spin spinning={loading} style={{marginTop:200}}>
       {
         <div className="icons-show-hide">
           {show ? (
@@ -61,14 +112,14 @@ const DiagramEm = () => {
           )}
         </div>
       }
-
+    {loading ? "" :
       <div className="body genealogy-body genealogy-scroll">
         <TransformWrapper>
           <TransformComponent>
             <div className="genealogy-tree">
               <ul>
                 <li>
-                  <Link to={`/listEmployee/DetailsEmp/${linework._id}`}>
+                  <Link to={`/lineWork/Details/${linework._id}`}>
                     <div className="member-view-box">
                       <div className="member-image">
                         <img src={imagePreview} alt="Member" />
@@ -86,7 +137,7 @@ const DiagramEm = () => {
                             <>
                               <li key={index}>
                                 <Link
-                                  to={`/listEmployee/DetailsEmp/${level_1._id}`}
+                                  to={`/lineWork/Details/${level_1._id}`}
                                 >
                                   <div className="member-view-box">
                                     <div className="member-image">
@@ -103,7 +154,7 @@ const DiagramEm = () => {
                                       <>
                                         <li key={index}>
                                           <Link
-                                            to={`/listEmployee/DetailsEmp/${level_2._id}`}
+                                            to={`/lineWork/Details/${level_2._id}`}
                                           >
                                             <div className="member-view-box">
                                               <div className="member-image">
@@ -126,7 +177,7 @@ const DiagramEm = () => {
                                                   <>
                                                     <li key={index}>
                                                       <Link
-                                                        to={`/listEmployee/DetailsEmp/${level_3._id}`}
+                                                        to={`/lineWork/Details/${level_3._id}`}
                                                       >
                                                         <div className="member-view-box">
                                                           <div className="member-image">
@@ -163,8 +214,11 @@ const DiagramEm = () => {
           </TransformComponent>
         </TransformWrapper>
       </div>
+      }
+      {
+        loading ? "" :
 
-      {show && (
+      show && (
         <>
           <div className="plan-card-emp-sub-1">
             <h5>ລະຫັດສະມາຊິກ</h5>
@@ -215,7 +269,9 @@ const DiagramEm = () => {
             </div>
           </div>
         </>
-      )}
+      )
+      }
+      </Spin>
     </div>
   );
 };

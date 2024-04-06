@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { GetAllProductType } from '../../functions/ProductType';
 import { UpdateProduct, GetOneProduct, DeleteProduct } from '../../functions/Products';
 import { Carusel } from '../../components/Carosel';
+import { Spin } from 'antd';
 
 const initialState = {
     name: "",
@@ -188,7 +189,29 @@ const EditProduct = () => {
                         navigate("/listProducts");
                     }
                 }).catch(err => {
-                    console.log(err)
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                          toast.onmouseenter = Swal.stopTimer;
+                          toast.onmouseleave = Swal.resumeTimer;
+                        },
+                      });
+                      Toast.fire({
+                        icon: "warning",
+                        title: err.response.data.message,
+                      });
+                      
+                      if (err.response.data.message === "unauthorized") {
+                        dispatch({
+                          type: "USER_LOGOUT",
+                          payload: null,
+                        });
+                        navigate("/");
+                      }
                 })
 
             }
@@ -196,22 +219,14 @@ const EditProduct = () => {
     }
     return (
         <div className="card-main">
+            <Spin spinning={loading} >
             <div className="Card">
                 <div className="card-header">
                     <div className="text-tilte">
-                        {loading
-
-                            ?
-                            <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-                                <p>ກຳລັງບັນທຶກຂໍ້ມູນ.......</p><CircularProgress style={{ color: '#008BCB' }} />
-                            </Stack>
-                            :
                             <button onClick={() => navigate('/ListProducts')} className="text-link">
                                 <i className='bx bx-chevron-left'></i>
                                 ກັບໄປໜ້າກ່ອນ
                             </button>
-                        }
-
                     </div>
 
                     {/* create delete button */}
@@ -271,6 +286,7 @@ const EditProduct = () => {
                     </div>
                 </form>
             </div>
+            </Spin>
         </div>
     )
 }

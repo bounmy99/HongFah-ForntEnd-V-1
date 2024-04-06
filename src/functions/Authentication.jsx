@@ -3,8 +3,17 @@ import axios from "axios";
 export const Login = async(value)=>{
     return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/login`,value)
 }
+
 export const AdminSignStaff = async(token,value)=>{
     return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/signstaff`,value,{
+        headers :{
+            'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+}
+export const AdminSignSuperadmin = async(token,value)=>{
+    return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/superadmin/register`,value,{
         headers :{
             'Content-Type': 'multipart/form-data',
             'Authorization' : `Bearer ${token}`

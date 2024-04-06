@@ -9,7 +9,6 @@ const HomeSales = () => {
 
   const handleChangePage = (e) => {
     setChagePage(e)
-    setShowTables(true)
   }
 
   return (

@@ -109,7 +109,7 @@ const columns = [
   },
 ];
 
-const MaintainFalse = ({ setStatusClick, setSelectableRow }) => {
+const MaintainFalse = ({setSelectableRow }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
@@ -130,8 +130,23 @@ const MaintainFalse = ({ setStatusClick, setSelectableRow }) => {
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
         setEmptyData(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -141,6 +156,8 @@ const MaintainFalse = ({ setStatusClick, setSelectableRow }) => {
         }
       });
   };
+
+
 
   return (
     <div className="maintain-table">
@@ -184,7 +201,6 @@ const MaintainFalse = ({ setStatusClick, setSelectableRow }) => {
           selectableRows
           onSelectedRowsChange={(row) => {
             setSelectableRow(row.selectedRows);
-            setStatusClick((statusClick) => !statusClick);
           }}
         />
       )}

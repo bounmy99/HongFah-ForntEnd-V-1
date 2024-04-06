@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation,useNavigate } from 'react-router-dom';
 import DiagramEm from './DiagramEm';
 import { Empty } from 'antd'
-import L from '../../assets/image/L.png'
-import M from '../../assets/image/M.png'
-import S from '../../assets/image/S.png'
-import O from '../../assets/image/O.png'
-import { GetLineWorkTable } from '../../functions/Employee';
+import gold from "../../assets/image/position/G-removebg-preview.png"
+import silver from "../../assets/image/position/SV-removebg-preview.png"
+import Patinum from "../../assets/image/position/P-removebg-preview.png"
+import Diamond from "../../assets/image/position/D-removebg-preview.png"
+import BlackDiamond from "../../assets/image/position/BKD-removebg-preview.png"
+import BluekDiamond from "../../assets/image/position/BD-removebg-preview.png"
+import { GetLineWorkTable,GetRootLineWork } from '../../functions/Employee';
 import Loading from '../../components/Loadding';
 
 const customStyles = {
@@ -55,7 +57,7 @@ const columns = [
     width: '200px'
   },
   {
-    name: "ຕຳແໜ່ງ",
+    name: "",
     selector: (row) => row.position,
     cell: row => (
       <div className="position">
@@ -135,7 +137,8 @@ const ListEmployee = () => {
   const [loading, setLoading] = useState(false);
   const [lineworkEmpty, setLineWorkEmpty] = useState('');
   const { state } = useLocation();
-
+  const [countNode,setCountNode] = useState([])
+  const [positionCount,setPositionCount] = useState()
 
   useEffect(() => {
     setLoading(true)
@@ -144,23 +147,70 @@ const ListEmployee = () => {
       setEmployee(res.data.data)
     }).catch(err => {
       setLoading(false)
-      console.log(err)
       setLineWorkEmpty(err.response.data.message);
-      if(err.response.data.message === 'unauthorized'){
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: err.response.data.message,
+      });
+      
+      if (err.response.data.message === "unauthorized") {
         dispatch({
-          type: 'USER_LOGOUT',
-          payload: null
-        })
-        navigate('/')
+          type: "USER_LOGOUT",
+          payload: null,
+        });
+        navigate("/");
       }
     })
+    GetRootLineWork(users.token)
+      .then((res) => {
+        setLoading(false)
+        setCountNode(res.data.data.countNode);
+        setPositionCount(res.data.data.positionCount);
+      })
+      .catch((err) => {
+        setLoading(false)
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+
     setChang(1)
     if (state) {
       setChang(state.key)
     }
   }, []);
 
-  console.log("List Employee", employee)
   return (
     <>
       <div className="employee-card">
@@ -170,89 +220,121 @@ const ListEmployee = () => {
               <div className="title">ສະມາຊິກທັງໝົດ</div>
               <div className="number">
                 <div className="number-left">
-                  <h5>7.265</h5>
-                </div>
-                <div className="number-right">
-                  <span>+11.02%</span>
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
-                  </span>
+                  <h5>{countNode ? countNode : 0 } ຄົນ</h5>
                 </div>
               </div>
             </div>
             <div className="emp-dash-boxes emp-new">
               <div className="number">
                 <div className="left">
-                  <div className="title-left">ສະມາຊິກໃໝ່ O</div>
-                  <h5>7.265</h5>
+                  <div className="title-left"> Gold</div>
+                  <h5>100</h5>
                 </div>
                 <div className="right">
                   <div className="icons">
-                    <img src={O} alt="" />
+                    <img src={gold} alt="" className="img-icon" />
                   </div>
-                  <div className="text-per">
+                  {/* <div className="text-per">
                     <span>+11.02%</span>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
             <div className="emp-dash-boxes emp-staff">
               <div className="number">
                 <div className="left">
-                  <div className="title-left">ຕຳແໜ່ງ S</div>
-                  <h5>7.265</h5>
+                  <div className="title-left"> Diamond</div>
+                  <h5>0</h5>
                 </div>
                 <div className="right">
                   <div className="icons">
-                    <img src={S} className="img-s" alt="" />
+                    <img src={Diamond} className="img-icon" alt="" />
                   </div>
-                  <div className="text-per">
+                  {/* <div className="text-per">
                     <span>+11.02%</span>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
             <div className="emp-dash-boxes emp-manage">
               <div className="number">
                 <div className="left">
-                  <div className="title-left">ຕຳແໜ່ງ M</div>
-                  <h5>7.265</h5>
+                  <div className="title-left">Silver</div>
+                  <h5>0</h5>
                 </div>
                 <div className="right">
                   <div className="icons">
-                    <img src={M} className="img-m" alt="" />
+                    <img src={silver} className="img-icon" alt="" />
                   </div>
-                  <div className="text-per">
+                  {/* <div className="text-per">
                     <span>+11.02%</span>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
             <div className="emp-dash-boxes emp-leader">
               <div className="number">
                 <div className="left">
-                  <div className="title-left">ຕຳແໜ່ງ L</div>
-                  <h5>7.265</h5>
+                  <div className="title-left"> Blue</div>
+                  <h5>0</h5>
                 </div>
                 <div className="right">
                   <div className="icons">
-                    <img src={L} className="img-l" alt="" />
+                    <img src={BluekDiamond} className="img-icon" alt="" />
                   </div>
-                  <div className="text-per">
+                  {/* <div className="text-per">
                     <span>+11.02%</span>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
                     </span>
+                  </div> */}
+                </div>
+              </div>
+            </div>
+            <div className="emp-dash-boxes emp-leader">
+              <div className="number">
+                <div className="left">
+                  <div className="title-left"> Platinum</div>
+                  <h5>0</h5>
+                </div>
+                <div className="right">
+                  <div className="icons">
+                    <img src={Patinum} className="img-icon" alt="" />
                   </div>
+                  {/* <div className="text-per">
+                    <span>+11.02%</span>
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
+                    </span>
+                  </div> */}
+                </div>
+              </div>
+            </div>
+            <div className="emp-dash-boxes emp-leader">
+              <div className="number">
+                <div className="left">
+                  <div className="title-left"> Black</div>
+                  <h5>0</h5>
+                </div>
+                <div className="right">
+                  <div className="icons">
+                    <img src={BlackDiamond} className="img-icon" alt="" />
+                  </div>
+                  {/* <div className="text-per">
+                    <span>+11.02%</span>
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M8.45488 5.60777L14 4L12.6198 9.6061L10.898 7.9532L8.12069 10.8463C8.02641 10.9445 7.89615 11 7.76 11C7.62385 11 7.49359 10.9445 7.39931 10.8463L5.36 8.72199L2.36069 11.8463C2.16946 12.0455 1.85294 12.0519 1.65373 11.8607C1.45453 11.6695 1.44807 11.3529 1.63931 11.1537L4.99931 7.65373C5.09359 7.55552 5.22385 7.5 5.36 7.5C5.49615 7.5 5.62641 7.55552 5.72069 7.65373L7.76 9.77801L10.1766 7.26067L8.45488 5.60777Z" fill="#1C1C1C"></path></svg>
+                    </span>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -336,37 +418,55 @@ const ListEmployee = () => {
                           </div>
                           <div className="member-card">
                             <div className="icons">
-                              <img src={O} alt="" />
+                              <img src={gold} alt="" />
                             </div>
                             <div className="text">
-                              <h3>ສະມາຊິກ O</h3>
+                              <h3>Gold</h3>
                               <span>0 ຄົນ</span>
                             </div>
                           </div>
                           <div className="member-card">
                             <div className="icons">
-                              <img src={S} alt="" />
+                              <img src={Diamond} alt="" />
                             </div>
                             <div className="text">
-                              <h3>ສະມາຊິກ S</h3>
+                              <h3>Diamond</h3>
                               <span>0 ຄົນ</span>
                             </div>
                           </div>
                           <div className="member-card">
                             <div className="icons">
-                              <img src={M} alt="" />
+                              <img src={silver} alt="" />
                             </div>
                             <div className="text">
-                              <h3>ສະມາຊິກ M</h3>
+                              <h3>Silver</h3>
                               <span>0 ຄົນ</span>
                             </div>
                           </div>
                           <div className="member-card">
                             <div className="icons">
-                              <img src={L} alt="" />
+                              <img src={BluekDiamond} alt="" />
                             </div>
                             <div className="text">
-                              <h3>ສະມາຊິກ L</h3>
+                              <h3>Bluek</h3>
+                              <span>0 ຄົນ</span>
+                            </div>
+                          </div>
+                          <div className="member-card">
+                            <div className="icons">
+                              <img src={Patinum} alt="" />
+                            </div>
+                            <div className="text">
+                              <h3>Platinum</h3>
+                              <span>0 ຄົນ</span>
+                            </div>
+                          </div>
+                          <div className="member-card">
+                            <div className="icons">
+                              <img src={BlackDiamond} alt="" />
+                            </div>
+                            <div className="text">
+                              <h3>Black</h3>
                               <span>0 ຄົນ</span>
                             </div>
                           </div>

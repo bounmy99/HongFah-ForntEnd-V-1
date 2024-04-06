@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip, notification } from "antd";
@@ -9,6 +9,8 @@ const Headers = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [toggle, setToggle] = useState("")
 
   const openNotification = () => {
     notification.open({
@@ -46,13 +48,27 @@ const Headers = () => {
     window.location.reload();
   };
 
-  console.log("Profile", users);
+  const handToggle = ()=>{
+    setToggle(pre=>!pre)
+  }
+
+  const ToggleSides = toggle ? (
+    dispatch({
+      type : "OPEN",
+      payload : true
+    })
+  ):(
+    dispatch({
+      type : "CLOSE",
+      payload : false
+    })
+  )
 
   return (
     <div>
       <div className="top">
         <div className="nav-left">
-          <div className="nav-icons-toggle">
+          <div className="nav-icons-toggle" onClick={handToggle}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="sidebar-toggle"
@@ -77,7 +93,7 @@ const Headers = () => {
         </div>
 
         <div className="nav-right">
-          <Badge count={"1"} size="small">
+          <Badge count={"1"} size="small" className="bages">
             <div className="bell-notification" onClick={openNotification}>
               <i className="bx bxs-bell"></i>
             </div>

@@ -4,12 +4,14 @@ import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import { CreateTrip } from '../../functions/Trip';
 import ImagePreviews from '../../assets/image/upload.png';
+import { Spin } from 'antd';
 const AddTravels = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const [image, setImage] = useState(null)
   const [fileName, setFileName] = useState("");
-  const [value, setValue] = useState([])
-  const navigate = useNavigate()
+  const [value, setValue] = useState([]);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value })
@@ -17,6 +19,7 @@ const AddTravels = () => {
   console.log(value);
 
   const handleSubmit = (e) => {
+    setLoading(true)
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const values = [...formData.values()];
@@ -45,6 +48,7 @@ const AddTravels = () => {
 
     CreateTrip(Data, users.token).then(res => {
       if (res.status === 200) {
+        setLoading(false)
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -65,14 +69,30 @@ const AddTravels = () => {
         setFileName("");
       }
     }).catch(err => {
-      console.log(err.response.data);
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: err.response.data.message,
-        showCancelButton: false,
-        timer: 3500
+      setLoading(false)
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
       });
+      Toast.fire({
+        icon: "warning",
+        title: err.response.data.message,
+      });
+      
+      if (err.response.data.message === "unauthorized") {
+        dispatch({
+          type: "USER_LOGOUT",
+          payload: null,
+        });
+        navigate("/");
+      }
       setImage("");
       setFileName("");
       return;
@@ -80,6 +100,7 @@ const AddTravels = () => {
   }
   return (
     <div className="card-main">
+      <Spin spinning={loading}> 
       <div className="card-add-detail">
         <div className="card-detail-header" id="add-detail">
           <div className="text-tilte">
@@ -106,7 +127,7 @@ const AddTravels = () => {
                     ? <img src={image} alt={fileName} className="img-fluid" />
                     : <><img src={ImagePreviews} className="img-fluid" /> <h3>ຮູບພາບສະຖານທີ</h3></>}
 
-                  <input type="file" name="images" className="input-file" hidden
+                  <input type="file" name="coverImage" className="input-file" hidden
                     onChange={({ target: { files } }) => {
                       files[0] && setFileName(files[0].name)
                       if (files) {
@@ -138,8 +159,8 @@ const AddTravels = () => {
                   <input type="text" name="amount" className="form-controls-md" onChange={handleChange} />
                 </div>
                 <div className="input-group">
-                  <label htmlFor="">level</label>
-                  <input type="text" name="level" className="form-controls-md" onChange={handleChange} />
+                  <label htmlFor="">ເງືອນໄຂຄະແນນ PV</label>
+                  <input type="text" name="conditionPv" className="form-controls-md" onChange={handleChange} />
                 </div>
                 <div className="input-group">
                   <label htmlFor="">ເງຶ່ອນໄຂຜຸ້ເຂົ້າຮ່ວມ</label>
@@ -151,6 +172,7 @@ const AddTravels = () => {
           </div>
         </form>
       </div>
+      </Spin>
     </div>
   )
 }

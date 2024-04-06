@@ -1,0 +1,238 @@
+import React, { useState,useEffect } from "react";
+import {
+  ArrowLeftOutlined,
+  DollarOutlined,
+  PhoneOutlined,
+  SearchOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { GetWalletWithUserCode } from "../../functions/WithDraw";
+import { Spin } from "antd";
+import Swal from "sweetalert2";
+import { CreateOrder } from "../../functions/OrdersAdmin";
+const Pay = () => {
+  const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [valueSearch, setValueSearch] = useState([]);
+  const [value, setValue] = useState([]);
+
+  // console.log("value",value)
+
+
+  const handleChange = (e) => {
+    setValue({ ...value, [e.target.name]: e.target.value });
+  };
+
+  const handleClickSearch = () => {
+    setLoading(true);
+    GetWalletWithUserCode(users.token, value.userCode)
+      .then((res) => {
+        setValueSearch(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+      setLoading(false);
+  };
+
+  // const product = JSON.stringify(carts);
+  // console.log("product",product);
+  
+ 
+ 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    // let orderItems = JSON.stringify(orderItems)
+    // let orderItems = JSON.parse(localStorage.getItem("orders"));
+
+    const formData = new FormData();
+    formData.append("userCode",value.userCode);
+    formData.append("paymentType",value.paymentType);
+    formData.append("orderItems",JSON.stringify(orderItems));
+
+    CreateOrder(users.token, formData)
+      .then((res) => {
+        setLoading(false);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "success",
+          title: res.data.message,
+        });
+
+        dispatch({
+          type : "EMPTY_CART",
+          payload : []
+        })
+        dispatch({
+          type : "EMPTY_ORDER",
+          payload : []
+        })
+        navigate("/listProducts/saleProducts");
+
+        
+      })
+      .catch((err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        setLoading(false);
+      });
+  };
+
+  return (
+    <Spin spinning={loading}>
+      <>
+        <div className="pay-content">
+          <div
+            className="btn-back"
+            onClick={() =>
+              navigate("/listProducts/saleProducts", { state: { key: 2 } })
+            }
+          >
+            <ArrowLeftOutlined className="icon-back" /> ຍ້ອນກັບ
+          </div>
+          <div className="pay-title">
+            <h3 className="title">ໃສ່ລະຫັດສະມາຊິກ</h3>
+          </div>
+          <div className="pay-form">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <div>
+                  <label htmlFor="">ລະຫັດສະມາຊິກ</label>
+                </div>
+                <div>
+                  <input
+                    type="search"
+                    name="userCode"
+                    className="form-input-pay"
+                    onChange={handleChange}
+                  />
+                  <UserOutlined className="icons user1" />
+                  <SearchOutlined
+                    className="icons search"
+                    onClick={handleClickSearch}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <div>
+                  <label htmlFor="">ຊື່ຜູ້ຮັບ</label>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={
+                      valueSearch.user_id &&
+                      `${valueSearch.user_id.firstName}   ${valueSearch.user_id.lastName}`
+                    }
+                    className="form-input-pay"
+                    onChange={handleChange}
+                  />
+                  <UserOutlined className="icons user2" />
+                </div>
+              </div>
+              <div className="form-group">
+                <div>
+                  <label htmlFor="">ເບີໂທ</label>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={
+                      valueSearch.user_id && valueSearch.user_id.phoneNumber
+                    }
+                    className="form-input-pay"
+                    onChange={handleChange}
+                  />
+                  <PhoneOutlined className="icons phone" />
+                </div>
+              </div>
+              <div className="form-group">
+                <div>
+                  <label htmlFor="">ເລືອກປະເພດຊຳລະ</label>
+                </div>
+                <div>
+                  <select
+                    className="form-input-pay"
+                    name="paymentType"
+                    onChange={handleChange}
+                  >
+                    <option selected disabled>
+                      ກະລຸນາເລຶອກ
+                    </option>
+                    <option value="transfer">ໂອນ</option>
+                    <option value="cash">ເງິນສົດ</option>
+                  </select>
+                  <DollarOutlined className="icons dollar" />
+                </div>
+              </div>
+              <div className="button-gruop">
+                <button className="btns-confirm" type="submit">
+                  ຢືນຢັນ
+                </button>
+                <button className="btns-cancel" type="reset">
+                  ຍົກເລິກ
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </>
+    </Spin>
+  );
+};
+
+export default Pay;

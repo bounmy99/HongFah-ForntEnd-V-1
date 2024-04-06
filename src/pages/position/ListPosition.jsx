@@ -58,8 +58,23 @@ const ListPosition = () => {
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
         setPositionEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -135,7 +150,29 @@ const ListPosition = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+            
+            if (err.response.data.message === "unauthorized") {
+              dispatch({
+                type: "USER_LOGOUT",
+                payload: null,
+              });
+              navigate("/");
+            }
             setOpenModal(false);
             setLoadSave(false);
           })
@@ -163,7 +200,29 @@ const ListPosition = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+            
+            if (err.response.data.message === "unauthorized") {
+              dispatch({
+                type: "USER_LOGOUT",
+                payload: null,
+              });
+              navigate("/");
+            }
             setOpenModal(false);
             setLoadSave(false);
           });

@@ -23,7 +23,7 @@ const LoginPages = () => {
     } else {
       navigate("/")
     }
-  }, [])
+  }, [users])
 
   const showHide = () => {
     setIsPasswordShow(isPasswordShow => !isPasswordShow);
@@ -31,7 +31,7 @@ const LoginPages = () => {
   // console.log(isPasswordShow)
 
   const [value, setValue] = useState({
-    userCode: "A5389",
+    userCode: "A27614",
     password: "12345678"
   })
 
@@ -79,7 +79,24 @@ const LoginPages = () => {
       localStorage.setItem("data", JSON.stringify(res.data.data))
     }).catch(err => {
       setLoading(false)
-      console.log('Error', err)
+      // console.log('Error', err.response.data.message)
+      if(err.response.data.message === "not found"){
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "error",
+          title: "ບໍ່ພົບຜູ້ໃຊ້ນີ້ໃນລະບົບ"
+        });
+      }
     })
   }
 

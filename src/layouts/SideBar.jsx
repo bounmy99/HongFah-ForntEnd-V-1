@@ -4,8 +4,11 @@ import  LogoSideBarTop  from '../assets/logo/logo-sidebar-top.png'
 import  LogoSideBarBottom  from '../assets/logo/logo-sidebar-bottom.png'
 import  LogoSideBarMiddle  from '../assets/logo/logo-sidebar-middle.png'
 import  Logo from '../assets/logo/logo.png'
-
+import {useSelector} from 'react-redux'
 const SideBar = () => {
+
+    const {ToggleSideBar} = useSelector((state)=>({...state}))
+
     const menu = [
         {
             name: "Dashboard",
@@ -24,7 +27,7 @@ const SideBar = () => {
         },
         {
             name: "ຈັດການສະມາຊິກ",
-            path: "/listEmployee",
+            path: "/lineWork",
             icon: <i className='bx bx-sitemap'></i>
         },
         {
@@ -43,9 +46,9 @@ const SideBar = () => {
             icon: <i className='bx bx-select-multiple'></i>
         },
         {
-            name: "ຖອນເງິນ",
-            path: "/withdraw",
-            icon: <i className='bx bxs-dollar-circle'></i>
+            name: "ຂໍ້ມູນຜຸ້ໃຊ້",
+            path: "/users",
+            icon: <i class='bx bxs-user'></i>
         },
         {
             name: "ຈັດການທິບທ່ອງທ່ຽວ",
@@ -59,7 +62,7 @@ const SideBar = () => {
         }
     ]
     return (
-        <nav className="nav-bar">
+        <nav className={`nav-bar ${ToggleSideBar ? "close" : ""}`}>
             <div className="logo">
                 <div className="logo-image">
                     <img src={Logo} alt={`images`} />

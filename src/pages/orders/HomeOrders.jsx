@@ -36,7 +36,7 @@ const HomeOrders = () => {
       <div className="orders-dashboard">
         <div className="order-boxes total">
           <div className="order-text">
-            <h5 className="title">{formatPrice(orderOverview.salsePrice)} ລ້ານ</h5>
+            <h5 className="title">{formatPrice(orderOverview.salsePrice ? orderOverview.salsePrice : 0 )} ລ້ານ</h5>
             <h3>ມູນຄ່າລວມ</h3>
           </div>
           <div className="order-icons">
