@@ -1,6 +1,6 @@
 import axios from 'axios'
-export const GetAllOrders = async (token,status) => {
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/order/getall?status=${status}`, {
+export const GetAllOrders = async (token,startDate,endDate,status) => {
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/order/getall?startDate=${startDate}&endDate=${endDate}&status=${status}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

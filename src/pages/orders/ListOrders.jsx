@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Empty } from 'antd';
-
+import Swal from 'sweetalert2'
 // Functions
 import TableComponent from '../../components/TableComponent';
 import { GetAllOrders } from '../../functions/Orders';
@@ -147,7 +147,7 @@ const ListOrders = () => {
 
   useEffect(() => {
     setLoading(true)
-    GetAllOrders(users.token, "await").then(res => {
+    GetAllOrders(users.token,"","", "await").then(res => {
       setLoading(false)
       setOrders(res.data.data);
     }).catch(err => {
@@ -179,7 +179,7 @@ const ListOrders = () => {
     })
   }, []);
 
-  console.log(orders)
+  // console.log(orders)
 
   return (
     <>
@@ -200,7 +200,7 @@ const ListOrders = () => {
         </div>
         :
         <div>
-          <TableComponent columns={columns} customStyles={customStyles} data={orders} loading={loading} />
+          <TableComponent Status={"await"} setOrders={setOrders} setEmptyOrder={setEmptyOrder} columns={columns} customStyles={customStyles} data={orders} loading={loading} />
         </div>
       }
     </>

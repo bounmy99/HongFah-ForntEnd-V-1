@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Spin, Tabs } from "antd";
+import { Empty, Modal, Spin, Tabs,Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import {
@@ -354,9 +354,9 @@ const Travels = () => {
                   trip.map((item, idx) => (
                     <div className="cards" key={idx}>
                       {item.cover && item.cover ? (
-                        <img src={item.cover} alt={item.name} />
+                        <Image src={item.cover} style={{height:"14rem"}} className="images-trip" alt={item.name} />
                       ) : (
-                        <img src={ImageTravel} alt={item.name} />
+                        <Image src={ImageTravel} style={{height:"14rem"}} className="images-trip" alt={item.name} />
                       )}
                       <div className="cards-title">
                         <span className="text-right">{item.name}</span>

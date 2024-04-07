@@ -5,9 +5,6 @@ import { Empty } from 'antd'
 import { GetAllOrders } from '../../functions/Orders';
 import { useSelector,useDispatch } from 'react-redux';
 
-
-
-
 const CancelOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
@@ -139,7 +136,7 @@ const CancelOrders = () => {
   ];
 
   useEffect(() => {
-    GetAllOrders(users.token, "cancel").then(res => {
+    GetAllOrders(users.token, "","","cancel").then(res => {
       setCancelOrder(res.data.data);
     }).catch(err => {
       setCancelOrderEmpty(err.response.data.message);
@@ -190,7 +187,7 @@ const CancelOrders = () => {
         :
 
         <div>
-          <TableComponent columns={columns} customStyles={customStyles} data={cancelOrder} />
+          <TableComponent Status={"cancel"} setCancelOrder={setCancelOrder} setCancelOrderEmpty={setCancelOrderEmpty} columns={columns} customStyles={customStyles} data={cancelOrder} />
         </div>
       }
 

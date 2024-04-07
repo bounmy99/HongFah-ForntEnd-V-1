@@ -11,6 +11,9 @@ import LoadingInfo from "../../components/LoadingInfo";
 import Swal from "sweetalert2";
 import { Button, Tooltip, Empty, Spin } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
+
+import PaginationComponent from "../../components/PaginationComponent"
+
 const Auth = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -22,11 +25,17 @@ const Auth = () => {
   const [count, setCount] = useState("");
   const [roleList, setRoleList] = useState([]);
   const [authEmpty, setAuthEmpty] = useState("");
+  const [pages,setPages] = useState(1);
+  const [pageSize,setPageSize] = useState(6)
 
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
+
+  const indexOfLastPages = pages * pageSize;
+  const indexOfFirstPages = indexOfLastPages - pageSize;
+  const currentPages = user.slice(indexOfFirstPages, indexOfLastPages);
 
   const loadData = () => {
     GetAllUser(users.token)
@@ -163,8 +172,10 @@ const Auth = () => {
       ) : (
         <div className="auth-list">
           <table cellPadding={0} cellSpacing={1}>
-            {user &&
-              user.slice(0, visible).map((u, i) => (
+            {/* {user &&
+              user.slice(0, visible).map((u, i) => ( */}
+            {currentPages &&
+              currentPages.map((u, i) => (
                 <tr>
                   <td>
                     <Link to={`/auth/EditUser/${u._id}`}>
@@ -235,7 +246,16 @@ const Auth = () => {
                 </tr>
               ))}
           </table>
-          {user.length > 0 ? (
+          { count > 6 &&
+          <PaginationComponent
+          count={count}
+          setPageSize={setPageSize}
+          pageSize={pageSize}
+          setPages={setPages}
+          pages={pages}
+          />
+          }
+          {/* {user.length > 0 ? (
             visible >= count ? (
               ""
             ) : (
@@ -247,7 +267,7 @@ const Auth = () => {
             )
           ) : (
             <h1>ບໍ່ມີຂໍ້ມູນ</h1>
-          )}
+          )} */}
         </div>
       )}
     </div>

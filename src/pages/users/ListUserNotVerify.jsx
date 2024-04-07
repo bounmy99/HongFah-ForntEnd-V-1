@@ -19,19 +19,13 @@ const ListWithdrawAwaitMoney = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [startDate, setStartDate] = useState(new Date());
-  const [isActiveDropdownFilter, setIsActiveDropdownFilter] = useState(false);
-  const [selected, setSelected] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingAwaitMoney, setLoadingAwaitMoney] = useState(false);
-  const [image, setImage] = useState(null);
-  const [fileName, setFileName] = useState("");
   const [withDraw, setWithDraw] = useState([]);
   const [infoWithDraw, setinfoWithDraw] = useState([]);
   const [withdrawEmpty, setWithWrawEmpty] = useState(null);
+  const [valueSearch, setValueSearch] = useState("");
 
-  const DataFilter = [15000, 30000, 50000, 100000];
 
   useEffect(() => {
     setLoading(true);
@@ -72,19 +66,6 @@ const ListWithdrawAwaitMoney = () => {
         setLoading(false);
       });
   };
-
-  const handleClickOpenDrop = () => {
-    setIsActiveDropdownFilter(
-      (isActiveDropdownFilter) => !isActiveDropdownFilter
-    );
-  };
-  let openDrop = isActiveDropdownFilter ? "active" : "";
-
-  const handleClick = (e) => {
-    setSelected(e.target.textContent);
-    setIsActiveDropdownFilter(false);
-  };
-
   const handleModal = (id) => {
     setOpenModal(true);
   };
@@ -136,7 +117,6 @@ const ListWithdrawAwaitMoney = () => {
             icon: "success",
             title: "ອັບເດດສຳເລັດແລ້ວ",
           });
-          setImage("");
           setLoadingAwaitMoney(false);
           setOpenModal(false);
           loadData();
@@ -169,7 +149,6 @@ const ListWithdrawAwaitMoney = () => {
   const handleModalCancel = () => {
     setOpenModal(false);
     setFormType(true);
-    setImage("");
     setinfoWithDraw([]);
   };
   const handleDelete = (id) => {
@@ -377,7 +356,7 @@ const ListWithdrawAwaitMoney = () => {
       sortable: true,
       selector: (row) => row.role,
       cell: (row) => <p>{row.role}</p>,
-      width: "180px",
+      width: "100px",
     },
     {
       name: "ຈັດການ",
@@ -402,30 +381,49 @@ const ListWithdrawAwaitMoney = () => {
       width: "180px",
     },
   ];
-  const handleExport = () => {
-    const heading = [
-      [
-        "ລະຫັດສະມາຊິກ",
-        "ຕຳແໜ່ງ",
-        "ບັນຊີ",
-        "ຊື່ບັນຊີ",
-        "ເລກບັນຊີທະນາຄານ",
-        "ເງິນທີ່ຖອນ",
-        "ວັນທີຮ້ອງຂໍ",
-        "ສະຖານະ",
-      ],
-    ];
-    const wb = utils.book_new();
-    const ws = utils.json_to_sheet([]);
-    utils.sheet_add_aoa(ws, heading);
-    utils.sheet_add_json(ws, withDraw, { origin: "A4", skipHeader: true });
-    utils.book_append_sheet(wb, ws, "ການຖອນເງິນ");
-    writeFileXLSX(wb, "ການຖອນເງິນ.xlsx");
-  };
 
   const handleChange = (e) => {
     setinfoWithDraw({ ...infoWithDraw, [e.target.name]: e.target.value });
   };
+  const handleChangeSearch = (e) => {
+    setValueSearch(e.target.value);
+  };
+  const handleClickSearch = ()=>{
+    GetAllNotVerify(users.token,valueSearch)
+      .then((res) => {
+        setWithDraw(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setWithWrawEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+        setLoading(false);
+      });
+  }
+
+
   // console.log("file", infoWithDraw)
   return (
     <div className="card-main">
@@ -453,6 +451,7 @@ const ListWithdrawAwaitMoney = () => {
                   <input
                     type="text"
                     placeholder="ຄົ້າຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                    onChange={handleChangeSearch}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -479,62 +478,12 @@ const ListWithdrawAwaitMoney = () => {
                     ></line>
                   </svg>
                 </div>
-              </div>
-              {/* <div class="button">
-                <div className="datepicker">
-                  <i className="bx bx-calendar icons-left"></i>
-                  <span className="text-date">ວັນທີ</span>
-                  <DatePicker
-                    className="btn-datepicker"
-                    selected={startDate}
-                    onChange={(date) => {
-                      setStartDate(date);
-                      setIsActiveDropdownFilter(false);
-                    }}
-                  />
-                  <i className="bx bx-chevron-down icons-right"></i>
-                </div>
-                <div className="withdraw-filter">
-                  <div className="withdraw-filter-menu">
-                    <div
-                      className={`withdraw-filter-btn ${openDrop}`}
-                      onClick={handleClickOpenDrop}
-                    >
-                      <i className="bx bx-filter"></i>{" "}
-                      {selected ? (
-                        <span className="sBtn-text">{selected}</span>
-                      ) : (
-                        <span className="sBtn-text">ຕົວກອງ</span>
-                      )}
-                      <i className="bx bx-chevron-down"></i>
-                    </div>
-                    {isActiveDropdownFilter && (
-                      <ul className="options-withdraw-filter">
-                        {DataFilter.map((item, idx) => (
-                          <li
-                            className="option-withdraw-filter"
-                            key={idx}
-                            onClick={handleClick}
-                          >
-                            <span className="option-withdraw-filter-text">
-                              {item}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <button
-                    className="btn-show"
-                    type="button"
-                    onClick={handleExport}
-                  >
-                    <i class="bx bxs-file-export bx-rotate-90"></i> ນຳອອກຂໍ້ມູນ
+                <div className="btn-search">
+                  <button type="button" onClick={handleClickSearch}>
+                    ຄົ້ນຫາ
                   </button>
                 </div>
-              </div> */}
+              </div>
             </div>
             {withdrawEmpty ? (
               <div className="empty-card">

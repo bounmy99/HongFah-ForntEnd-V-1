@@ -85,13 +85,11 @@ const HomeOrders = () => {
       </div>
       <div className="orders-button">
         <button type="button" className={`btn-order btn-waiting ${orderStatus === 1 ? 'active' : ''} `} onClick={() => handleClick(1)}>ລໍຖ້າອະນຸມັດ</button>
-        {/* <button type="button" className={`btn-order btn-order-processing ${orderStatus === 2 ? 'active' : '' } `} onClick={()=>handleClick(2)}>ກຳລັງດຳເນີນການ</button> */}
         <button type="button" className={`btn-order btn-order-cancel ${orderStatus === 2 ? 'active' : ''} `} onClick={() => handleClick(2)}>ອໍເດີທີຍົກເລີກ</button>
         <button type="button" className={`btn-order btn-order-success ${orderStatus === 3 ? 'active' : ''} `} onClick={() => handleClick(3)}>ປະຫວັດການຂາຍ</button>
       </div>
 
       {orderStatus === 1 && <ListOrders />}
-      {/* { orderStatus === 2 && <ProcessingOrders/>} */}
       {orderStatus === 2 && <CancelOrders />}
       {orderStatus === 3 && <HistoryOrders />}
     </div>

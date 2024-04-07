@@ -135,7 +135,7 @@ const HistoryOrders = () => {
   ];
 
   useEffect(() => {
-    GetAllOrders(users.token, "success").then(res => {
+    GetAllOrders(users.token,"","", "success").then(res => {
       setSuccessOrders(res.data.data);
     }).catch(err => {
       setSuccessOrdersEmpty(err.response.data.message);
@@ -186,7 +186,7 @@ const HistoryOrders = () => {
           </div>
           :
           <div>
-            <TableComponent columns={columns} customStyles={customStyles} data={successOrders} />
+            <TableComponent Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
           </div>
       }
 

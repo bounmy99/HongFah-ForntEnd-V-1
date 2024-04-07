@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import { useSelector, useDispatch } from "react-redux";
-import { Empty } from "antd";
+import { Empty,Image } from "antd";
 import { useNavigate } from "react-router-dom";
 // function
 import {
@@ -407,7 +407,7 @@ const ListPosition = () => {
                         <div className="position-content">
                           <div className="content-title">
                             <div className="position-icon-image">
-                              <img
+                              <Image
                                 src={item.icon}
                                 alt={item.title}
                                 className="image-pos"

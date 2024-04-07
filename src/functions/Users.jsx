@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const GetAllUsers  = async(token)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall`,{
+export const GetAllUsers  = async(token,values)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall?searchName=${values}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }

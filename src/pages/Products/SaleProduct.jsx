@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import HistoryProduct from "./HistoryProduct";
 import CartProduct from "./CartProduct";
 import CardProduct from "../../components/CardProduct";
-
+import PaginationComponent from "../../components/PaginationComponent";
 const initialValue = {
   productType: "",
   maxPrice: "",
@@ -36,9 +36,8 @@ const SaleProduct = () => {
   const [isActiveDropdownType, setIsActiveDropdownType] = useState(false);
   const [isActiveDropdownPrice, setIsActiveDropdownPrice] = useState(false);
   const [count, setCount] = useState("");
-  const [allPages, setAllPages] = useState("");
-  const [pageSize, setPageSize] = useState(27);
-  const [pages, setPages] = useState("");
+  const [pageSize, setPageSize] = useState(24);
+  const [pages, setPages] = useState(1);
   const [productsEmpty, setProductsEmpty] = useState("");
   const [visible, setVisible] = useState(27);
 
@@ -55,7 +54,7 @@ const SaleProduct = () => {
   };
 
   // ===========pagination antd =============
-  const indexOfLastPages = pages + pageSize;
+  const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = product.slice(indexOfFirstPages, indexOfLastPages);
   // ================ end pagination antd ===========
@@ -305,9 +304,9 @@ const SaleProduct = () => {
           <div className="product-card-content">
             <div className="main-card">
               {
-                // currentPages && currentPages.map((items, idx) =>
-                product &&
-                  product.slice(0, visible).map((items, idx) => (
+                // product &&
+                //   product.slice(0, visible).map((items, idx) => 
+                currentPages && currentPages.map((items, idx) =>(
                     <>
                       <CardProduct ordersId={items._id}  items={items} idx={idx} formatPrice={formatPrice} />
                     </>
@@ -315,7 +314,7 @@ const SaleProduct = () => {
               }
             </div>
 
-            {product.length > 0 ? (
+            {/* {product.length > 0 ? (
               <>
                 {visible >= count ? (
                   ""
@@ -345,7 +344,7 @@ const SaleProduct = () => {
                   </div>
                 </Empty>
               </div>
-            )}
+            )} */}
           </div>
         </>
       )}
@@ -355,6 +354,15 @@ const SaleProduct = () => {
             <button type="button">ກັບໜ້າຫຼັກ</button>
           </Link>
         </div>
+        <div className="pagination">
+                <PaginationComponent 
+                 count={count}
+                 setPageSize={setPageSize}
+                 pageSize={pageSize}
+                 setPages={setPages}
+                 pages={pages}
+                />
+          </div>
       </div>
     </div>
   );

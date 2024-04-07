@@ -5,8 +5,8 @@ export const GetRootLineWork = async(token)=>{
         headers:{Authorization: `Bearer ${token}`}
     })
 }
-export const GetLineWorkTable = async(token)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/linework/getall`,{
+export const GetLineWorkTable = async(token,searchName)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/linework/getall?searchName=${searchName}`,{
         headers:{Authorization: `Bearer ${token}`}
     })
 }

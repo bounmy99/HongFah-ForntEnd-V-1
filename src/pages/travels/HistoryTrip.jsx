@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Button } from "antd";
+import { Empty,Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import {
@@ -190,9 +190,9 @@ const HistoryTrip = () => {
                     trip.map((item, idx) => (
                       <div className="cards" key={idx}>
                         {item.cover && item.cover ? (
-                          <img src={item.cover} alt={item.name} />
+                          <Image style={{height:"14rem"}} src={item.cover} alt={item.name} />
                         ) : (
-                          <img src={ImageTravel} alt={item.name} />
+                          <Image style={{height:"14rem"}} src={ImageTravel} alt={item.name} />
                         )}
                         <div className="cards-title">
                           <span className="text-right">{item.name}</span>

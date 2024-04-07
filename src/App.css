@@ -1884,14 +1884,15 @@ body {
   height: 27rem;
   width: 97.5%;
   margin: 0px 15px;
-  overflow: auto;
-
+  overflow: hidden;
+}
+.Product-card .product-card-content:hover{
+  overflow-y: auto;
 }
 
 .Product-card .product-card-content .main-card {
   display: flex;
   align-items: center;
-  /* justify-content: center; */
   gap: .3rem .3rem;
   flex-wrap: wrap;
   margin-bottom: 1rem;
@@ -1899,7 +1900,6 @@ body {
 
 .Product-card .product-card-content .content {
   margin-top: 10px;
-  width: 7rem;
   width: calc(100% - 88%);
   height: 8rem;
   border-radius: 0.6rem;
@@ -1907,12 +1907,18 @@ body {
   border: 1px solid #E0E2E7;
   box-shadow: 0px 1.5px 2px 0px rgba(16, 24, 40, 0.10);
   position: relative;
+  transition: opacity 0.6s ease;
 }
+
 
 .Product-card .product-card-content .images img {
   width: 100%;
   height: 5rem;
   border-radius: .4rem .4rem 0 0;
+}
+
+.Product-card .product-card-content .images img:hover {
+  opacity: 0.4;
 }
 
 .Product-card .product-card-content .content .point {
@@ -2516,10 +2522,10 @@ body {
   border: none;
   outline: none;
   color: #008BCB;
-  width: 11rem;
+  width: 15rem;
   font-weight: bold;
   font-size: 15px;
-  padding-left: 4rem;
+  padding-left: 6.5rem;
   z-index: 1000;
 }
 
@@ -2554,7 +2560,7 @@ body {
   display: flex;
   align-items: center;
   top: 11px;
-  left: 9rem;
+  left: 13rem;
   font-size: 20px;
 }
 
@@ -5095,6 +5101,8 @@ body {
   width: 60px;
   height: 60px;
   mix-blend-mode: multiply;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .position-details {
@@ -5241,6 +5249,21 @@ body {
 .withdraw-table .withdraw-card-header .input-search {
   position: relative;
 }
+.withdraw-table .withdraw-card-header .btn-search button {
+  cursor: pointer;
+  padding: 9px;
+  border-radius: 0.625rem;
+  background: #008BCB;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  width: 7rem;
+  font-weight: bold;
+  font-size: 15px;
+}
+.withdraw-table .withdraw-card-header .btn-search button:hover {
+  background: #00A4CD;
+}
 
 .withdraw-table .withdraw-card-header .input-search input {
   border-radius: 0.5rem;
@@ -5381,10 +5404,6 @@ body {
 .withdraw-filter-btn i {
   font-size: 20px;
   transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
 }
 
 .withdraw-filter-btn.active i {
@@ -7158,11 +7177,12 @@ body {
 
   .Product-card {
     width: 42.5rem;
-    height: 40rem;
+    height: 100vh;
   }
 
   .Product-card .product-card-header {
     width: 42.5rem;
+
   }
 
   .Product-card .product-card-header .search {
@@ -7341,7 +7361,7 @@ body {
     width: 20rem;
   }
 
-  .cards img {
+  .cards .images-trip {
     width: 18.2rem;
   }
 

@@ -8,26 +8,20 @@ import { Empty, Flex, Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../components/DataTable";
-import { GetAllUsers,ResetPassword,DeleteUsers } from "../../functions/Users";
-import noImage from "../../assets/image/no-image.png"
+import { GetAllUsers, ResetPassword, DeleteUsers } from "../../functions/Users";
+import noImage from "../../assets/image/no-image.png";
 
 const ListWithdrawAwait = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { users } = useSelector((state) => ({ ...state }));
-  const [startDate, setStartDate] = useState(new Date());
-  const [isActiveDropdownFilter, setIsActiveDropdownFilter] = useState(false);
-  const [selected, setSelected] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingAwait, setLoadingAwait] = useState(false);
-  const [image, setImage] = useState(null);
-  const [fileName, setFileName] = useState("");
   const [withDraw, setWithDraw] = useState([]);
   const [infoWithDraw, setinfoWithDraw] = useState([]);
   const [withdrawEmpty, setWithWrawEmpty] = useState(null);
-
-  // const DataFilter = [15000, 30000, 50000, 100000];
+  const [valueSearch, setValueSearch] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -35,9 +29,9 @@ const ListWithdrawAwait = () => {
   }, []);
 
   const loadData = () => {
-    GetAllUsers(users.token)
+  
+    GetAllUsers(users.token,"")
       .then((res) => {
-        console.log(res.data)
         setWithDraw(res.data.data);
         setLoading(false);
       })
@@ -58,7 +52,7 @@ const ListWithdrawAwait = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -69,18 +63,6 @@ const ListWithdrawAwait = () => {
         setLoading(false);
       });
   };
-
-  // const handleClickOpenDrop = () => {
-  //   setIsActiveDropdownFilter(
-  //     (isActiveDropdownFilter) => !isActiveDropdownFilter
-  //   );
-  // };
-  // let openDrop = isActiveDropdownFilter ? "active" : "";
-
-  // const handleClick = (e) => {
-  //   setSelected(e.target.textContent);
-  //   setIsActiveDropdownFilter(false);
-  // };
 
   const handleModal = () => {
     setOpenModal(true);
@@ -133,7 +115,6 @@ const ListWithdrawAwait = () => {
             icon: "success",
             title: "ອັບເດດລະຫັດຜ່ານສຳເລັດ",
           });
-          setImage("");
           loadData();
           setLoadingAwait(false);
           setOpenModal(false);
@@ -165,7 +146,6 @@ const ListWithdrawAwait = () => {
   const handleModalCancel = () => {
     setOpenModal(false);
     setFormType(true);
-    setImage("");
     setinfoWithDraw([]);
   };
 
@@ -209,10 +189,7 @@ const ListWithdrawAwait = () => {
     });
   };
 
-
   let openModals = openModal ? "open" : "";
-
-
   const customStyles = {
     rows: {
       style: {
@@ -239,15 +216,18 @@ const ListWithdrawAwait = () => {
       },
     },
   };
-
   const columns = [
     {
       name: "ຮູບພາບ",
       cell: (row) => (
-        <div className="images-users"> 
+        <div className="images-users">
           <Tooltip title="ກົດເພື່ອເບິ່ງລະອຽດ" color="#00A5E8">
             <Link to={`/users/detail/${row._id}`}>
-                {row.profile ?<img src={row.profile} alt={row.userCode} /> :<img src={noImage} alt={row.userCode} />}
+              {row.profile ? (
+                <img src={row.profile} alt={row.userCode} />
+              ) : (
+                <img src={noImage} alt={row.userCode} />
+              )}
             </Link>
           </Tooltip>
         </div>
@@ -266,7 +246,7 @@ const ListWithdrawAwait = () => {
       name: "ຊື່ແລະນາມສະກຸນ",
       cell: (row) => (
         <div>
-            <p className="posit-gold">{`${row.firstName} ${row.lastName}`}</p>
+          <p className="posit-gold">{`${row.firstName} ${row.lastName}`}</p>
         </div>
       ),
       sortable: true,
@@ -284,7 +264,10 @@ const ListWithdrawAwait = () => {
     {
       name: "ທີ່ຢູ່",
       cell: (row) => (
-        <p className="posit-text-acount-name">{row.address && `${row.address.village}, ${row.address.district}, ${row.address.province}`}</p>
+        <p className="posit-text-acount-name">
+          {row.address &&
+            `${row.address.village}, ${row.address.district}, ${row.address.province}`}
+        </p>
       ),
       sortable: true,
       width: "210px",
@@ -293,58 +276,76 @@ const ListWithdrawAwait = () => {
       name: "ສະຖານະ",
       sortable: true,
       selector: (row) => row.role,
-      cell: (row) => (<p>{row.role}</p>),
-      width: "180px",
+      cell: (row) => <p>{row.role}</p>,
+      width: "100px",
     },
     {
       name: "ຈັດການ",
       cell: (row) => (
-            <>
-              <button
-                style={{width:"50px", height:"30px", margin:"5px"}}
-                className="btn-success"
-                onClick={() => handleModal(row._id)}
-              >
-                ແກ້ໄຂ
-              </button>
-              <button
-                style={{width:"50px", height:"30px", margin:"5px"}}
-                className="btn-danger"
-                onClick={() => handleDelete(row._id)}
-              >
-                ລົບ
-              </button>
-            </>
+        <>
+          <button
+            style={{ width: "50px", height: "30px", margin: "5px" }}
+            className="btn-success"
+            onClick={() => handleModal(row._id)}
+          >
+            ແກ້ໄຂ
+          </button>
+          <button
+            style={{ width: "50px", height: "30px", margin: "5px" }}
+            className="btn-danger"
+            onClick={() => handleDelete(row._id)}
+          >
+            ລົບ
+          </button>
+        </>
       ),
       width: "180px",
     },
   ];
 
-  // const handleExport = () => {
-  //   const heading = [
-  //     [
-  //       "ລະຫັດສະມາຊິກ",
-  //       "ຕຳແໜ່ງ",
-  //       "ບັນຊີ",
-  //       "ຊື່ບັນຊີ",
-  //       "ເລກບັນຊີທະນາຄານ",
-  //       "ເງິນທີ່ຖອນ",
-  //       "ວັນທີຮ້ອງຂໍ",
-  //       "ສະຖານະ",
-  //     ],
-  //   ];
-  //   const wb = utils.book_new();
-  //   const ws = utils.json_to_sheet([]);
-  //   utils.sheet_add_aoa(ws, heading);
-  //   utils.sheet_add_json(ws, withDraw, { origin: "A4", skipHeader: true });
-  //   utils.book_append_sheet(wb, ws, "ການຖອນເງິນ");
-  //   writeFileXLSX(wb, "ການຖອນເງິນ.xlsx");
-  // };
-
-  const handleChange = (e) => {
+  const Search = (e) => {
     setinfoWithDraw({ ...infoWithDraw, [e.target.name]: e.target.value });
   };
   // console.log("file", infoWithDraw)
+
+  const handleChangeSearch = (e) => {
+    setValueSearch(e.target.value);
+  };
+  const handleClickSearch = ()=>{
+    GetAllUsers(users.token,valueSearch)
+      .then((res) => {
+        console.log(res.data);
+        setWithDraw(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setWithWrawEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+        setLoading(false);
+      });
+  }
 
   return (
     <div className="card-main">
@@ -357,7 +358,8 @@ const ListWithdrawAwait = () => {
             }}
             description={
               <span>
-                <a>ກຳລັງໂຫຼດ....</a><Spin/>
+                <a>ກຳລັງໂຫຼດ....</a>
+                <Spin />
               </span>
             }
           ></Empty>
@@ -371,6 +373,7 @@ const ListWithdrawAwait = () => {
                   <input
                     type="text"
                     placeholder="ຄົ້າຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                    onChange={handleChangeSearch}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -397,62 +400,12 @@ const ListWithdrawAwait = () => {
                     ></line>
                   </svg>
                 </div>
-              </div>
-              {/* <div class="button">
-                <div className="datepicker">
-                  <i className="bx bx-calendar icons-left"></i>
-                  <span className="text-date">ວັນທີ</span>
-                  <DatePicker
-                    className="btn-datepicker"
-                    selected={startDate}
-                    onChange={(date) => {
-                      setStartDate(date);
-                      setIsActiveDropdownFilter(false);
-                    }}
-                  />
-                  <i className="bx bx-chevron-down icons-right"></i>
-                </div>
-                <div className="withdraw-filter">
-                  <div className="withdraw-filter-menu">
-                    <div
-                      className={`withdraw-filter-btn ${openDrop}`}
-                      onClick={handleClickOpenDrop}
-                    >
-                      <i className="bx bx-filter"></i>{" "}
-                      {selected ? (
-                        <span className="sBtn-text">{selected}</span>
-                      ) : (
-                        <span className="sBtn-text">ຕົວກອງ</span>
-                      )}
-                      <i className="bx bx-chevron-down"></i>
-                    </div>
-                    {isActiveDropdownFilter && (
-                      <ul className="options-withdraw-filter">
-                        {DataFilter.map((item, idx) => (
-                          <li
-                            className="option-withdraw-filter"
-                            key={idx}
-                            onClick={handleClick}
-                          >
-                            <span className="option-withdraw-filter-text">
-                              {item}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <button
-                    className="btn-show"
-                    type="button"
-                    onClick={handleExport}
-                  >
-                    <i class="bx bxs-file-export bx-rotate-90"></i> ນຳອອກຂໍ້ມູນ
+                <div className="btn-search">
+                  <button type="button" onClick={handleClickSearch}>
+                    ຄົ້ນຫາ
                   </button>
                 </div>
-              </div> */}
+              </div>
             </div>
             {withdrawEmpty ? (
               <div className="empty-card">
@@ -496,7 +449,7 @@ const ListWithdrawAwait = () => {
                         type="text"
                         name="userCode"
                         className="form-modal-control-withdraw"
-                        onChange={handleChange}
+                        onChange={Search}
                       />
                     </div>
                     <div className="input-group-withdraw">
@@ -505,7 +458,7 @@ const ListWithdrawAwait = () => {
                         type="password"
                         name="newPassword"
                         className="form-modal-control-withdraw"
-                        onChange={handleChange}
+                        onChange={Search}
                       />
                     </div>
                   </div>

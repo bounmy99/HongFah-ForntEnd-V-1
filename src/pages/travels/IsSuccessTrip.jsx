@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Button } from "antd";
+import { Empty, Modal, Button,Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import {
@@ -119,45 +119,6 @@ const IsSuccessTrip = () => {
     width: 315,
   };
 
-  // const handleDelete = (id) => {
-  //   Swal.fire({
-  //     title: "ທ່ານຕ້ອງການລົບແທ້ບໍ່",
-  //     text: "ຖ້າທ່ານລົບໄປແລ້ວບໍ່ສາມາດກູ້ຄືນໄດ້ອີກ!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "ຢືນຢັນ",
-  //     cancelButtonText: "ຍົກເລິກ",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       DeleteTrip(users.token, id)
-  //         .then((res) => {
-  //           if (res.data.message === "success") {
-  //             const Toast = Swal.mixin({
-  //               toast: true,
-  //               position: "top-end",
-  //               showConfirmButton: false,
-  //               timer: 3000,
-  //               timerProgressBar: true,
-  //               didOpen: (toast) => {
-  //                 toast.onmouseenter = Swal.stopTimer;
-  //                 toast.onmouseleave = Swal.resumeTimer;
-  //               },
-  //             });
-  //             Toast.fire({
-  //               icon: "success",
-  //               title: "ລົບສຳເລັດແລ້ວ",
-  //             });
-  //             LoadData();
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log(err.response.data.message);
-  //         });
-  //     }
-  //   });
-  // };
   return (
     <>
       <div className="card-main">
@@ -262,9 +223,9 @@ const IsSuccessTrip = () => {
                     trip.map((item, idx) => (
                       <div className="cards" key={idx}>
                         {item.cover && item.cover ? (
-                          <img src={item.cover} alt={item.name} />
+                          <Image style={{height:"14rem"}} src={item.cover} alt={item.name} />
                         ) : (
-                          <img src={ImageTravel} alt={item.name} />
+                          <Image style={{height:"14rem"}} src={ImageTravel} alt={item.name} />
                         )}
                         <div className="cards-title">
                           <span className="text-right">{item.name}</span>

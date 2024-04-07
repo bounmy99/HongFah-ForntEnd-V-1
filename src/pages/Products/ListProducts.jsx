@@ -7,6 +7,7 @@ import { GetAllProductType } from "../../functions/ProductType";
 import LoadingCard from "../../components/LoadingCard";
 import InputSearch from "../../components/InputSearch";
 import { useSelector, useDispatch } from "react-redux";
+import Swal from 'sweetalert2';
 import PaginationComponent from "../../components/PaginationComponent";
 const initialValue = {
   productType: "",
@@ -32,9 +33,8 @@ const ListProducts = () => {
   const [isActiveDropdownType, setIsActiveDropdownType] = useState(false);
   const [isActiveDropdownPrice, setIsActiveDropdownPrice] = useState(false);
   const [count, setCount] = useState("");
-  const [allPages, setAllPages] = useState("");
-  const [pageSize, setPageSize] = useState(27);
-  const [pages, setPages] = useState("");
+  const [pageSize, setPageSize] = useState(24);
+  const [pages, setPages] = useState(1);
   const [productsEmpty, setProductsEmpty] = useState("");
   const [visible, setVisible] = useState(27);
 
@@ -47,7 +47,7 @@ const ListProducts = () => {
   };
 
   // ===========pagination antd =============
-  const indexOfLastPages = pages + pageSize;
+  const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = product.slice(indexOfFirstPages, indexOfLastPages);
   // ================ end pagination antd ===========
@@ -63,8 +63,7 @@ const ListProducts = () => {
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
-        setAllPages(res.data.allPage);
-        setPages(res.data.page);
+
         console.log("Product API", res.data);
         setLoading(false);
       })
@@ -98,7 +97,6 @@ const ListProducts = () => {
   const loadAllProductType = () => {
     GetAllProductType(users.token).then((res) => {
       setProductTypes(res.data.data);
-      // console.log("ProductType", res.data)
     });
   };
   const handleClickOpenType = () => {
@@ -145,15 +143,36 @@ const ListProducts = () => {
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
-        setAllPages(res.data.allPage);
-        setPages(res.data.page);
+
         console.log("Product API", res.data);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err.response.data);
         setProductsEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
       });
   };
 
@@ -165,8 +184,6 @@ const ListProducts = () => {
     GetAllProduct(users.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
-      setAllPages(res.data.allPage);
-      setPages(res.data.page);
       console.log("Product API", res.data);
       setProductsEmpty("");
       setSearch("");
@@ -295,9 +312,10 @@ const ListProducts = () => {
               <div className="product-card-content">
                 <div className="main-card">
                   {
-                    // currentPages && currentPages.map((items, idx) =>
-                    product &&
-                      product.slice(0, visible).map((items, idx) => (
+                    
+                    // product &&
+                    //   product.slice(0, visible).map((items, idx) => (
+                      currentPages && currentPages.map((items, idx) => (
                         <>
                           <div className="content" key={idx}>
                             <div className="point">{items.point} PV</div>
@@ -329,7 +347,7 @@ const ListProducts = () => {
                   }
                 </div>
 
-                {product.length > 0 ? (
+                {/* {product.length > 0 ? (
                   <>
                     {visible >= count ? (
                       ""
@@ -359,7 +377,7 @@ const ListProducts = () => {
                       </div>
                     </Empty>
                   </div>
-                )}
+                )} */}
               </div>
             </>
           )}
@@ -369,6 +387,15 @@ const ListProducts = () => {
                 <button type="button">ເພີ່ມສິນຄ້າໃໝ່</button>
                 <img src={icons} alt="" />
               </Link>
+            </div>
+            <div className="pagination">
+                <PaginationComponent 
+                 count={count}
+                 setPageSize={setPageSize}
+                 pageSize={pageSize}
+                 setPages={setPages}
+                 pages={pages}
+                />
             </div>
             <div className="pagination">
               <button className="btn-show-more" onClick={()=>navigate("/listProducts/saleProducts")}>ຂາຍສິນຄ້າ</button> 

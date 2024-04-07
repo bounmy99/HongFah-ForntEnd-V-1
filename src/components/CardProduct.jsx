@@ -53,7 +53,7 @@ const CardProduct = ({ ordersId, items, idx, formatPrice }) => {
   };
 
   return (
-    <div>
+    <>
       <div className="content" key={idx}>
         <div className="point">{items.point} PV</div>
         <div className="card-content">
@@ -82,7 +82,7 @@ const CardProduct = ({ ordersId, items, idx, formatPrice }) => {
           </Tooltip>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

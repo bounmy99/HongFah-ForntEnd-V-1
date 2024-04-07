@@ -139,10 +139,11 @@ const ListEmployee = () => {
   const { state } = useLocation();
   const [countNode,setCountNode] = useState([])
   const [positionCount,setPositionCount] = useState()
+  const [valueSearch, setValueSearch] = useState("")
 
   useEffect(() => {
     setLoading(true)
-    GetLineWorkTable(users.token).then(res => {
+    GetLineWorkTable(users.token,"").then(res => {
       setLoading(false)
       setEmployee(res.data.data)
     }).catch(err => {
@@ -210,6 +211,44 @@ const ListEmployee = () => {
       setChang(state.key)
     }
   }, []);
+
+  const handleChangeSearch = (e)=>{
+    setValueSearch(e.target.value)
+  }
+ 
+  const handleClickSearch = ()=>{
+    setLoading(true)
+    GetLineWorkTable(users.token,valueSearch).then(res => {
+      setLoading(false)
+      setEmployee(res.data.data)
+    }).catch(err => {
+      setLoading(false)
+      setLineWorkEmpty(err.response.data.message);
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: err.response.data.message,
+      });
+      
+      if (err.response.data.message === "unauthorized") {
+        dispatch({
+          type: "USER_LOGOUT",
+          payload: null,
+        });
+        navigate("/");
+      }
+    })
+  }
 
   return (
     <>
@@ -365,11 +404,11 @@ const ListEmployee = () => {
                 </svg>
               </div>
               <div className="input-search">
-                <input type="text" placeholder="ຄົ້າຫາລາຍການສິນຄ້າ" />
+                <input type="search" onChange={handleChangeSearch}  placeholder="ຄົ້າຫາລາຍການສິນຄ້າ" />
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none"><circle cx="7.27273" cy="7.27273" r="6.27273" stroke="#00A5E8" strokeWidth="2"></circle><line x1="14.5858" y1="16" x2="11.6364" y2="13.0506" stroke="#00A5E8" strokeWidth="2" strokeLinecap="round"></line></svg>
               </div>
               <div className="btn-search">
-                <button type="button">ຄົ້ນຫາ</button>
+                <button type="button" onClick={handleClickSearch}>ຄົ້ນຫາ</button>
               </div>
             </div>
           </div>
