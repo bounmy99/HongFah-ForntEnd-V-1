@@ -2,24 +2,32 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import MaintainFalse from "./MaintainFalse";
 import MaintainTrue from "./MaintainTrue";
-import { Paybonus,Deletebonus } from "../../functions/Bonus";
+import { Paybonus, Deletebonus } from "../../functions/Bonus";
 import { read, writeFileXLSX, utils } from "xlsx";
 import { useSelector } from "react-redux";
-
+import {useNavigate} from "react-router-dom"
 const ListTotalSales = () => {
+  const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
   const [tablechange, setTableChange] = useState("");
   const [selectableRow, setSelectableRow] = useState([]);
   const [hiddenBtn, setHiddenBtn] = useState(false);
+  const [valueInput,setValueInput] = useState("")
+
 
   useEffect(() => {
     setTableChange(1);
   }, []);
 
-  const user_id = selectableRow.map((item) => item._id);
+  // set value input
+  const handleChage = (e)=>{
+    setValueInput(e.target.value)
+  }
 
+  const user_id = selectableRow.map((item) => item._id); // loop id 
+  
+  // function export to excels
   const handleExport = () => {
-    // console.log("selectableRow", selectableRow);
     Swal.fire({
       title: "ເເຈ້ງເຕືອນ",
       text: `ທ່ານຕ້ອງການ Export ເປັນ Excel ບໍ່`,
@@ -44,31 +52,36 @@ const ListTotalSales = () => {
             "ຕຳແໜ່ງ",
             "ລະຫັດ ID",
             "ລູກທີມ",
-            "ຮັກສາຍອດ",
             "ຄະແນນ",
+            "ຮັກສາຍອດ",
             "ຄະແນນທີມ",
-            "ເງິນທອນ"
+            "ເງິນທອນ",
+            "ໂບນັດທີມ",
+            "ຄ່າແນະນຳ",
+            "ໂບນັດລວມ",
+            "ໂບນັດຄະແນນ",
           ],
         ];
         const wb = utils.book_new();
         const ws = utils.json_to_sheet([]);
         utils.sheet_add_aoa(ws, heading);
-        utils.sheet_add_json(ws, selectableRow, { origin: "A2", skipHeader: true });
+        utils.sheet_add_json(ws, selectableRow, {
+          origin: "A2",
+          skipHeader: true,
+        });
         utils.book_append_sheet(wb, ws, "ການເຄື່ອນໄຫວ");
         writeFileXLSX(wb, "History.xlsx");
       } else {
         window.location.reload();
       }
     });
-   
   };
-
- 
-
+  // set value status click to show other pages
   const handleClick = (e) => {
     setTableChange(e);
   };
 
+  // delete all Maintain False
   const handleDelete = () => {
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
@@ -107,7 +120,7 @@ const ListTotalSales = () => {
               icon: "warning",
               title: err.response.data.message,
             });
-            
+
             if (err.response.data.message === "unauthorized") {
               dispatch({
                 type: "USER_LOGOUT",
@@ -122,6 +135,8 @@ const ListTotalSales = () => {
       }
     });
   };
+
+  // function transection bonus
   const handleClickTran = () => {
     Swal.fire({
       title: "ຢືນຢັນການຈ່າຍໂບນັດ",
@@ -134,20 +149,52 @@ const ListTotalSales = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
-        Paybonus(users.token, user_id)
-          .then((res) => {
-            Swal.fire({
-              title: "ສຳເລັດ",
-              text: "ການຈ່າຍໂບນັດສຳເລັດແລ້ວ.",
-              icon: "success",
-              confirmButtonText: "ຕົກລົງ",
-            });
-            window.location.reload();
+        
+        Paybonus(users.token, user_id).then((res) => {
+            if (res.data.message === "success") {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "success",
+                title: "ການຈ່າຍໂບນັດສຳເລັດແລ້ວ",
+              });
+              navigate("/Bonus/history")
+            }
           })
           .catch((err) => {
-            console.log(err);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+
+            if (err.response.data.message === "unauthorized") {
+              dispatch({
+                type: "USER_LOGOUT",
+                payload: null,
+              });
+              navigate("/");
+            }
           });
-        navigate("/homeSales");
       } else {
         window.location.reload();
       }
@@ -180,15 +227,14 @@ const ListTotalSales = () => {
             <div class="btn-show">
               {tablechange === 2 ? (
                 selectableRow.length ? (
-<>
-                  <button type="button" class={`btn`} onClick={handleDelete}>
-                    ລົບຂໍ້ມູນ
-                  </button>
-                </>
+                  <>
+                    <button type="button" class={`btn`} onClick={handleDelete}>
+                      ລົບຂໍ້ມູນ
+                    </button>
+                  </>
                 ) : (
-                    ""
+                  ""
                 )
-                
               ) : (
                 <>
                   {selectableRow.length ? (
@@ -247,7 +293,7 @@ const ListTotalSales = () => {
               </svg>
             </div>
             <div class="input-search">
-              <input type="text" placeholder="ຄົ້າຫາ" />
+              <input type="text" placeholder="ຄົ້າຫາ" onChange={handleChage} />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -280,14 +326,10 @@ const ListTotalSales = () => {
         </div>
         <>
           {tablechange === 1 && (
-            <MaintainTrue
-              setSelectableRow={setSelectableRow}
-            />
+            <MaintainTrue valueInput={valueInput} setSelectableRow={setSelectableRow} />
           )}
           {tablechange === 2 && (
-            <MaintainFalse
-              setSelectableRow={setSelectableRow}
-            />
+            <MaintainFalse valueInput={valueInput} setSelectableRow={setSelectableRow} />
           )}
         </>
       </div>

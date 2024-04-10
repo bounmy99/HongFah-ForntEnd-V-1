@@ -12,7 +12,7 @@ import Swal from "sweetalert2";
 import { Button, Tooltip, Empty, Spin } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import PaginationComponent from "../../components/PaginationComponent"
+import PaginationComponent from "../../components/PaginationComponent";
 
 const Auth = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -21,22 +21,24 @@ const Auth = () => {
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChangeRole, setLoadingChangeRole] = useState(false);
-  const [visible, setVisible] = useState(6);
   const [count, setCount] = useState("");
   const [roleList, setRoleList] = useState([]);
   const [authEmpty, setAuthEmpty] = useState("");
-  const [pages,setPages] = useState(1);
-  const [pageSize,setPageSize] = useState(6)
+  const [pages, setPages] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
 
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
 
+// create pagination
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = user.slice(indexOfFirstPages, indexOfLastPages);
 
+
+// load all users
   const loadData = () => {
     GetAllUser(users.token)
       .then((res) => {
@@ -64,7 +66,7 @@ const Auth = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -75,10 +77,7 @@ const Auth = () => {
       });
   };
 
-  const handleShowMore = () => {
-    setVisible((show) => show + 3);
-  };
-
+// change role users
   const handleRoles = (e, id) => {
     setLoadingChangeRole(true);
     e.preventDefault();
@@ -105,6 +104,7 @@ const Auth = () => {
       });
   };
 
+// delete users
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
@@ -137,140 +137,126 @@ const Auth = () => {
   };
 
   return (
-    <Spin spinning={loadingChangeRole} >
-    <div className="card-main">
-      <div className="auth-title">
-        <div className="text-title">
-          <h5>ຄົນທີ່ມີສິດໃນການເຂົ້າເຖິງເວັບແອັດມິນ ຫົງຟ້າ</h5>
+    <Spin spinning={loadingChangeRole}>
+      <div className="card-main">
+        <div className="auth-title">
+          <div className="text-title">
+            <h5>ຄົນທີ່ມີສິດໃນການເຂົ້າເຖິງເວັບແອັດມິນ ຫົງຟ້າ</h5>
+          </div>
+          <div className="btn-add">
+            <Link to={"/auth/addUser"}>
+              <button type="button" className="btn-success">
+                ເພີ່ມໃໝ່
+              </button>
+            </Link>
+          </div>
         </div>
-        <div className="btn-add">
-          <Link to={"/auth/addUser"}>
-            <button type="button" className="btn-success">
-              ເພີ່ມໃໝ່
-            </button>
-          </Link>
-        </div>
-      </div>
 
-      {loading ? (
-        // <Loading paragraph={15}/>
-        <LoadingInfo count={5} />
-      ) : authEmpty ? (
-        <div className="empty-card">
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{
-              height: 60,
-            }}
-            description={
-              <span>
-                <a>{authEmpty}</a>
-              </span>
-            }
-          ></Empty>
-        </div>
-      ) : (
-        <div className="auth-list">
-          <table cellPadding={0} cellSpacing={1}>
-            {/* {user &&
-              user.slice(0, visible).map((u, i) => ( */}
-            {currentPages &&
-              currentPages.map((u, i) => (
-                <tr>
-                  <td>
-                    <Link to={`/auth/EditUser/${u._id}`}>
-                      <Tooltip
-                        placement="topLeft"
-                        color={"#00A5E8"}
-                        title={"ເບິ່ງລາຍລະອຽດ"}
-                      >
-                        <img
-                          src={u.profile}
-                          alt="image"
-                          className="image-auth"
-                        />
-                      </Tooltip>
-                    </Link>
-                    <div className="username">
-                      <h4>{`${u.firstName} ${u.lastName}`}</h4>
-                      <p>
-                        ສິດໃນການອະນຸຍາດ,ລົບສະມາຊິກ,ເພີ່ມເງື່ອນໄຂ,ຈັດການຄະແນນ
-                      </p>
-                    </div>
-                  </td>
-                  <td>{u.phoneNumber}</td>
-                  <td>{u.email}</td>
-                  <td>{u.userCode}</td>
-                  <td>
-                    <select
-                      name="role"
-                      defaultValue={u.role}
-                      className="select-roles"
-                      onChange={(e) => handleRoles(e, u._id)}
-                    >
-                      {roleList.map((role, index) => (
-                        <option value={role} index={index}>
-                          {role}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <div className="btn-auth-action">
+        {loading ? (
+          <LoadingInfo count={5} />
+        ) : authEmpty ? (
+          <div className="empty-card">
+            <Empty
+              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+              imageStyle={{
+                height: 60,
+              }}
+              description={
+                <span>
+                  <a>{authEmpty}</a>
+                </span>
+              }
+            ></Empty>
+          </div>
+        ) : (
+          <div className="auth-list">
+            <table cellPadding={0} cellSpacing={1}>
+              {currentPages &&
+                currentPages.map((u, i) => (
+                  <tr>
+                    <td>
                       <Link to={`/auth/EditUser/${u._id}`}>
                         <Tooltip
-                          placement="top"
+                          placement="topLeft"
                           color={"#00A5E8"}
                           title={"ເບິ່ງລາຍລະອຽດ"}
                         >
-                          <button className="btn-user-detail">
-                            <EyeOutlined />
-                          </button>
+                          <img
+                            src={u.profile}
+                            alt="image"
+                            className="image-auth"
+                          />
                         </Tooltip>
                       </Link>
-
-                      <Tooltip
-                        placement="top"
-                        color={"#00A5E8"}
-                        title={"ລົບຂໍ້ມູນ"}
+                      <div className="username">
+                        <h4>{`${u.firstName} ${u.lastName}`}</h4>
+                        <p>
+                          ສິດໃນການອະນຸຍາດ,ລົບສະມາຊິກ,ເພີ່ມເງື່ອນໄຂ,ຈັດການຄະແນນ
+                        </p>
+                      </div>
+                    </td>
+                    <td>{u.phoneNumber}</td>
+                    <td>{u.email}</td>
+                    <td>{u.userCode}</td>
+                    <td>
+                      <select
+                        name="role"
+                        defaultValue={u.role}
+                        className="select-roles"
+                        onChange={(e) => handleRoles(e, u._id)}
                       >
-                        <button
-                          className="btn-user-delete"
-                          onClick={() => handleDelete(u._id)}
+                        {roleList.map((role, index) => (
+                          <option value={role} index={index}>
+                            {role}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <div className="btn-auth-action">
+                        <Link to={`/auth/EditUser/${u._id}`}>
+                          <Tooltip
+                            placement="top"
+                            color={"#00A5E8"}
+                            title={"ເບິ່ງລາຍລະອຽດ"}
+                          >
+                            <button className="btn-user-detail">
+                              <EyeOutlined />
+                            </button>
+                          </Tooltip>
+                        </Link>
+
+                        <Tooltip
+                          placement="top"
+                          color={"#00A5E8"}
+                          title={"ລົບຂໍ້ມູນ"}
                         >
-                          <DeleteOutlined />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </table>
-          { count > 6 &&
-          <PaginationComponent
-          count={count}
-          setPageSize={setPageSize}
-          pageSize={pageSize}
-          setPages={setPages}
-          pages={pages}
-          />
-          }
-          {/* {user.length > 0 ? (
-            visible >= count ? (
-              ""
-            ) : (
-              <div className="load-more">
-                <button className="btn" onClick={handleShowMore}>
-                  ສະແດງເພີ່ມເຕີມ
-                </button>
+                          <button
+                            className="btn-user-delete"
+                            onClick={() => handleDelete(u._id)}
+                          >
+                            <DeleteOutlined />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </table>
+            {count > 6 && (
+              <div className="pagination-auth">
+                <PaginationComponent
+                  count={count}
+                  setPageSize={setPageSize}
+                  pageSize={pageSize}
+                  setPages={setPages}
+                  pages={pages}
+                />
               </div>
-            )
-          ) : (
-            <h1>ບໍ່ມີຂໍ້ມູນ</h1>
-          )} */}
-        </div>
-      )}
-    </div>
+            )}
+          </div>
+        )}
+      </div>
     </Spin>
   );
 };

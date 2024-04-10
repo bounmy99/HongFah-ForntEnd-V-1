@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import CartTable from "../../components/CartTable";
 import PaginationComponent from "../../components/PaginationComponent";
+import { formatPrice } from "../../functions/FormatPrices";
 const CartProduct = () => {
   const { carts } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -12,29 +13,25 @@ const CartProduct = () => {
   const [pageSize, setPageSize] = useState(3);
   const [pages, setPages] = useState(1);
 
-  console.log("Count", count);
-
+// create pagination
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = carts.slice(indexOfFirstPages, indexOfLastPages);
 
+// function Total price
   const TotalPrice = () => {
     return carts.reduce((currentValue, nexttValue) => {
       return currentValue + nexttValue.qty * nexttValue.price;
     }, 0);
   };
-
+// function Total point
   const TotalPoint = () => {
     return carts.reduce((currentValue, nexttValue) => {
       return currentValue + nexttValue.qty * nexttValue.point;
     }, 0);
   };
 
-  const formatPrice = (value) => {
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
+// function Clear Carts
   const handleClearCart = () => {
     dispatch({
       type: "EMPTY_CART",

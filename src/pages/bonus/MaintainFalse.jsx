@@ -4,12 +4,13 @@ import { Empty,Spin } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GetAllMaintain } from "../../functions/Bonus";
-
+import Swal from "sweetalert2"
+// format price
 const formatPrice = (value) => {
   let val = (value / 1).toFixed(0).replace(",", ".");
   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
-
+// customize style cell of table
 const customStyles = {
   rows: {
     style: {
@@ -36,7 +37,7 @@ const customStyles = {
     },
   },
 };
-
+// columns header of table
 const columns = [
   {
     name: "ໂປຣຟາຍ",
@@ -109,7 +110,7 @@ const columns = [
   },
 ];
 
-const MaintainFalse = ({setSelectableRow }) => {
+const MaintainFalse = ({setSelectableRow,valueInput }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
@@ -120,10 +121,10 @@ const MaintainFalse = ({setSelectableRow }) => {
   useEffect(() => {
     loadData();
   }, []);
-
+// load Maintain False
   const loadData = () => {
     setLoading(true);
-    GetAllMaintain(users.token, "false")
+    GetAllMaintain(users.token, "false", "")
       .then((res) => {
         setMainTain(res.data.data);
         setLoading(false);
@@ -157,7 +158,41 @@ const MaintainFalse = ({setSelectableRow }) => {
       });
   };
 
-
+  useEffect(()=>{
+    setLoading(true);
+    GetAllMaintain(users.token, "false", valueInput)
+      .then((res) => {
+        setMainTain(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setEmptyData(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  },[valueInput])
 
   return (
     <div className="maintain-table">
@@ -201,6 +236,7 @@ const MaintainFalse = ({setSelectableRow }) => {
           selectableRows
           onSelectedRowsChange={(row) => {
             setSelectableRow(row.selectedRows);
+            
           }}
         />
       )}

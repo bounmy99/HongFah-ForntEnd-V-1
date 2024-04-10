@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { read, writeFileXLSX, utils } from "xlsx";
 import { Empty, Flex, Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,32 +10,31 @@ import DataTables from "../../components/DataTable";
 import { GetAllUsers, ResetPassword, DeleteUsers } from "../../functions/Users";
 import noImage from "../../assets/image/no-image.png";
 
-const ListWithdrawAwait = () => {
+const ListUsersAll = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { users } = useSelector((state) => ({ ...state }));
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingAwait, setLoadingAwait] = useState(false);
-  const [withDraw, setWithDraw] = useState([]);
-  const [infoWithDraw, setinfoWithDraw] = useState([]);
-  const [withdrawEmpty, setWithWrawEmpty] = useState(null);
+  const [usersAll, setUsersAll] = useState([]);
+  const [infoUser, setInfoUser] = useState([]);
+  const [userEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
-
+  const [loadingSearch, setLoadingSearch] = useState(false)
+// function forst load when open pages
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
-
+// function load data
   const loadData = () => {
   
-    GetAllUsers(users.token,"")
-      .then((res) => {
-        setWithDraw(res.data.data);
+    GetAllUsers(users.token,"").then((res) => {
+        setUsersAll(res.data.data);
         setLoading(false);
-      })
-      .catch((err) => {
-        setWithWrawEmpty(err.response.data.message);
+      }).catch((err) => {
+        setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -63,10 +61,11 @@ const ListWithdrawAwait = () => {
         setLoading(false);
       });
   };
-
+// function open button
   const handleModal = () => {
     setOpenModal(true);
   };
+// function update password
   const handleSubmit = (e) => {
     setLoadingAwait(true);
     e.preventDefault();
@@ -94,9 +93,6 @@ const ListWithdrawAwait = () => {
     }
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-
-    console.log("Data In form", Data);
-
     ResetPassword(users.token, Data)
       .then((res) => {
         if (res.data.message === "success") {
@@ -142,13 +138,13 @@ const ListWithdrawAwait = () => {
         }
       });
   };
-
+// function cancel button
   const handleModalCancel = () => {
     setOpenModal(false);
     setFormType(true);
-    setinfoWithDraw([]);
+    setInfoUser([]);
   };
-
+// function delete 
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນລົບ",
@@ -190,6 +186,8 @@ const ListWithdrawAwait = () => {
   };
 
   let openModals = openModal ? "open" : "";
+
+// customize style header of table
   const customStyles = {
     rows: {
       style: {
@@ -216,6 +214,8 @@ const ListWithdrawAwait = () => {
       },
     },
   };
+
+// colunms headers of table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -303,23 +303,27 @@ const ListWithdrawAwait = () => {
     },
   ];
 
-  const Search = (e) => {
-    setinfoWithDraw({ ...infoWithDraw, [e.target.name]: e.target.value });
+// set value change passwprd
+  const handleChange = (e) => {
+    setInfoUser({ ...infoUser, [e.target.name]: e.target.value });
   };
-  // console.log("file", infoWithDraw)
 
+  // set value input search
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
+  // function search data
   const handleClickSearch = ()=>{
+    setLoadingSearch(true);
     GetAllUsers(users.token,valueSearch)
       .then((res) => {
-        console.log(res.data);
-        setWithDraw(res.data.data);
+        setLoadingSearch(false);
+        setUsersAll(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setWithWrawEmpty(err.response.data.message);
+        setLoadingSearch(false);
+        setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -349,6 +353,7 @@ const ListWithdrawAwait = () => {
 
   return (
     <div className="card-main">
+      <Spin spinning={loadingSearch} >
       {loading ? (
         <div className="empty-card">
           <Empty
@@ -366,8 +371,8 @@ const ListWithdrawAwait = () => {
         </div>
       ) : (
         <>
-          <div className="withdraw-table">
-            <div className="withdraw-card-header">
+          <div className="user-table">
+            <div className="user-card-header">
               <div className="search">
                 <div className="input-search">
                   <input
@@ -407,72 +412,59 @@ const ListWithdrawAwait = () => {
                 </div>
               </div>
             </div>
-            {withdrawEmpty ? (
-              <div className="empty-card">
-                <Empty
-                  image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                  imageStyle={{
-                    height: 60,
-                  }}
-                  description={
-                    <span>
-                      <a>{withdrawEmpty}</a>
-                    </span>
-                  }
-                ></Empty>
-              </div>
-            ) : (
+            {
               <DataTables
                 columns={columns}
-                data={withDraw}
+                data={usersAll}
                 customStyles={customStyles}
+                userEmpty={userEmpty}
               />
-            )}
+            }
           </div>
         </>
       )}
-
+</Spin>
       {/* ================================Modal============================= */}
-      <div className={`modal-withdraw ${openModals}`}>
-        <div className="modal-withdraw-card Card">
+      <div className={`modal-user ${openModals}`}>
+        <div className="modal-user-card Card">
           <form onSubmit={handleSubmit}>
-            <div className="modal-withdraw-card-content">
-              <div className="modal-input-withdraw">
-                <div className="modal-withdraw-input">
-                  <div className="withdraw-title">
+            <div className="modal-user-card-content">
+              <div className="modal-input-user">
+                <div className="modal-user-input">
+                  <div className="user-title">
                     <h3>Reset Password</h3>
                   </div>
-                  <div className="modal-withdraw-form-group">
-                    <div className="input-group-withdraw">
+                  <div className="modal-user-form-group">
+                    <div className="input-group-user">
                       <label htmlFor="">ລະຫັດສະມາຊິກ</label>
                       <input
                         type="text"
                         name="userCode"
-                        className="form-modal-control-withdraw"
-                        onChange={Search}
+                        className="form-modal-control-user"
+                        onChange={handleChange}
                       />
                     </div>
-                    <div className="input-group-withdraw">
+                    <div className="input-group-user">
                       <label htmlFor="">ລະຫັດຜ່ານ</label>
                       <input
                         type="password"
                         name="newPassword"
-                        className="form-modal-control-withdraw"
-                        onChange={Search}
+                        className="form-modal-control-user"
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="modals-withdraw-btn">
+              <div className="modals-user-btn">
                 <button
                   type="button"
-                  className="modal-withdraw-btn btn-secondary"
+                  className="modal-user-btn btn-secondary"
                   onClick={handleModalCancel}
                 >
                   ຍົກເລີກ
                 </button>
-                <button type="submit" className="modal-withdraw-btn btn-info">
+                <button type="submit" className="modal-user-btn btn-info">
                   {loadingAwait ? (
                     <>
                       <span>ກຳລັງ....</span>
@@ -501,4 +493,4 @@ const ListWithdrawAwait = () => {
   );
 };
 
-export default ListWithdrawAwait;
+export default ListUsersAll;

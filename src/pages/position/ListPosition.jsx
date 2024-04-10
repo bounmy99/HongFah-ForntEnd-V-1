@@ -48,6 +48,7 @@ const ListPosition = () => {
     loadPosition();
   }, []);
 
+// load all position
   const loadPosition = () => {
     setLoading(true);
     GetAllPosition(users.token)
@@ -84,15 +85,17 @@ const ListPosition = () => {
         }
       });
   };
+
+// open add modal position
   const handleModal = () => {
     setOpenModal(true);
   };
+
+// set value 
   const handleChange = (e) => {
     setPositionEdit({ ...positionEdit, [e.target.name]: e.target.value });
-    console.log(e.target.value);
-    console.log(e.target.name);
   };
-
+// inset and update
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoadSave(true);
@@ -121,8 +124,6 @@ const ListPosition = () => {
     }
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-
-    console.log("Data In form", Data);
 
     // Chaeck before Save and Update
     positionEdit && positionEdit._id
@@ -229,9 +230,9 @@ const ListPosition = () => {
     setImage("");
   };
 
+// open edit modal position
   const handleModalEdit = (id) => {
     setOpenModal(true);
-    // dispatch(editData(users.token,id))
     GetOnePosition(users.token, id)
       .then((res) => {
         setPositionEdit({ ...positionEdit, ...res.data.data });
@@ -241,16 +242,15 @@ const ListPosition = () => {
       });
   };
 
-  console.log("Current Position", positionEdit);
-
+// cancel button
   const handleModalCancel = () => {
     setOpenModal(false);
     setImage("");
     setPositionEdit([]);
-    // window.location.reload();
   };
   let openModals = openModal ? "open" : "";
 
+// delete position
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
@@ -281,6 +281,8 @@ const ListPosition = () => {
       }
     });
   };
+
+// show more position
   const handleShowMore = () => {
     setVisible((show) => show + 7);
   };

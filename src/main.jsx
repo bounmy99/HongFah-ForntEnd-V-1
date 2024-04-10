@@ -5,11 +5,9 @@ import App from './App.jsx'
 
 //Redux
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import { thunk } from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension'
+import { createStore } from 'redux';
 import rootReducer from './components/redux/index.jsx';
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer);
 import 'boxicons/css/boxicons.min.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
  

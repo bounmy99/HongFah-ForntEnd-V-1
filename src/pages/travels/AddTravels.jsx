@@ -13,11 +13,11 @@ const AddTravels = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
 
+  // set value trip
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value })
   }
-  console.log(value);
-
+  //  insert trip
   const handleSubmit = (e) => {
     setLoading(true)
     e.preventDefault();
@@ -98,6 +98,7 @@ const AddTravels = () => {
       return;
     })
   }
+
   return (
     <div className="card-main">
       <Spin spinning={loading}> 

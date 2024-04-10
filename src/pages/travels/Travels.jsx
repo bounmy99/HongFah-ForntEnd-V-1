@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Spin, Tabs,Image } from "antd";
+import { Empty, Modal, Spin, Tabs, Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import {
@@ -15,6 +15,7 @@ import {
 import HistoryTrip from "./HistoryTrip";
 import IsSuccessTrip from "./IsSuccessTrip";
 import UploadImage from "../../components/UploadImage";
+import PaginationComponent from "../../components/PaginationComponent";
 const Travels = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -23,17 +24,20 @@ const Travels = () => {
   const [trip, setTrip] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingInsert, setLoadingInsert] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState("");
   const [tripEmpty, setTripEmpty] = useState("");
   const [key, setKey] = useState("");
-
-  console.log("State", state);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [tripId, setTripId] = useState();
   const [fileItem, setFileItem] = useState([]);
+  const [valueInput, setValueInput] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [count, setCount] = useState("");
+  const [pageSize, setPageSize] = useState(4);
+  const [pages, setPages] = useState(1);
 
+  // function first load when open page
   useEffect(() => {
     LoadData();
     setKey("1");
@@ -42,29 +46,70 @@ const Travels = () => {
     }
   }, []);
 
+// function load data
+  const LoadData = () => {
+    setLoading(true);
+    GetAllTrip(users.token, "")
+      .then((res) => {
+        setLoading(false);
+        setTrip(res.data.data);
+        setCount(res.data.data.length);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setTripEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  };
+
+  // ===========pagination antd =============
+  const indexOfLastPages = pages * pageSize;
+  const indexOfFirstPages = indexOfLastPages - pageSize;
+  const currentPages = trip.slice(indexOfFirstPages, indexOfLastPages);
+  // ================ end pagination antd ===========
+
+  // function open modal
   const showModal = (id) => {
     setIsModalOpen(true);
     setTripId(id);
   };
-
+// function set file list
   const handleChange = ({ fileList, file }) => {
     setFileList(fileList);
-    setImages(file);
   };
 
+// function confirm trip
   const handleOk = () => {
-    setLoadingInsert(true)
+    setLoadingInsert(true);
     if (fileList) {
       let allFile = fileItem;
       fileList.forEach((item) => {
         allFile.push(item.originFileObj);
       });
-      // console.log("All File", allFile)
       setFileItem({ ...fileItem, allFile });
     }
-
-    // console.log("FileItem",fileItem)
-
     const formData = new FormData();
     if (fileItem) {
       fileItem.forEach((file) => {
@@ -76,37 +121,39 @@ const Travels = () => {
       console.log(`${key}: ${value}`);
     }
 
-    TripSuccess(users.token, tripId).then(res=>{
-      console.log(res.data)
-    }).catch(err=>{
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: err.response.data.message,
-      });
-      
-      if (err.response.data.message === "unauthorized") {
-        dispatch({
-          type: "USER_LOGOUT",
-          payload: null,
+    TripSuccess(users.token, tripId)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
         });
-        navigate("/");
-      }
-    })
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
     InsertImageTrip(users.token, formData, tripId)
       .then((res) => {
         if (res.data.message === "success") {
-          setLoadingInsert(false)
+          setLoadingInsert(false);
           const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -126,7 +173,7 @@ const Travels = () => {
         }
       })
       .catch((err) => {
-        setLoadingInsert(false)
+        setLoadingInsert(false);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -142,7 +189,7 @@ const Travels = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -155,32 +202,12 @@ const Travels = () => {
     setFileList([]);
   };
 
+// function cancel button
   const handleCancel = () => {
     setIsModalOpen(false);
     setFileList([]);
   };
-  const LoadData = () => {
-    setLoading(true);
-    GetAllTrip(users.token)
-      .then((res) => {
-        setLoading(false);
-        setTrip(res.data.data);
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err.response.data.message);
-        setTripEmpty(err.response.data.message);
-        if (err.response.data.message === "unauthorized") {
-          dispatch({
-            type: "USER_LOGOUT",
-            payload: null,
-          });
-          navigate("/");
-        }
-      });
-  };
 
-  // console.log("Trips", trip)
 
   const styles = {
     margin: 10,
@@ -200,6 +227,7 @@ const Travels = () => {
     width: 315,
   };
 
+// function delete
   const handleDelete = (id) => {
     Swal.fire({
       title: "ທ່ານຕ້ອງການລົບແທ້ບໍ່",
@@ -240,6 +268,84 @@ const Travels = () => {
     });
   };
 
+// set value input search
+  const handleSearch = (e) => {
+    setValueInput(e.target.value);
+  };
+
+  useEffect(()=>{
+      setLoading(true);
+      GetAllTrip(users.token, valueInput)
+        .then((res) => {
+          setLoading(false);
+          setTrip(res.data.data);
+        })
+        .catch((err) => {
+          setLoading(false);
+          setTripEmpty(err.response.data.message);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: err.response.data.message,
+          });
+  
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
+        });
+  },[valueInput])
+
+// function search data
+  const handleClickSearch = () => {
+    setLoading(true);
+    GetAllTrip(users.token, valueInput)
+      .then((res) => {
+        setLoading(false);
+        setTrip(res.data.data);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setTripEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  };
+
   const ManageTrip = () => (
     <>
       <div class="list-trip-filter">
@@ -273,9 +379,9 @@ const Travels = () => {
               <span className="text-date-trip">ວັນທີ</span>
               <DatePicker
                 className="btn-datepicker-trip"
-                selected={startDate}
+                selected={endDate}
                 onChange={(date) => {
-                  setStartDate(date);
+                  setEndDate(date);
                   setIsActiveDropdownFilter(false);
                 }}
               />
@@ -285,7 +391,11 @@ const Travels = () => {
         </div>
         <div class="search">
           <div class="input-search">
-            <input type="text" placeholder="ຄົ້ນຫາລາຍການ" />
+            <input
+              type="search"
+              onChange={handleSearch}
+              placeholder="ຄົ້ນຫາລາຍການ"
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -312,7 +422,9 @@ const Travels = () => {
             </svg>
           </div>
           <div class="btn-search">
-            <button type="button">ຄົ້ນຫາ</button>
+            <button type="button" onClick={handleClickSearch}>
+              ຄົ້ນຫາ
+            </button>
           </div>
         </div>
       </div>
@@ -349,74 +461,97 @@ const Travels = () => {
                 </div>
               </div>
             ) : (
-              <div class="trip-cards">
-                {trip &&
-                  trip.map((item, idx) => (
-                    <div className="cards" key={idx}>
-                      {item.cover && item.cover ? (
-                        <Image src={item.cover} style={{height:"14rem"}} className="images-trip" alt={item.name} />
-                      ) : (
-                        <Image src={ImageTravel} style={{height:"14rem"}} className="images-trip" alt={item.name} />
-                      )}
-                      <div className="cards-title">
-                        <span className="text-right">{item.name}</span>
-                      </div>
-                      <div className="cards-body">
-                        <h5>{`${
-                          item.placeName && item.placeName.substring(0, 60)
-                        }`}</h5>
-                        <ul className="cards-body-text">
-                          <li>{item.period}</li>
-                          <li>{item.amount} ຄົນ</li>
-                        </ul>
-                        <h3>
-                          ວັນທີເດີນທາງ{" "}
-                          {new Date(item.departureDate).toLocaleDateString()}
-                        </h3>
-                      </div>
-                      <div className="cards-btn">
-                        <div className="btn-del-ed">
-                          <button
-                            type="button"
-                            className="btn-outline danger-outline"
-                            onClick={() => handleDelete(item._id)}
-                          >
-                            <i className="bx bxs-trash-alt"></i> ລົບ
-                          </button>
-
-                          <button
-                            type="button"
-                            className="btn-outline success-outline"
-                            onClick={() => showModal(item._id)}
-                          >
-                            <i class="bx bx-check"></i> ຢືນຢັນ
-                          </button>
-
-                          <Link to={`/travels/detailTravels/${item._id}`}>
+              <>
+                <div class="trip-cards">
+                  {currentPages &&
+                    currentPages.map((item, idx) => (
+                      <div className="cards" key={idx}>
+                        {item.cover && item.cover ? (
+                          <Image
+                            src={item.cover}
+                            style={{ height: "14rem" }}
+                            className="images-trip"
+                            alt={item.name}
+                          />
+                        ) : (
+                          <Image
+                            src={ImageTravel}
+                            style={{ height: "14rem" }}
+                            className="images-trip"
+                            alt={item.name}
+                          />
+                        )}
+                        <div className="cards-title">
+                          <span className="text-right">{item.name}</span>
+                        </div>
+                        <div className="cards-body">
+                          <h5>{`${
+                            item.placeName && item.placeName.substring(0, 60)
+                          }`}</h5>
+                          <ul className="cards-body-text">
+                            <li>{item.period}</li>
+                            <li>{item.amount} ຄົນ</li>
+                          </ul>
+                          <h3>
+                            ວັນທີເດີນທາງ{" "}
+                            {new Date(item.departureDate).toLocaleDateString()}
+                          </h3>
+                        </div>
+                        <div className="cards-btn">
+                          <div className="btn-del-ed">
                             <button
                               type="button"
-                              className="btn-outline info-outline"
+                              className="btn-outline danger-outline"
+                              onClick={() => handleDelete(item._id)}
                             >
-                              <i class="bx bxs-edit"></i> ແກ້ໄຂ
+                              <i className="bx bxs-trash-alt"></i> ລົບ
                             </button>
-                          </Link>
+
+                            <button
+                              type="button"
+                              className="btn-outline success-outline"
+                              onClick={() => showModal(item._id)}
+                            >
+                              <i class="bx bx-check"></i> ຢືນຢັນ
+                            </button>
+
+                            <Link to={`/travels/detailTravels/${item._id}`}>
+                              <button
+                                type="button"
+                                className="btn-outline info-outline"
+                              >
+                                <i class="bx bxs-edit"></i> ແກ້ໄຂ
+                              </button>
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-              </div>
+                    ))}
+                </div>
+                {trip.length >= 5 && (
+                  <div className="pagination-trip">
+                    <PaginationComponent
+                      count={count}
+                      setPageSize={setPageSize}
+                      pageSize={pageSize}
+                      setPages={setPages}
+                      pages={pages}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
       </div>
     </>
   );
-
+// set key when Click
   const onChangeKey = (key) => {
     setKey(key);
   };
 
-  // console.log("key",key)
+  // tab show item
   const items = [
     {
       key: "1",
@@ -437,21 +572,21 @@ const Travels = () => {
 
   return (
     <div className="card-main">
-      <Spin spinning={loadingInsert} >
-      <Tabs
-        defaultActiveKey={key}
-        activeKey={key}
-        onChange={onChangeKey}
-        items={items}
-      />
-      <Modal
-        title="ອັບໂຫຼດຮູບພາບບັນຍາກາດ"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <UploadImage fileList={fileList} handleChange={handleChange} />
-      </Modal>
+      <Spin spinning={loadingInsert}>
+        <Tabs
+          defaultActiveKey={key}
+          activeKey={key}
+          onChange={onChangeKey}
+          items={items}
+        />
+        <Modal
+          title="ອັບໂຫຼດຮູບພາບບັນຍາກາດ"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <UploadImage fileList={fileList} handleChange={handleChange} />
+        </Modal>
       </Spin>
     </div>
   );

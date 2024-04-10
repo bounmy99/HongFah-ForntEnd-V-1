@@ -7,8 +7,11 @@
   font-family: 'Noto Sans Lao', sans-serif;
 }
 
-:where(.css-dev-only-do-not-override-p7e5j5).ant-pagination .ant-pagination-options {
-  margin-left: 18rem;
+:where(.css-dev-only-do-not-override-p7e5j5).ant-image {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
 }
 
 .empty-card {
@@ -249,6 +252,7 @@ body {
 
 .card-main {
   margin: 15px 0;
+  height: 100%;
 }
 
 .card {
@@ -1084,6 +1088,7 @@ body {
   align-items: center;
   flex-shrink: 0;
   border-radius: 50%;
+  border: 2px solid #00a5e8;
   box-shadow: 0px 2px 5px 0px rgba(38, 51, 77, 0.03);
   cursor: pointer;
 }
@@ -1934,12 +1939,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .Product-card .product-card-content .description h5 {
   font-size: 10px;
   padding: 3px;
   line-height: 2px;
+  margin-top: 8px;
 }
 
 .Product-card .product-card-content .content .text-bottom {
@@ -2229,7 +2236,7 @@ body {
         color: #00a5e8;
         position: absolute;
         left: 94%;
-        top: 133px;
+        top: 136px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -3386,7 +3393,7 @@ body {
 }
 
 .trip-container {
-  height: 30rem;
+  height: 100%;
 }
 
 .trip-title {
@@ -3508,6 +3515,11 @@ body {
   border: none;
   cursor: pointer;
 
+}
+.pagination-trip{
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 }
 
 /* ------------- add ------------------- */
@@ -4031,6 +4043,11 @@ body {
   background-color: transparent;
   outline: none;
   cursor: pointer;
+}
+.pagination-auth{
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
 }
 
 /* ================= start add-user ================ */
@@ -4867,23 +4884,10 @@ body {
   background: transparent;
   cursor: pointer;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
   font-weight: bold;
 }
 
-.p-btn.btn-delete {
-  border: 1px solid red;
-  color: red;
-}
 
-.p-btn.btn-edit {
-  border: 1px solid #0DB5E8;
-  background: linear-gradient(180deg, #0DB5E8 0%, #008BCB 100%), #00A5E8;
-  color: white;
-}
 
 .package-add {
   display: flex;
@@ -5033,19 +5037,23 @@ body {
   background: transparent;
   cursor: pointer;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  font-weight: bold;
 }
 
 .p-btn.btn-delete {
   border: 1px solid red;
   color: red;
 }
+.p-btn.btn-delete:hover {
+  border: 1px solid #ff0000;
+  color: rgb(253, 253, 253);
+  background-color: #ff0000;
+}
 
 .p-btn.btn-edit {
+  border: 1px solid #0DB5E8;
+  color: #0DB5E8;
+}
+.p-btn.btn-edit:hover {
   border: 1px solid #0DB5E8;
   background: linear-gradient(180deg, #0DB5E8 0%, #008BCB 100%), #00A5E8;
   color: white;
@@ -5124,14 +5132,14 @@ body {
   }
 }
 
-/* =============================== start Withdraw ================================ */
-.withdraw-content-header {
+/* =============================== start user ================================ */
+.user-content-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.withdraw-text {
+.user-text {
   h3 {
     font-weight: bold;
     font-size: 15px;
@@ -5145,7 +5153,7 @@ body {
   border-bottom: 2px solid #008BCB;
 }
 
-.withdraw-button {
+.user-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5153,7 +5161,7 @@ body {
 
 }
 
-.withdraw-btns {
+.user-btns {
   padding: 8px;
   width: 150px;
   height: 45px;
@@ -5165,7 +5173,7 @@ body {
   font-weight: bold;
 }
 
-.btn-await-withdraw {
+.btn-await-user {
   border: 2px solid #f89045
 }
 
@@ -5181,7 +5189,7 @@ body {
   border: 2px solid #ef0000
 }
 
-.btn-await-withdraw.active {
+.btn-await-user.active {
   background-color: #f89045;
   color: #fff;
 }
@@ -5201,7 +5209,7 @@ body {
   color: #fff;
 }
 
-.btn-withdraw {
+.btn-user {
   width: 130px;
   display: flex;
   align-items: center;
@@ -5223,13 +5231,13 @@ body {
 }
 
 
-.withdraw-table {
+.user-table {
   width: 100%;
   margin: 15px 0;
 
 }
 
-.withdraw-table .withdraw-card-header {
+.user-table .user-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -5239,17 +5247,17 @@ body {
   height: 4rem;
 }
 
-.withdraw-table .withdraw-card-header .search {
+.user-table .user-card-header .search {
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 15px;
 }
 
-.withdraw-table .withdraw-card-header .input-search {
+.user-table .user-card-header .input-search {
   position: relative;
 }
-.withdraw-table .withdraw-card-header .btn-search button {
+.user-table .user-card-header .btn-search button {
   cursor: pointer;
   padding: 9px;
   border-radius: 0.625rem;
@@ -5261,11 +5269,11 @@ body {
   font-weight: bold;
   font-size: 15px;
 }
-.withdraw-table .withdraw-card-header .btn-search button:hover {
+.user-table .user-card-header .btn-search button:hover {
   background: #00A4CD;
 }
 
-.withdraw-table .withdraw-card-header .input-search input {
+.user-table .user-card-header .input-search input {
   border-radius: 0.5rem;
   border: 1px solid #D2D5D9;
   background: #F4F7FC;
@@ -5276,7 +5284,7 @@ body {
   outline: none
 }
 
-.withdraw-table .withdraw-card-header .input-search svg {
+.user-table .user-card-header .input-search svg {
   position: absolute;
   display: flex;
   align-items: center;
@@ -5285,14 +5293,14 @@ body {
   left: 3%;
 }
 
-.withdraw-table .withdraw-card-header .button {
+.user-table .user-card-header .button {
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 15px;
 }
 
-.withdraw-table .withdraw-card-header .button .btn-show {
+.user-table .user-card-header .button .btn-show {
   cursor: pointer;
   padding: 9px;
   border-radius: 0.625rem;
@@ -5369,20 +5377,20 @@ body {
 
 
 /* ================================= select type products =================================== */
-.withdraw-filter {
+.user-filter {
   position: relative;
   width: 120px;
   height: 40px;
 }
 
-.withdraw-filter-menu {
+.user-filter-menu {
   position: absolute;
   top: 0;
   width: 120px;
   z-index: 1;
 }
 
-.withdraw-filter-menu .withdraw-filter-btn {
+.user-filter-menu .user-filter-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -5397,16 +5405,16 @@ body {
 
 }
 
-.withdraw-filter-btn .sBtn-text {
+.user-filter-btn .sBtn-text {
   font-weight: bold;
 }
 
-.withdraw-filter-btn i {
+.user-filter-btn i {
   font-size: 20px;
   transition: all 0.3s;
 }
 
-.withdraw-filter-btn.active i {
+.user-filter-btn.active i {
   transform: rotate(-180deg);
   -webkit-transform: rotate(-180deg);
   -moz-transform: rotate(-180deg);
@@ -5414,7 +5422,7 @@ body {
   -o-transform: rotate(-180deg);
 }
 
-.withdraw-filter-menu .options-withdraw-filter {
+.user-filter-menu .options-user-filter {
   z-index: 1;
   position: relative;
   padding: 15px;
@@ -5424,7 +5432,7 @@ body {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.options-withdraw-filter .option-withdraw-filter {
+.options-user-filter .option-user-filter {
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -5434,23 +5442,23 @@ body {
   background-color: #fff;
 }
 
-.options-withdraw-filter .option-withdraw-filter:hover {
+.options-user-filter .option-user-filter:hover {
   background-color: #f2f2f2f2;
 }
 
-.options-withdraw-filter .option-withdraw-filter-text {
+.options-user-filter .option-user-filter-text {
   font-size: 15px;
   color: #0089be;
 }
 
 /* ====================================== end select type products ========================================== */
-.withdraw-status {
+.user-status {
   display: flex;
   flex-direction: column;
   gap: .2rem;
 }
 
-.withdraw-status .status-approved {
+.user-status .status-approved {
   border-radius: 0.3125rem;
   color: #fff;
   font-size: 12px;
@@ -5461,7 +5469,7 @@ body {
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.10);
 }
 
-.withdraw-status .status-success {
+.user-status .status-success {
   border-radius: 0.3125rem;
   color: #fff;
   width: 60px;
@@ -5471,7 +5479,7 @@ body {
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.10);
 }
 
-.withdraw-status .status-danger {
+.user-status .status-danger {
   border-radius: 0.3125rem;
   color: #fff;
   width: 60px;
@@ -5515,7 +5523,7 @@ body {
   color: #151D48
 }
 
-.posit-text-withdraw {
+.posit-text-user {
   color: #008BCB
 }
 
@@ -5640,9 +5648,9 @@ body {
 
 /* ======================= end detail-users ==================== */
 
-/* ====================== models withdraw ============== */
+/* ====================== models user ============== */
 
-.modal-withdraw {
+.modal-user {
   top: 0;
   left: 0;
   width: 100%;
@@ -5654,7 +5662,7 @@ body {
   display: none;
 }
 
-.modal-withdraw-card {
+.modal-user-card {
   width: 30rem;
   height: 20rem;
   flex-shrink: 0;
@@ -5664,21 +5672,21 @@ body {
   -webkit-animation: DropTop .3s linear;
 }
 
-.withdraw-title {
+.user-title {
   margin-top: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.modal-input-withdraw {
+.modal-input-user {
   align-items: center;
   justify-content: center;
   display: flex;
   gap: 1rem;
 }
 
-.modal-withdraw-form-group {
+.modal-user-form-group {
   margin-top: 10px;
   border: 1px solid #7B8B9F;
   border-radius: 5px;
@@ -5688,16 +5696,16 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.input-group-withdraw label {
+.input-group-user label {
   color: #00AEEF;
   font-size: 14px;
 }
 
-.input-group-withdraw {
+.input-group-user {
   margin: 0px 10px;
 }
 
-.input-group-withdraw .form-modal-control-withdraw {
+.input-group-user .form-modal-control-user {
   padding: 8px;
   border-radius: 5px;
   width: 100%;
@@ -5708,52 +5716,14 @@ body {
   font-weight: bold
 }
 
-.withdraw-image {
-  margin-top: 10px;
-  border: 1px solid #7B8B9F;
-  border-radius: 5px;
-  width: 250px;
-  height: 350px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.uploadImage-withdraw {
-  width: 100%;
-  height: 270px;
-  object-fit: cover;
-  margin-bottom: 5px;
-}
-
-.uploadImage-withdraw-preview {
-  width: 100%;
-  height: 270px;
-  object-fit: cover;
-  margin-bottom: 5px;
-}
-
-.withdraw-image .btn-withdraw-browse {
-  width: 150px;
-  padding: 10px;
-  color: #0089be;
-  font-size: 15px;
-  border: 1px solid #0089be;
-  border-radius: 3px;
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.modals-withdraw-btn {
+.modals-user-btn {
   margin-top: 16px;
   display: flex;
   justify-content: center;
   gap: 2rem;
 }
 
-.modal-withdraw-btn {
+.modal-user-btn {
   width: 170px;
   padding: 8px;
   border: none;
@@ -5762,7 +5732,7 @@ body {
   font-size: 15px;
 }
 
-.modal-withdraw.open {
+.modal-user.open {
   top: 0;
   left: 0;
   width: 100%;
@@ -5798,15 +5768,15 @@ body {
   }
 }
 
-/* ============== End modals withdraw =================== */
+/* ============== End modals user =================== */
 
 
 
-/* =============================== end Withdraw ================================ */
+/* =============================== end user ================================ */
 
 
-/* =============================== Create Withdraw ============================ */
-.CreateWithDraw-content {
+/* =============================== Create user ============================ */
+.Createuser-content {
   margin-top: 3rem;
   display: flex;
   height: 30rem;
@@ -5815,11 +5785,11 @@ body {
   gap: 1rem;
 }
 
-.CreateWithDraw-content .icons-print-withdraw {
+.Createuser-content .icons-print-user {
   margin-top: 15px;
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .text-group-CreateWithDraw {
+.Createuser-content .Createuser-form-group .text-group-Createuser {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -5841,12 +5811,12 @@ body {
   }
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw label {
+.Createuser-content .Createuser-form-group .input-group-Createuser label {
   font-size: 15px;
   color: #858484
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw .form-modal-control-CreateWithDraw {
+.Createuser-content .Createuser-form-group .input-group-Createuser .form-modal-control-Createuser {
   position: relative;
   width: 25rem;
   padding: 8px;
@@ -5859,11 +5829,11 @@ body {
   border: 1px solid #00A4CD
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw {
+.Createuser-content .Createuser-form-group .input-group-Createuser {
   display: block;
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw i.member {
+.Createuser-content .Createuser-form-group .input-group-Createuser i.member {
   position: absolute;
   display: flex;
   align-items: center;
@@ -5873,7 +5843,7 @@ body {
   cursor: pointer;
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw i.number-acount {
+.Createuser-content .Createuser-form-group .input-group-Createuser i.number-acount {
   position: absolute;
   display: flex;
   align-items: center;
@@ -5882,7 +5852,7 @@ body {
   color: #00A4CD;
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw i.name-acount {
+.Createuser-content .Createuser-form-group .input-group-Createuser i.name-acount {
   position: absolute;
   display: flex;
   align-items: center;
@@ -5891,7 +5861,7 @@ body {
   color: #00A4CD;
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw i.withdraw {
+.Createuser-content .Createuser-form-group .input-group-Createuser i.user {
   position: absolute;
   display: flex;
   align-items: center;
@@ -5900,7 +5870,7 @@ body {
   color: #00A4CD;
 }
 
-.CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw i.password {
+.Createuser-content .Createuser-form-group .input-group-Createuser i.password {
   position: absolute;
   display: flex;
   align-items: center;
@@ -5909,14 +5879,14 @@ body {
   color: #00A4CD;
 }
 
-.Createwithdraw-btn {
+.Createuser-btn {
   margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
 
-  .create-withdraw-btn {
+  .create-user-btn {
     width: 12rem;
     padding: 6px;
     font-size: 15px;
@@ -6349,7 +6319,7 @@ body {
     margin-left: 35px;
   }
 
-  .withdraw-table .withdraw-card-header .input-search input {
+  .user-table .user-card-header .input-search input {
     border-radius: 0.5rem;
     border: 1px solid #D2D5D9;
     background: #F4F7FC;
@@ -6808,19 +6778,19 @@ body {
 
 
 
-  .withdraw-button {
+  .user-button {
     margin-top: 10px;
   }
 
-  .withdraw-content-header {
+  .user-content-header {
     display: block;
   }
 
-  .withdraw-btns {
+  .user-btns {
     width: 110px;
   }
 
-  .btn-withdraw {
+  .btn-user {
     width: 161px;
     height: 48px;
     padding: 11.3px;
@@ -6834,21 +6804,21 @@ body {
     margin-top: 15px;
   }
 
-  .withdraw-table .withdraw-card-header {
+  .user-table .user-card-header {
     display: block;
     height: 8rem;
   }
 
-  .withdraw-table .withdraw-card-header .search {
+  .user-table .user-card-header .search {
     margin-left: 7rem;
   }
 
-  .withdraw-table .withdraw-card-header .button {
+  .user-table .user-card-header .button {
     padding: 0px;
     margin-left: 8rem;
   }
 
-  .withdraw-table .withdraw-card-header .input-search input {
+  .user-table .user-card-header .input-search input {
     width: 27rem;
   }
 
@@ -7311,19 +7281,19 @@ body {
     right: 16.6rem;
   }
 
-  .withdraw-button {
+  .user-button {
     margin-top: 10px;
   }
 
-  .withdraw-content-header {
+  .user-content-header {
     display: block;
   }
 
-  .withdraw-btns {
+  .user-btns {
     width: 110px;
   }
 
-  .btn-withdraw {
+  .btn-user {
     width: 161px;
     height: 48px;
     padding: 11.3px;
@@ -7333,21 +7303,21 @@ body {
     }
   }
 
-  .withdraw-table .withdraw-card-header {
+  .user-table .user-card-header {
     display: block;
     height: 8rem;
   }
 
-  .withdraw-table .withdraw-card-header .search {
+  .user-table .user-card-header .search {
     margin-left: 7rem;
   }
 
-  .withdraw-table .withdraw-card-header .button {
+  .user-table .user-card-header .button {
     padding: 0px;
     margin-left: 8rem;
   }
 
-  .withdraw-table .withdraw-card-header .input-search input {
+  .user-table .user-card-header .input-search input {
     width: 27rem;
   }
 
@@ -8196,33 +8166,33 @@ body {
     height: 10rem;
   }
 
-  .withdraw-button {
+  .user-button {
     display: block;
   }
 
-  .withdraw-btns {
+  .user-btns {
     width: 270px;
     margin-bottom: 10px;
   }
 
-  .btn-withdraw {
+  .btn-user {
     width: 269px;
   }
 
-  .withdraw-table .withdraw-card-header {
+  .user-table .user-card-header {
     display: block;
     height: 13.5rem;
   }
 
-  .withdraw-table .withdraw-card-header .search {
+  .user-table .user-card-header .search {
     margin-left: 0px;
   }
 
-  .withdraw-table .withdraw-card-header .input-search input {
+  .user-table .user-card-header .input-search input {
     width: 15rem;
   }
 
-  .withdraw-table .withdraw-card-header .button {
+  .user-table .user-card-header .button {
     display: block;
     margin-left: 15px;
   }
@@ -8237,32 +8207,32 @@ body {
     left: 12.8rem;
   }
 
-  .withdraw-filter-menu .withdraw-filter-btn {
+  .user-filter-menu .user-filter-btn {
     width: 15rem;
     margin-top: 5px;
   }
 
-  .withdraw-table .withdraw-card-header .button .btn-show {
+  .user-table .user-card-header .button .btn-show {
     width: 15rem;
     margin-top: 10px;
   }
 
-  .modal-withdraw-card {
+  .modal-user-card {
     width: 21rem;
     height: 57.5rem;
   }
 
-  .modal-input-withdraw {
+  .modal-input-user {
     display: flex;
     flex-wrap: wrap-reverse;
     margin-top: 30px;
   }
 
-  .modal-withdraw-btn {
+  .modal-user-btn {
     width: 108px;
   }
 
-  .CreateWithDraw-content {
+  .Createuser-content {
     display: block;
     height: 30rem;
     width: 18rem;
@@ -8270,16 +8240,16 @@ body {
     gap: 1rem;
   }
 
-  .CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw .form-modal-control-CreateWithDraw {
+  .Createuser-content .Createuser-form-group .input-group-Createuser .form-modal-control-Createuser {
     width: 17rem;
   }
 
-  .CreateWithDraw-content .CreateWithDraw-form-group .input-group-CreateWithDraw i.member {
+  .Createuser-content .Createuser-form-group .input-group-Createuser i.member {
     left: 15.5rem;
     top: 12.3rem;
   }
 
-  .Createwithdraw-btn .create-withdraw-btn {
+  .Createuser-btn .create-user-btn {
     width: 7rem;
     padding: 6px;
     font-size: 15px;

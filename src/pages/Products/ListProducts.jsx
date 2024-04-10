@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Empty } from "antd";
+import { Empty, Image } from "antd";
 import icons from "../../assets/image/icons-add.png";
 import { GetAllProduct } from "../../functions/Products";
 import { GetAllProductType } from "../../functions/ProductType";
 import LoadingCard from "../../components/LoadingCard";
 import InputSearch from "../../components/InputSearch";
 import { useSelector, useDispatch } from "react-redux";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import PaginationComponent from "../../components/PaginationComponent";
+import { formatPrice } from "../../functions/FormatPrices";
 const initialValue = {
   productType: "",
   maxPrice: "",
@@ -21,7 +23,7 @@ const ListProducts = () => {
   const [product, setProduct] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [keyword, setKeyword] = useState('');
+
   const [selectedType, setSelectedType] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
 
@@ -29,22 +31,19 @@ const ListProducts = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [search, setSearch] = useState("");
   const [arg, setArg] = useState(initialValue);
-  // console.log(arg)
+
   const [isActiveDropdownType, setIsActiveDropdownType] = useState(false);
   const [isActiveDropdownPrice, setIsActiveDropdownPrice] = useState(false);
   const [count, setCount] = useState("");
   const [pageSize, setPageSize] = useState(24);
   const [pages, setPages] = useState(1);
   const [productsEmpty, setProductsEmpty] = useState("");
-  const [visible, setVisible] = useState(27);
 
-  // const ProductType = ['ປະເພດຄີມ', 'ປະເພດເຈວ', 'ປະເພດແປ້ງ', 'ປະເພດນ້ຳ'];
+  const [previewImages, setPreviewImages] = useState([]);
+
+  console.log("previewImages", previewImages);
+
   const ProductPrice = [15000, 30000, 50000, 100000];
-
-  const formatPrice = (value) => {
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
 
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
@@ -55,8 +54,10 @@ const ListProducts = () => {
   useEffect(() => {
     LoadData();
     loadAllProductType();
+    setPages(1);
   }, []);
 
+  // load all products
   const LoadData = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
@@ -84,7 +85,7 @@ const ListProducts = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -94,25 +95,28 @@ const ListProducts = () => {
         }
       });
   };
+  // load all products type
   const loadAllProductType = () => {
     GetAllProductType(users.token).then((res) => {
       setProductTypes(res.data.data);
     });
   };
+
+  // open dropdown product type
   const handleClickOpenType = () => {
     setIsActiveDropdownType((isActiveDropdownType) => !isActiveDropdownType);
     setIsActiveDropdownPrice(false);
   };
-
   let openDropType = isActiveDropdownType ? "active" : "";
 
+  // open dropdown price
   const handleClickOpenPrice = () => {
     setIsActiveDropdownType(false);
     setIsActiveDropdownPrice((isActiveDropdownPrice) => !isActiveDropdownPrice);
   };
-
   let openDropPrice = isActiveDropdownPrice ? "active" : "";
 
+  // set value products type
   const handleClickType = (e) => {
     setProductType(e.target.value);
     setArg({ ...arg, productType: e.target.value });
@@ -120,6 +124,8 @@ const ListProducts = () => {
     setIsActiveDropdownPrice(false);
     setSelectedType(e.target.textContent);
   };
+
+  // set value products price
   const handleClickPrice = (e) => {
     setIsActiveDropdownType(false);
     setIsActiveDropdownPrice(false);
@@ -134,9 +140,7 @@ const ListProducts = () => {
     width: 110,
   };
 
-  // const searched = (keyword) => (item) => item.name === undefined ? item.name?.toLowerCase().includes(keyword) : item.name.toLowerCase().includes(keyword);
-  // const searched = (keyword) => (item) => item.name.toLowerCase().includes(keyword);
-
+  // search with Produc price , product Type, Product name
   const handleSearch = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
@@ -165,7 +169,7 @@ const ListProducts = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -176,6 +180,7 @@ const ListProducts = () => {
       });
   };
 
+  // reset search
   const handleReset = () => {
     const maxPrice = [];
     const productType = [];
@@ -191,12 +196,7 @@ const ListProducts = () => {
       setLoading(false);
     });
   };
-  const handleShowMore = () => {
-    setVisible((show) => show + 27);
-  };
 
-  console.log("count", count);
-  console.log("visible", visible);
   return (
     <>
       <div className="">
@@ -306,78 +306,63 @@ const ListProducts = () => {
             </div>
           ) : (
             <>
-              {/* // product && product.slice(0, visible).map((items, idx) =>
-                    // product && product.filter(searched(keyword)).map((items, idx) =>
-                    // thisPageItems && thisPageItems.filter(searched(keyword)).map((items, idx) => */}
               <div className="product-card-content">
                 <div className="main-card">
-                  {
-                    
-                    // product &&
-                    //   product.slice(0, visible).map((items, idx) => (
-                      currentPages && currentPages.map((items, idx) => (
-                        <>
-                          <div className="content" key={idx}>
-                            <div className="point">{items.point} PV</div>
-                            <div className="card-content">
-                              <div className="images">
-                                <img src={items.images[0]} alt="" />
-                              </div>
-                              <div className="description">
-                                <h5>{`${
-                                  items.name && items.name.substring(0, 10)
-                                }.....`}</h5>
-                              </div>
+                  {currentPages &&
+                    currentPages.map((items, idx) => (
+                      <>
+                        <div className="content" key={idx}>
+                          <div className="point">{items.point} PV</div>
+                          <div className="card-content">
+                            <div className="images">
+                              <Image
+                                src={items.images[0]}
+                                preview={{visible : false}}
+                                onClick={() => setPreviewImages(items.images)}
+                              />
                             </div>
-                            <div className="text-bottom">
-                              <div className="price-text">
-                                <h5>₭ {formatPrice(items.price)}</h5>
-                              </div>
-                              <div className="button">
-                                <Link
-                                  to={`/listProducts/editProduct/${items._id}`}
-                                >
-                                  <button type="button">ແກ້ໄຂ</button>
-                                </Link>
-                              </div>
+                            <div className="description">
+                              <h5>{`${
+                                items.name && items.name.substring(0, 10)
+                              }.....`}</h5>
                             </div>
                           </div>
-                        </>
-                      ))
-                  }
+                          <div className="text-bottom">
+                            <div className="price-text">
+                              <h5>₭ {formatPrice(items.price)}</h5>
+                            </div>
+                            <div className="button">
+                              <Link
+                                to={`/listProducts/editProduct/${items._id}`}
+                              >
+                                <button type="button">ແກ້ໄຂ</button>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ))}
                 </div>
-
-                {/* {product.length > 0 ? (
-                  <>
-                    {visible >= count ? (
-                      ""
-                    ) : (
-                      <div className="load-more">
-                        <button className="btn" onClick={handleShowMore}>
-                          ສະແດງເພີ່ມເຕີມ
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="empty-card">
-                    <Empty
-                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                      imageStyle={{
-                        height: 60,
-                      }}
-                      description={
-                        <span>
-                          <a>{productsEmpty}</a>
-                        </span>
+                {previewImages.length > 0 ? (
+                  <Image.PreviewGroup
+                    preview={{
+                      onChange: (current, prev) =>
+                        console.log(
+                          `current index: ${current}, prev index: ${prev}`
+                        ),
+                      visible : previewImages.length, 
+                      onVisibleChange : (value)=>{
+                        if(!value){
+                          setPreviewImages([])
+                        }
                       }
-                    >
-                      <div className="add-btn-empty">
-                        <p>ບໍ່ມີຂໍ້ມູນ</p>
-                      </div>
-                    </Empty>
-                  </div>
-                )} */}
+                    }}
+                  >
+                    {previewImages.map((image, i) => (
+                      <Image src={image} key={i}/>
+                    ))}
+                  </Image.PreviewGroup>
+                ) : null}
               </div>
             </>
           )}
@@ -389,16 +374,21 @@ const ListProducts = () => {
               </Link>
             </div>
             <div className="pagination">
-                <PaginationComponent 
-                 count={count}
-                 setPageSize={setPageSize}
-                 pageSize={pageSize}
-                 setPages={setPages}
-                 pages={pages}
-                />
+              <PaginationComponent
+                count={count}
+                setPageSize={setPageSize}
+                pageSize={pageSize}
+                setPages={setPages}
+                pages={pages}
+              />
             </div>
             <div className="pagination">
-              <button className="btn-show-more" onClick={()=>navigate("/listProducts/saleProducts")}>ຂາຍສິນຄ້າ</button> 
+              <button
+                className="btn-show-more"
+                onClick={() => navigate("/listProducts/saleProducts")}
+              >
+                <ShoppingCartOutlined /> ຂາຍສິນຄ້າ
+              </button>
             </div>
           </div>
         </div>

@@ -9,14 +9,12 @@ import { Spin, Tabs } from 'antd';
 const AddUser = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate()
-  const [image, setImage] = useState([])
-  const [fileName, setFileName] = useState("")
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState([]);
 
+  // load all users
   useEffect(() => {
     GetAllUser(users.token).then(res => {
-      
       const roles = [...new Set(res.data.data.map(item => item.role))]
       setRoleList(roles)
     }).catch(err => {
@@ -46,12 +44,11 @@ const AddUser = () => {
     })
   }, [])
 
-
-
   const handleChange = (e) => {
     console.log(e.target.name)
     console.log(e.target.value)
   }
+// signin admin
   const handleSubmitAdmin = (e) => {
     setLoading(true);
     e.preventDefault()
@@ -107,6 +104,7 @@ const AddUser = () => {
     })
 
   }
+// signin supper admin
   const handleSubmitSuperAdmin = (e) => {
     setLoading(true);
     e.preventDefault()

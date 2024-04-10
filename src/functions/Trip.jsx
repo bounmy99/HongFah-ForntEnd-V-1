@@ -1,14 +1,14 @@
 import axios from "axios";
 
-export const GetAllTrip = async (token) =>
-  await axios.get(`${import.meta.env.VITE_HONGFHA_API}/trip/getall`, {
+export const GetAllTrip = async (token,value) =>
+  await axios.get(`${import.meta.env.VITE_HONGFHA_API}/trip/getall?searchtext=${value}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-export const GetAllTripIsSuccess = async (token, status) =>
+export const GetAllTripIsSuccess = async (token, status,value) =>
   await axios.get(
-    `${import.meta.env.VITE_HONGFHA_API}/trip/getall?isSuccess=${status}`,
+    `${import.meta.env.VITE_HONGFHA_API}/trip/getall?isSuccess=${status}&searchtext=${value}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

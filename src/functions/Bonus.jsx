@@ -1,14 +1,21 @@
 import axios from "axios";
 
-export const GetAllBonus = async(token)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isMaintainSales=true&toexport=true`,{
+export const GetAllBonus = async(token,isMaintainSales,toexport,isApproved,search)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isMaintainSales=${isMaintainSales}&toexport=${toexport}&isApproved=${isApproved}&search=${search}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }
     })
 }
-export const GetAllMaintain = async(token,isMaintainSales)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isMaintainSales=${isMaintainSales}`,{
+export const GetAllSuccess = async(token,Improved,search)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isApproved=${Improved}&search=${search}`,{
+        headers :{
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+}
+export const GetAllMaintain = async(token,isMaintainSales,search)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isMaintainSales=${isMaintainSales}&search=${search}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }

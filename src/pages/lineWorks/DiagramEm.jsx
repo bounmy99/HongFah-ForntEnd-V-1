@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import imagePreview from "../../assets/avatar/image-avatar.jpeg";
-import { GetOneEmployee, GetRootLineWork } from "../../functions/Employee";
+import { GetOneLineWork, GetRootLineWork } from "../../functions/LineWork";
 import {Spin} from "antd"
 const DiagramEm = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -14,14 +14,13 @@ const DiagramEm = () => {
   const [detail, setDetail] = useState([]);
   const [loading, setLoading] = useState(false)
   const [position,setPosition] = useState([])
-
-  console.log("position",position)
+  const [show, setShow] = useState(false);
   
 
   useEffect(() => {
     loadingGetRoot();
   }, []);
-
+// load all lineWork
   const loadingGetRoot = () => {
     setLoading(true)
     GetRootLineWork(users.token)
@@ -58,14 +57,11 @@ const DiagramEm = () => {
         }
       });
   };
-
-  // console.log("LineWork", linework);
-
-  const [show, setShow] = useState(false);
+// show detail right
   const handleShow = () => {
     setShow((show) => !show);
     setLoading(true)
-    GetOneEmployee(users.token, linework._id)
+    GetOneLineWork(users.token, linework._id)
       .then((res) => {
         setLoading(false)
         setDetail(res.data.data);
@@ -98,7 +94,6 @@ const DiagramEm = () => {
       });
   };
 
-  console.log("Detail", detail);
 
   return (
     <div className="plan-card-emp genealogy-scroll">

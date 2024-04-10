@@ -10,6 +10,7 @@ import BtnAddPkg from '../../assets/image/btn-add-package.png';
 import Swal from 'sweetalert2';
 import FormUpdate from './FormUpdate'
 import FormCreate from './FormCreate'
+import { formatPrice } from "../../functions/FormatPrices"
 
 const ListPackage = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -21,17 +22,16 @@ const ListPackage = () => {
   const [packageList, setPackageList] = useState([]);
   const [packageEdit, setPackageEdit] = useState([]);
   const [packageAdd, setPackageAdd] = useState([]);
-  const [packageUpdate, setPackageUpdate] = useState([]);
   const [visible, setVisible] = useState(7);
   const [packageEmpty, setPackageEmpty] = useState('');
-  // console.log("PackageEdit",packageEdit);
-  // console.log("PackageUpdate",packageUpdate);
-  // console.log("PackageAdd",packageAdd);
+
 
   useEffect(() => {
     LoadAllPackage();
   }, []);
 
+
+// load all package
   const LoadAllPackage = () => {
     setLoading(true);
     GetAllPackage(users.token).then(res => {
@@ -67,25 +67,23 @@ const ListPackage = () => {
     })
   }
 
+  // open add modal package
   const handleModal = () => {
     setOpenModal(true);
     setLoadingSave(false);
     setPackageEdit([]);
   }
 
-
+// set edit value
   const handleChangeUpdate = (e) => {
     setPackageEdit({ ...packageEdit, [e.target.name]: e.target.value })
-    console.log(e.target.value)
-    console.log(e.target.name)
   }
+// set add value
   const handleChangeAdd = (e) => {
     setPackageAdd({ ...packageAdd, [e.target.name]: e.target.value })
-    console.log(e.target.value)
-    console.log(e.target.name)
   }
 
-
+// insert and update package
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoadingSave(true)
@@ -110,6 +108,7 @@ const ListPackage = () => {
 
     // Check before Save and Update
     packageEdit._id ?
+    // update package
       UpdatePackage(users.token, Data, packageEdit._id).then(res => {
         console.log("Data Edit From Database", res.data)
         if (res.status === 200) {
@@ -162,6 +161,7 @@ const ListPackage = () => {
         setLoading(false);
       })
       :
+      // crete package
       CreatePackage(users.token, Data).then(res => {
         try {
           if (res.status === 200) {
@@ -188,7 +188,22 @@ const ListPackage = () => {
             setPackageEdit([]);
           }
         } catch (err) {
-          console.log(err)
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: err.response.data.message,
+          });
+          setOpenModal(false);
         }
 
       }).catch(err => {
@@ -217,10 +232,13 @@ const ListPackage = () => {
           navigate("/");
         }
       })
+      setOpenModal(false);
 
     e.currentTarget.reset();
 
   }
+
+  // open edit modal package
   const handleModalEdit = (id) => {
 
     setOpenModal(true);
@@ -255,17 +273,15 @@ const ListPackage = () => {
     })
 
   }
-
+// cancel button
   const handleModalCancel = () => {
     setPackageEdit([])
     setOpenModal(false);
     // window.location.reload();
   }
 
-  // console.log("packageEdit", packageEdit);
-
   let openModals = openModal ? 'open' : '';
-
+// delete package
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
@@ -315,15 +331,11 @@ const ListPackage = () => {
     height: 255,
     margin: 10
   }
-
+// show more package
   const handleShowMore = () => {
     setVisible((show) => show + 7)
   }
 
-  const formatPrice = (value) => {
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
 
   return (
     <div className="card-main">

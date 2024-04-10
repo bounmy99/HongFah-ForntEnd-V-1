@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Button,Image } from "antd";
+import { Empty, Modal, Button, Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import {
@@ -12,6 +12,7 @@ import {
   GetAllTripIsSuccess,
 } from "./../../functions/Trip";
 import UploadImage from "../../components/UploadImage";
+import PaginationComponent from "../../components/PaginationComponent";
 const IsSuccessTrip = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -21,54 +22,23 @@ const IsSuccessTrip = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [tripEmpty, setTripEmpty] = useState("");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [fileList, setFileList] = useState([]);
-  const [tripId, setTripId] = useState();
-  const [images, setImages] = useState({});
-
-  console.log(images);
-
-  const showModal = (id) => {
-    setIsModalOpen(true);
-    setTripId(id);
-  };
-  // console.log("tripId",tripId)
-
-  const handleOk = () => {
-    InsertImageTrip(users.token, images, tripId)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    setIsModalOpen(false);
-    setFileList([]);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setFileList([]);
-  };
-
+  const [count, setCount] = useState("");
+  const [pageSize, setPageSize] = useState(4);
+  const [pages, setPages] = useState(1);
+  const [valueInput, setValueInput] = useState("");
+// function first load when open pages
   useEffect(() => {
     LoadData();
   }, []);
 
-  const handleChange = ({ fileList, file }) => {
-    setFileList(fileList);
-    // setFileList(e)
-    // console.log("value",file)
-    setImages(file);
-    // console.log("fileList",e.fileList)
-  };
-
+// function load data
   const LoadData = () => {
     setLoading(true);
-    GetAllTripIsSuccess(users.token, "false")
+    GetAllTripIsSuccess(users.token, "false","")
       .then((res) => {
         setLoading(false);
         setTrip(res.data.data);
+        setCount(res.data.data.length);
       })
       .catch((err) => {
         setLoading(false);
@@ -88,7 +58,7 @@ const IsSuccessTrip = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -99,7 +69,53 @@ const IsSuccessTrip = () => {
       });
   };
 
-  // console.log("Trips", trip)
+    // set value input
+    const handleChange = (e) => {
+      setValueInput(e.target.value);
+    };
+  // search
+  useEffect(()=>{
+    setLoading(true);
+    GetAllTripIsSuccess(users.token, "false", valueInput)
+      .then((res) => {
+        setLoading(false);
+        setTrip(res.data.data);
+        setCount(res.data.data.length);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setTripEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  },[valueInput])
+
+  // ===========pagination antd =============
+  const indexOfLastPages = pages * pageSize;
+  const indexOfFirstPages = indexOfLastPages - pageSize;
+  const currentPages = trip.slice(indexOfFirstPages, indexOfLastPages);
+  // ================ end pagination antd ===========
 
   const styles = {
     margin: 10,
@@ -157,7 +173,7 @@ const IsSuccessTrip = () => {
           </div>
           <div class="search">
             <div class="input-search">
-              <input type="text" placeholder="ຄົ້ນຫາລາຍການ" />
+              <input type="search" placeholder="ຄົ້ນຫາລາຍການ" onChange={handleChange}/>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -218,42 +234,43 @@ const IsSuccessTrip = () => {
                   </div>
                 </div>
               ) : (
-                <div class="trip-cards">
-                  {trip &&
-                    trip.map((item, idx) => (
-                      <div className="cards" key={idx}>
-                        {item.cover && item.cover ? (
-                          <Image style={{height:"14rem"}} src={item.cover} alt={item.name} />
-                        ) : (
-                          <Image style={{height:"14rem"}} src={ImageTravel} alt={item.name} />
-                        )}
-                        <div className="cards-title">
-                          <span className="text-right">{item.name}</span>
-                        </div>
-                        <div className="cards-body">
-                          <h5>{`${
-                            item.placeName && item.placeName.substring(0, 60)
-                          }`}</h5>
-                          <ul className="cards-body-text">
-                            <li>{item.period}</li>
-                            <li>{item.amount} ຄົນ</li>
-                          </ul>
-                          <h3>
-                            ວັນທີເດີນທາງ{" "}
-                            {new Date(item.departureDate).toLocaleDateString()}
-                          </h3>
-                        </div>
-                        <div className="cards-btn">
-                          {/* <div className="btn-del-ed">
-                            <button
-                              type="button"
-                              className="btn-outline info-outline"
-                              // onClick={() => handleDelete(item._id)}
-                              onClick={() => showModal(item._id)}
-                            >
-                              <i class="bx bxs-edit"></i> ຢືນຢັນ
-                            </button>
-                          </div> */}
+                <>
+                  <div class="trip-cards">
+                    {currentPages &&
+                      currentPages.map((item, idx) => (
+                        <div className="cards" key={idx}>
+                          {item.cover && item.cover ? (
+                            <Image
+                              style={{ height: "14rem" }}
+                              src={item.cover}
+                              alt={item.name}
+                            />
+                          ) : (
+                            <Image
+                              style={{ height: "14rem" }}
+                              src={ImageTravel}
+                              alt={item.name}
+                            />
+                          )}
+                          <div className="cards-title">
+                            <span className="text-right">{item.name}</span>
+                          </div>
+                          <div className="cards-body">
+                            <h5>{`${
+                              item.placeName && item.placeName.substring(0, 60)
+                            }`}</h5>
+                            <ul className="cards-body-text">
+                              <li>{item.period}</li>
+                              <li>{item.amount} ຄົນ</li>
+                            </ul>
+                            <h3>
+                              ວັນທີເດີນທາງ{" "}
+                              {new Date(
+                                item.departureDate
+                              ).toLocaleDateString()}
+                            </h3>
+                          </div>
+                          <div className="cards-btn">
                             <Link to={`/travels/DetailSuccesTrip/${item._id}`}>
                               <button
                                 type="button"
@@ -262,23 +279,27 @@ const IsSuccessTrip = () => {
                                 ລາຍລະອຽດ
                               </button>
                             </Link>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
+                      ))}
+                  </div>
+                  {trip.length >= 5 && (
+                    <div className="pagination-trip">
+                      <PaginationComponent
+                        count={count}
+                        setPageSize={setPageSize}
+                        pageSize={pageSize}
+                        setPages={setPages}
+                        pages={pages}
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
         </div>
       </div>
-      <Modal
-        title="ອັບໂຫຼດຮູບພາບບັນຍາກາດ"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <UploadImage fileList={fileList} handleChange={handleChange} />
-      </Modal>
     </>
   );
 };

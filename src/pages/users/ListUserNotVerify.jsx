@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { read, writeFileXLSX, utils } from "xlsx";
 import { Empty, Flex, Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,31 +13,32 @@ import {
   Verify,
 } from "../../functions/Users";
 import noImage from "../../assets/image/no-image.png"
-const ListWithdrawAwaitMoney = () => {
+const ListUserNotVerify = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [withDraw, setWithDraw] = useState([]);
-  const [infoWithDraw, setinfoWithDraw] = useState([]);
-  const [withdrawEmpty, setWithWrawEmpty] = useState(null);
+  const [userNotVerify, setUserNotVerify] = useState([]);
+  const [infoUsers, setinfoUsers] = useState([]);
+  const [userEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
 
-
+// function first load when open pages
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
 
+// load all data 
   const loadData = () => {
-    GetAllNotVerify(users.token)
+    GetAllNotVerify(users.token,"")
       .then((res) => {
-        setWithDraw(res.data.data);
+        setUserNotVerify(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setWithWrawEmpty(err.response.data.message);
+        setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -66,9 +65,14 @@ const ListWithdrawAwaitMoney = () => {
         setLoading(false);
       });
   };
+
+// function open modal
   const handleModal = (id) => {
     setOpenModal(true);
   };
+  let openModals = openModal ? "open" : "";
+
+// function reset password
   const handleSubmit = (e) => {
     setLoadingAwaitMoney(true);
     e.preventDefault();
@@ -146,11 +150,14 @@ const ListWithdrawAwaitMoney = () => {
       });
   };
 
+// function cancel button modal
   const handleModalCancel = () => {
     setOpenModal(false);
     setFormType(true);
-    setinfoWithDraw([]);
+    setinfoUsers([]);
   };
+
+// function delete
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການປະຕິເສດ",
@@ -191,13 +198,8 @@ const ListWithdrawAwaitMoney = () => {
     });
   };
 
-  let openModals = openModal ? "open" : "";
-
-  // const formatPrice = (value) => {
-  //   let val = (value / 1).toFixed(0).replace(",", ".");
-  //   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  // };
-
+ 
+// function verify users
   const handleVerify = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການ Verify",
@@ -238,7 +240,7 @@ const ListWithdrawAwaitMoney = () => {
       }
     });
   };
-
+// customize header of table
   const customStyles = {
     rows: {
       style: {
@@ -265,7 +267,7 @@ const ListWithdrawAwaitMoney = () => {
       },
     },
   };
-
+// colums header of table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -288,7 +290,7 @@ const ListWithdrawAwaitMoney = () => {
     {
       name: "verify",
       cell: (row) => (
-        <div className="withdraw-status">
+        <div className="user-status">
           {row.status === "success" ? (
             <div className="status-approved">
               <p>ຢືນຢັນສຳເລັດ</p>
@@ -381,21 +383,23 @@ const ListWithdrawAwaitMoney = () => {
       width: "180px",
     },
   ];
-
+// set value
   const handleChange = (e) => {
-    setinfoWithDraw({ ...infoWithDraw, [e.target.name]: e.target.value });
+    setinfoUsers({ ...infoUsers, [e.target.name]: e.target.value });
   };
+// set value input search
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
+// function handle Search
   const handleClickSearch = ()=>{
     GetAllNotVerify(users.token,valueSearch)
       .then((res) => {
-        setWithDraw(res.data.data);
+        setUserNotVerify(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setWithWrawEmpty(err.response.data.message);
+        setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -422,9 +426,6 @@ const ListWithdrawAwaitMoney = () => {
         setLoading(false);
       });
   }
-
-
-  // console.log("file", infoWithDraw)
   return (
     <div className="card-main">
       {loading ? (
@@ -444,8 +445,8 @@ const ListWithdrawAwaitMoney = () => {
         </div>
       ) : (
         <>
-          <div className="withdraw-table">
-            <div className="withdraw-card-header">
+          <div className="user-table">
+            <div className="user-card-header">
               <div className="search">
                 <div className="input-search">
                   <input
@@ -485,72 +486,59 @@ const ListWithdrawAwaitMoney = () => {
                 </div>
               </div>
             </div>
-            {withdrawEmpty ? (
-              <div className="empty-card">
-                <Empty
-                  image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                  imageStyle={{
-                    height: 60,
-                  }}
-                  description={
-                    <span>
-                      <a>{withdrawEmpty}</a>
-                    </span>
-                  }
-                ></Empty>
-              </div>
-            ) : (
+            {
               <DataTables
                 columns={columns}
-                data={withDraw}
+                data={userNotVerify}
                 customStyles={customStyles}
+                userEmpty={userEmpty}
               />
-            )}
+            }
           </div>
         </>
       )}
 
       {/* ================================Modal============================= */}
-      <div className={`modal-withdraw ${openModals}`}>
-        <div className="modal-withdraw-card Card">
+      <div className={`modal-user ${openModals}`}>
+        <div className="modal-user-card Card">
           <form onSubmit={handleSubmit}>
-            <div className="modal-withdraw-card-content">
-              <div className="modal-input-withdraw">
-                <div className="modal-withdraw-input">
-                  <div className="withdraw-title">
+            <div className="modal-user-card-content">
+              <div className="modal-input-user">
+                <div className="modal-user-input">
+                  <div className="user-title">
                     <h3>Reset Password</h3>
                   </div>
-                  <div className="modal-withdraw-form-group">
-                    <div className="input-group-withdraw">
+                  <div className="modal-user-form-group">
+                    <div className="input-group-user">
                       <label htmlFor="">ລະຫັດສະມາຊິກ</label>
                       <input
                         type="text"
                         name="userCode"
-                        className="form-modal-control-withdraw"
+                        className="form-modal-control-user"
                         onChange={handleChange}
                       />
                     </div>
-                    <div className="input-group-withdraw">
+                    <div className="input-group-user">
                       <label htmlFor="">ລະຫັດຜ່ານ</label>
                       <input
                         type="password"
                         name="newPassword"
-                        className="form-modal-control-withdraw"
+                        className="form-modal-control-user"
                         onChange={handleChange}
                       />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="modals-withdraw-btn">
+              <div className="modals-user-btn">
                 <button
                   type="button"
-                  className="modal-withdraw-btn btn-secondary"
+                  className="modal-user-btn btn-secondary"
                   onClick={handleModalCancel}
                 >
                   ຍົກເລີກ
                 </button>
-                <button type="submit" className="modal-withdraw-btn btn-info">
+                <button type="submit" className="modal-user-btn btn-info">
                   {loading ? (
                     <>
                       <span>ກຳລັງ....</span>
@@ -579,4 +567,4 @@ const ListWithdrawAwaitMoney = () => {
   );
 };
 
-export default ListWithdrawAwaitMoney;
+export default ListUserNotVerify;

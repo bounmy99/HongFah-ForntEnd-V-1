@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { useSelector } from 'react-redux';
-import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
 import imagePreview from '../../assets/image/upload.png';
 import { GetAllProductType } from '../../functions/ProductType';
 import { CreateProduct } from '../../functions/Products';
@@ -47,7 +44,7 @@ const AddProduct = () => {
     useEffect(() => {
         loadAllProductType();
     }, [])
-
+// load product type
     const loadAllProductType = () => {
         GetAllProductType(users.token).then(res => {
             setProductTypes(res.data.data)
@@ -78,21 +75,23 @@ const AddProduct = () => {
         })
     }
 
+// set value 
     const handleChange = (e) => {
         setProduct({ ...product, [e.target.name]: e.target.value })
     }
+
+// set product type
     const handleChangeProductType = (e) => {
         setProduct({ ...product, productType: e.target.value })
     }
 
+// set file list images
     const handleChangeImage = (e) => {
         const files = e.target.files;
         if (files) {
             let allFile = product.images;
             let allPreview = image
 
-            console.log("All File", allFile)
-            console.log("allPreview", allPreview)
             for (let i = 0; i < files.length; i++) {
 
                 // Preview
@@ -106,10 +105,7 @@ const AddProduct = () => {
         }
     }
 
-    // console.log("images",images)
-
-    // console.log("New images Select", image)
-
+// insert product
     const handleSubmit = (e) => {
         setLoading(true);
         e.preventDefault();
@@ -139,7 +135,7 @@ const AddProduct = () => {
                     showConfirmButton: false,
                     timer: 3500
                 });
-               
+                setLoading(false)
                 return;
             }
         
@@ -196,6 +192,8 @@ const AddProduct = () => {
         })
 
     }
+
+// reset file when insert finish
     const handleReset = () => {
         setImage([]);
         setProduct([]);
@@ -219,21 +217,6 @@ const AddProduct = () => {
                         <div className="content-left">
                             <div className="image-add-multiple" >
                                 <CaruselAdd handleChangeImage={handleChangeImage} imagePreview={imagePreview} images={image} />
-
-                                {
-                                /* <input type="file" multiple accept="images/*" className="input-file" hidden
-                                    onChange={handleChangeImage}
-                                />
-                                {!image[0] && <img src={imagePreview} onClick={() => document.querySelector(".input-file").click()} className="img-fluid" />}
-                                <Carousel autoPlay infiniteLoop showArrows={true}>
-                                    {image && image.map((img, index) => (
-                                        <div key={index}>
-                                            <img src={img} alt={img} />
-                                        </div>
-                                    ))}
-                                </Carousel> */
-                                }
-
                             </div>
                             <div className="btn-button">
                                 <button type="button" className="btn-info-outline" onClick={handleReset}>ຍົກເລິກການເພີ່ມ</button>
@@ -275,6 +258,14 @@ const AddProduct = () => {
                                 <div className="input-group">
                                     <label htmlFor="">ໄດ້ຮັບເງິນຄືນ (cash back):</label>
                                     <input type="text" name="cashback" onChange={handleChange} id="" className="form-controls" value={cashback} />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <label htmlFor="">ຈຳນວນ:</label>
+                                    <input type="text" name="amount" onChange={handleChange} id="" className="form-controls" value={amount} />
+                                </div>
+                                <div className="input-group">
                                 </div>
                             </div>
                             <div className="input-group">

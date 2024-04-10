@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import PaginationComponent from "../../components/PaginationComponent";
 import { Empty, Button, Drawer, Pagination, Spin } from "antd";
-import { GetWalletWithUserCode } from "../../functions/WithDraw";
+import { GetUserCode } from "../../functions/GetUserWithUsercode";
 import {
   GetOneTrip,
   UpdateTrip,
@@ -36,6 +36,7 @@ const DetailTravels = () => {
     loadData();
   }, []);
 
+// function load data 
   const loadData = () => {
     GetOneTrip(users.token, id)
       .then((res) => {
@@ -48,34 +49,34 @@ const DetailTravels = () => {
       });
   };
 
-  console.log("member", member);
-  console.log("length", count);
 
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = member.slice(indexOfFirstPages, indexOfLastPages);
 
-  console.log("currentPages", currentPages);
   // ================ end pagination antd ===========
 
+  // open sidebar insert member
   const showDrawer = () => {
     setOpen(true);
   };
+
+  // close sidebar inset member
   const onClose = () => {
     setOpen(false);
     setUserCode("")
     setValueSearch("")
     setStatus(false)
   };
-
+// set value search 
   const handleSeach = (e) => {
     setUserCode(e.target.value);
   };
-
+// function search data
   const handleSeachData = () => {
     setLoadingSearch(true);
-    GetWalletWithUserCode(users.token, useCode)
+    GetUserCode(users.token, useCode)
       .then((res) => {
         setValueSearch(res.data.data);
         setStatus(true);
@@ -110,7 +111,7 @@ const DetailTravels = () => {
         }
       });
   };
-
+// function delete member
   const handleDelete = (memberId) => {
     const Member = {
       trip_id : value._id,
@@ -142,13 +143,12 @@ const DetailTravels = () => {
     });
   };
 
+// set value trip
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
-  const handleChangeSearch = (e) => {
-    setValueSearch({ ...valueSearch, [e.target.name]: e.target.value });
-  };
 
+  // function insert member
   const handleMember = (e) => {
     setLoadingSearch(true);
     e.preventDefault();
@@ -191,7 +191,7 @@ const DetailTravels = () => {
         }
       });
   };
-
+  // function update trip
   const handleSubmit = (e) => {
     setLoading(true);
     e.preventDefault();

@@ -1,7 +1,7 @@
 import react, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { GetOneEmployee } from "../../functions/Employee";
+import { GetOneLineWork } from "../../functions/LineWork";
 import DataTables from '../../components/DataTable';
 const DetailsEmp = () => {
   const { id } = useParams();
@@ -9,7 +9,7 @@ const DetailsEmp = () => {
   const [detail, setDetail] = useState([]);
   const [loading,setLoading] = useState(false)
   const navigate = useNavigate();
-
+// customize style cell of table
   const customStyles = {
     rows: {
         style: {
@@ -36,7 +36,7 @@ const DetailsEmp = () => {
         },
     },
 };
-
+// columns header of table
 const columns = [
     {
         name: "ລຳດັບ",
@@ -86,10 +86,10 @@ const columns = [
         width: '100px'
     }
 ];
-
+// load detail
   useEffect(() => {
     setLoading(true)
-    GetOneEmployee(users.token, id)
+    GetOneLineWork(users.token, id)
       .then((res) => {
         setDetail(res.data.data);
         setLoading(false)
@@ -121,7 +121,7 @@ const columns = [
         setLoading(false)
       });
   }, []);
-  console.log("Details", detail);
+
 
   return (
     <div className="DetailLineWork">

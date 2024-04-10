@@ -3,16 +3,18 @@ import { useSelector } from 'react-redux';
 // functions
 import { GetOneOrders } from '../../functions/Orders';
 import { Link, useParams } from 'react-router-dom'
-import DataTable from 'react-data-table-component'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { formatPrice } from "../../functions/FormatPrices"
+import {Table} from 'antd'
 import Swal from 'sweetalert2'
 const InfoOrders = () => {
     const navigate = useNavigate();
     const { users } = useSelector((state) => ({ ...state }))
     const { id } = useParams();
-    // console.log("Orders ID",id);
     const [order, setOrder] = useState([]);
-
+    const [page, setPage] = useState(1);
+    const [pageSiize, setPageSiize] = useState(1);
+// load one cancel orders
     useEffect(() => {
         GetOneOrders(users.token, id).then(res => {
             console.log(res.data.data)
@@ -43,92 +45,43 @@ const InfoOrders = () => {
               }
         })
     }, []);
-
-    const customStyles = {
-        rows: {
-            style: {
-                minHeight: '0px', // override the row height
-            },
-        },
-        headCells: {
-            style: {
-                paddingLeft: '0px', // override the cell padding for head cells
-                paddingRight: '0px',
-                fontSize: "12px",
-                justifyContent: "center",
-                fontWeight: "bold",
-                backgroundColor: "#00A5E8",
-            },
-        },
-        cells: {
-            style: {
-                paddingLeft: '0px', // override the cell padding for data cells
-                paddingRight: '0px',
-                justifyContent: "center",
-                fontSize: "12px",
-                backgroundColor: "#ecf3f6",
-            },
-        },
-    };
+// columns header of table
     const columns = [
         {
-            name: "ລະຫັດສິນຄ້າ",
-            selector: (row) => row.productCode,
-            cell: row => (
-                <p className="name-posit">{row.productCode}</p>
-            ),
-            sortable: true,
-            width: '70px'
+            title: "ລະຫັດສິນຄ້າ",
+            dataIndex : "productCode",
+            key : "productCode",
+            width: '120px'
         },
         {
-            name: "ຮູບສິນຄ້າ",
-            selector: (row) => (row.image),
-            cell: row => (
-                <img src={row.image} alt={row.name} className="img-rounded" />
+            title: "ຮູບສິນຄ້າ",
+            dataIndex : "image",
+            key : "image",
+            render: row => (
+                <img src={row} alt={row} className="img-rounded" />
             ),
-            sortable: true,
             width: '60px'
         },
 
         {
-            name: "ຊື່ສິນຄ້າ",
-            selector: (row) => (row.name),
-            sortable: true,
+            title: "ຊື່ສິນຄ້າ",
+            dataIndex : "name",
+            key : "name",
             width: '232px'
         },
         {
-            name: "ຈຳນວນ",
-            selector: (row) => row.qty,
-            cell: row => (
-                <p>{row.qty}</p>
-            ),
-            sortable: true,
+            title: "ຈຳນວນ",
+            dataIndex : "qty",
+            key : "qty",
             width: '50px'
         },
         {
-            name: "ລາຄາ",
-            sortable: true,
-            selector: (row) => row.price,
-            cell: row => (
-
-                <h4>{row.price}</h4>
-            ),
+            title: "ລາຄາ",
+            dataIndex : "price",
+            render : (price)=>formatPrice(price),
+            key : "price",
             width: '162px'
         }
-        // {
-        //     name: "ສະຖານທີຈັດສົ່ງ",
-        //     sortable: true,
-        //     selector: (row) => row.address,
-        //     cell: row => (
-        //         <div className="name-product">
-        //             <div className="location">
-        //                 <h4>{row.location.company}</h4>
-        //                 <p>{row.location.address}</p>
-        //             </div>
-        //         </div>
-        //     ),
-        //     width: '162px'
-        // }
     ];
 
     return (
@@ -207,12 +160,18 @@ const InfoOrders = () => {
                                 <h5>ລາຍລະອຽດສິນຄ້າ</h5>
                             </div>
                             <div className="content-detail Card">
-                                {<DataTable
-                                    columns={columns}
-                                    data={order.products}
-                                    fixedHeader
-                                    customStyles={customStyles}
-                                />}
+                                <Table
+                                   dataSource={order.products}
+                                   columns={columns}
+                                   pagination={{
+                                    current: page,
+                                    pageSize: pageSiize,
+                                    onChange: (page, pageSiize) => {
+                                      setPage(page);
+                                      setPageSiize(pageSiize);
+                                    },
+                                  }}
+                                />
                             </div>
                         </div>
                 

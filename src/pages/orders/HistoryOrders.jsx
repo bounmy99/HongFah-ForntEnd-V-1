@@ -4,7 +4,7 @@ import TableComponent from '../../components/TableComponent';
 import { Empty } from 'antd';
 import { GetAllOrders } from '../../functions/Orders';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { formatPrice } from "../../functions/FormatPrices"
 
 const HistoryOrders = () => {
   const { users } = useSelector((state) => ({ ...state }))
@@ -13,11 +13,7 @@ const HistoryOrders = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const formatPrice = (value)=>{
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");      
-   }
-
+// customize style cell of table
    const customStyles = {
     rows: {
       style: {
@@ -43,7 +39,7 @@ const HistoryOrders = () => {
       },
     },
   };
-  
+  // columns header of table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -133,9 +129,9 @@ const HistoryOrders = () => {
       width: '162px'
     },
   ];
-
+// load all success orders
   useEffect(() => {
-    GetAllOrders(users.token,"","", "success").then(res => {
+    GetAllOrders(users.token,"","","", "success").then(res => {
       setSuccessOrders(res.data.data);
     }).catch(err => {
       setSuccessOrdersEmpty(err.response.data.message);
@@ -165,31 +161,12 @@ const HistoryOrders = () => {
     })
   }, []);
 
-  console.log("Success Orders", successOrders)
+
   return (
     <>
-      {
-        successOrdersEmpty ?
-          <div className="empty-card">
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              imageStyle={{
-                height: 60,
-              }}
-              description={
-                <span>
-                  <a>{successOrdersEmpty}</a>
-                </span>
-              }
-            >
-            </Empty>
-          </div>
-          :
           <div>
-            <TableComponent Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
+            <TableComponent successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
           </div>
-      }
-
     </>
 
   )

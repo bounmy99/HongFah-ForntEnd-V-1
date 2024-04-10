@@ -4,7 +4,6 @@ import { GetOneTrip } from "../../functions/Trip";
 import { useSelector, useDispatch } from "react-redux";
 import DataTable from "react-data-table-component";
 import { Carousel, Empty,Image } from "antd";
-import imageSlide from "../../assets/image/no-image.png";
 
 const DetailSuccesTrip = () => {
   const { id } = useParams();
@@ -13,7 +12,8 @@ const DetailSuccesTrip = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const [detail, setDetail] = useState([]);
   const [member, setMember] = useState([]);
-
+  
+// function load data
   useEffect(() => {
     GetOneTrip(users.token, id)
       .then((res) => {
@@ -46,10 +46,6 @@ const DetailSuccesTrip = () => {
         }
       });
   }, []);
-
-  // console.log(detail);
-  // console.log(detail.images);
-  // console.log(member);
 
   const customStyles = {
     rows: {

@@ -25,7 +25,7 @@ import HomeOrders from "./pages/orders/HomeOrders";
 import InfoOrders from "./pages/orders/InfoOrders";
 import InfoCancel from "./pages/orders/InfoCancel";
 import InfoHistory from "./pages/orders/InfoHistory";
-import ListEmployee from "./pages/lineWorks/ListEmployee";
+import ListLineWork from "./pages/lineWorks/ListLineWork";
 import DetailsEmp from "./pages/lineWorks/DetailsEmp";
 import ListPackage from "./pages/packages/ListPackage";
 
@@ -37,8 +37,14 @@ import DetailSuccesTrip from "./pages/travels/DetailSuccesTrip";
 import Auth from "./pages/auth/Auth";
 import EditUser from "./pages/auth/EditUser";
 import AddUser from "./pages/auth/AddUser";
+
 import HomeSales from "./pages/bonus/HomeSales";
+import HistoryTransfer from "./pages/bonus/HistoryTransfer";
+import MaintainFalse from "./pages/bonus/MaintainFalse";
+import MaintainTrue from "./pages/bonus/MaintainTrue";
+
 import ListPosition from "./pages/position/ListPosition";
+
 import ListUsers from "./pages/users/ListUsers";
 import UsersDetail from "./pages/users/UsersDetail";
 
@@ -179,7 +185,7 @@ function App() {
                     path="/lineWork"
                     element={
                       <RouteProtect>
-                        <ListEmployee />
+                        <ListLineWork />
                       </RouteProtect>
                     }
                   />
@@ -290,6 +296,30 @@ function App() {
                     element={
                       <RouteProtect>
                         <HomeSales />
+                      </RouteProtect>
+                    }
+                  />
+                  <Route
+                    path="/Bonus/history"
+                    element={
+                      <RouteProtect>
+                        <HistoryTransfer />
+                      </RouteProtect>
+                    }
+                  />
+                  <Route
+                    path="/Bonus/maintain/true"
+                    element={
+                      <RouteProtect>
+                        <MaintainTrue />
+                      </RouteProtect>
+                    }
+                  />
+                  <Route
+                    path="/Bonus/maintain/false"
+                    element={
+                      <RouteProtect>
+                        <MaintainFalse />
                       </RouteProtect>
                     }
                   />

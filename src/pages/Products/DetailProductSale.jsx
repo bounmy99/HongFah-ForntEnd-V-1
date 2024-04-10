@@ -16,6 +16,7 @@ const DetailProductSale = () => {
   const [page, setPage] = useState(1);
   const [pageSiize, setPageSiize] = useState(2);
 
+  // columns header of data
   const columns = [
     {
       title: "ລະຫັດສິນຄ້າ",
@@ -61,9 +62,7 @@ const DetailProductSale = () => {
       key: "totalCashback",
     },
   ];
-
-  //   console.log(products)
-
+// load data 
   useEffect(() => {
     setLoading(true);
     GetOneOrderAdmin(users.token, id)

@@ -21,6 +21,7 @@ const EditUser = () => {
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState([]);
 
+
   useEffect(() => {
     GetOneUser(users.token, id)
       .then((res) => {
@@ -54,6 +55,7 @@ const EditUser = () => {
     loadData();
   }, []);
 
+  // load one user
   const loadData = () => {
     GetAllUser(users.token)
       .then((res) => {
@@ -88,12 +90,12 @@ const EditUser = () => {
         }
       });
   };
-
+// set value edtit
   const handleChange = (e) => {
-    console.log(e.target.name);
-    console.log(e.target.value);
     setUserEdit({ ...userEdit, [e.target.name]: e.target.value });
   };
+  
+  // update users
   const handleSubmit = (e) => {
     setLoading(true);
     e.preventDefault();

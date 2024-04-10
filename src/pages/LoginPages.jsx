@@ -16,36 +16,48 @@ const LoginPages = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
   const { users } = useSelector((state) => ({ ...state }))
+  const [value, setValue] = useState({
+    userCode: "A27614",
+    password: "12345678"
+  })
 
+// function first load open page
   useEffect(() => {
     if (users) {
       navigate("/dashboard")
     } else {
       navigate("/")
     }
-  }, [users])
+  }, [users]);
 
+// function show hide password
   const showHide = () => {
     setIsPasswordShow(isPasswordShow => !isPasswordShow);
   }
-  // console.log(isPasswordShow)
-
-  const [value, setValue] = useState({
-    userCode: "A27614",
-    password: "12345678"
-  })
-
-  // console.log(value)
+// function submit login
   const handleSubmit = (e) => {
     setLoading(true)
     e.preventDefault()
     if (value.userCode === '' && value.password === '') {
-      alert("ກະລຸນາຕື່ມຂໍ້ມູນໃຫ້ຄົບຖ້ວນ")
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "ກະລຸນາຕື່ມຂໍ້ມູນໃຫ້ຄົບຖ້ວນ"
+      });
       return
     }
     Login(value).then(res => {
       setLoading(false)
-      // console.log(res.data.data)
       dispatch({
         type: "USER_LOGIN",
         payload: {
@@ -79,7 +91,6 @@ const LoginPages = () => {
       localStorage.setItem("data", JSON.stringify(res.data.data))
     }).catch(err => {
       setLoading(false)
-      // console.log('Error', err.response.data.message)
       if(err.response.data.message === "not found"){
         const Toast = Swal.mixin({
           toast: true,
@@ -103,6 +114,7 @@ const LoginPages = () => {
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   }
+
   return (
     <div className="login-pages">
       <div className="card-login-border">
@@ -154,7 +166,6 @@ const LoginPages = () => {
                 <Link to={'/forgetPassword'} className="forget-password">ລືມລະຫັດຜ່ານ</Link>
               </div>
             </div>
-            {/* <button type={`submit`} className={`btn`} >ເຂົ້າສູ່ລະບົບ</button> */}
             <button type={`${value.password.length <= 4 ? 'button' : 'submit'}`} className={`${value.password.length <= 4 ? 'disable' : 'btn'}`} >ເຂົ້າສູ່ລະບົບ</button>
           </form>
         </div>

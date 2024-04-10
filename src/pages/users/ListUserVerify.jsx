@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { read, writeFileXLSX, utils } from "xlsx";
-import { Empty, Flex, Spin, Tooltip } from "antd";
+import { Empty, Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../components/DataTable";
@@ -17,26 +16,27 @@ const ListVerify = () => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingAwait, setLoadingAwait] = useState(false);
-  const [withDraw, setWithDraw] = useState([]);
-  const [infoWithDraw, setinfoWithDraw] = useState([]);
-  const [withdrawEmpty, setWithWrawEmpty] = useState(null);
+  const [userVerify, setUserVirify] = useState([]);
+  const [infoUsersVerify, setInfoUsersVerify] = useState([]);
+  const [usersEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
 
 
+// function first load when open pages
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
-
+// function load data
   const loadData = () => {
-    GetAllVerify(users.token)
+    GetAllVerify(users.token,"")
       .then((res) => {
         console.log(res.data)
-        setWithDraw(res.data.data);
+        setUserVirify(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setWithWrawEmpty(err.response.data.message);
+        setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -63,10 +63,12 @@ const ListVerify = () => {
         setLoading(false);
       });
   };
-
+// function oppen modal
   const handleModal = () => {
     setOpenModal(true);
   };
+
+  // function reset password
   const handleSubmit = (e) => {
     setLoadingAwait(true);
     e.preventDefault();
@@ -94,9 +96,6 @@ const ListVerify = () => {
     }
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-
-    console.log("Data In form", Data);
-
     ResetPassword(users.token, Data)
       .then((res) => {
         if (res.data.message === "success") {
@@ -143,12 +142,13 @@ const ListVerify = () => {
       });
   };
 
+  // function cancel button
   const handleModalCancel = () => {
     setOpenModal(false);
-    setFormType(true);
-    setinfoWithDraw([]);
+    setInfoUsersVerify([]);
   };
 
+// function delete users
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນລົບ",
@@ -188,11 +188,9 @@ const ListVerify = () => {
       }
     });
   };
-
-
   let openModals = openModal ? "open" : "";
 
-
+// customize style cell
   const customStyles = {
     rows: {
       style: {
@@ -220,6 +218,7 @@ const ListVerify = () => {
     },
   };
 
+// colums of header table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -300,24 +299,66 @@ const ListVerify = () => {
     },
   ];
 
-
+// set value verify
   const handleChange = (e) => {
-    setinfoWithDraw({ ...infoWithDraw, [e.target.name]: e.target.value });
+    setInfoUsersVerify({ ...infoUsersVerify, [e.target.name]: e.target.value });
   };
-  // console.log("file", infoWithDraw)
 
+  
+// set value input search
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
+
+  console.log(valueSearch)
+
+
+// function search data
+  useEffect(()=>{
+    GetAllVerify(users.token,valueSearch)
+    .then((res) => {
+      console.log(res.data)
+      setUserVirify(res.data.data);
+      setLoading(false);
+    })
+    .catch((err) => {
+      setUserEmpty(err.response.data.message);
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: err.response.data.message,
+      });
+      
+      if (err.response.data.message === "unauthorized") {
+        dispatch({
+          type: "USER_LOGOUT",
+          payload: null,
+        });
+        navigate("/");
+      }
+      setLoading(false);
+    });
+  },[valueSearch])
+  
   const handleClickSearch = ()=>{
     GetAllVerify(users.token,valueSearch)
       .then((res) => {
         console.log(res.data)
-        setWithDraw(res.data.data);
+        setUserVirify(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setWithWrawEmpty(err.response.data.message);
+        setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -364,14 +405,14 @@ const ListVerify = () => {
         </div>
       ) : (
         <>
-          <div className="withdraw-table">
-            <div className="withdraw-card-header">
+          <div className="user-table">
+            <div className="user-card-header">
               <div className="search">
                 <div className="input-search">
                   <input
-                    onChange={handleChangeSearch}
                     type="text"
                     placeholder="ຄົ້າຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                    onChange={handleChangeSearch}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -405,72 +446,59 @@ const ListVerify = () => {
                 </div>
               </div>
             </div>
-            {withdrawEmpty ? (
-              <div className="empty-card">
-                <Empty
-                  image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                  imageStyle={{
-                    height: 60,
-                  }}
-                  description={
-                    <span>
-                      <a>{withdrawEmpty}</a>
-                    </span>
-                  }
-                ></Empty>
-              </div>
-            ) : (
+            {
               <DataTables
                 columns={columns}
-                data={withDraw}
+                data={userVerify}
                 customStyles={customStyles}
+                userEmpty={usersEmpty}
               />
-            )}
+            }
           </div>
         </>
       )}
 
       {/* ================================Modal============================= */}
-      <div className={`modal-withdraw ${openModals}`}>
-        <div className="modal-withdraw-card Card">
+      <div className={`modal-user ${openModals}`}>
+        <div className="modal-user-card Card">
           <form onSubmit={handleSubmit}>
-            <div className="modal-withdraw-card-content">
-              <div className="modal-input-withdraw">
-                <div className="modal-withdraw-input">
-                  <div className="withdraw-title">
+            <div className="modal-user-card-content">
+              <div className="modal-input-user">
+                <div className="modal-user-input">
+                  <div className="user-title">
                     <h3>Reset Password</h3>
                   </div>
-                  <div className="modal-withdraw-form-group">
-                    <div className="input-group-withdraw">
+                  <div className="modal-user-form-group">
+                    <div className="input-group-user">
                       <label htmlFor="">ລະຫັດສະມາຊິກ</label>
                       <input
                         type="text"
                         name="userCode"
-                        className="form-modal-control-withdraw"
+                        className="form-modal-control-user"
                         onChange={handleChange}
                       />
                     </div>
-                    <div className="input-group-withdraw">
+                    <div className="input-group-user">
                       <label htmlFor="">ລະຫັດຜ່ານ</label>
                       <input
                         type="password"
                         name="newPassword"
-                        className="form-modal-control-withdraw"
+                        className="form-modal-control-user"
                         onChange={handleChange}
                       />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="modals-withdraw-btn">
+              <div className="modals-user-btn">
                 <button
                   type="button"
-                  className="modal-withdraw-btn btn-secondary"
+                  className="modal-user-btn btn-secondary"
                   onClick={handleModalCancel}
                 >
                   ຍົກເລີກ
                 </button>
-                <button type="submit" className="modal-withdraw-btn btn-info">
+                <button type="submit" className="modal-user-btn btn-info">
                   {loadingAwait ? (
                     <>
                       <span>ກຳລັງ....</span>

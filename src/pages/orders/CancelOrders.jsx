@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import TableComponent from '../../components/TableComponent';
-import { Empty } from 'antd'
 import { GetAllOrders } from '../../functions/Orders';
 import { useSelector,useDispatch } from 'react-redux';
-
+import { formatPrice } from "../../functions/FormatPrices"
 const CancelOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
@@ -12,11 +11,8 @@ const CancelOrders = () => {
   const [cancelOrderEmpty, setCancelOrderEmpty] = useState("");
   const dispatch = useDispatch();
 
-  const formatPrice = (value)=>{
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");      
-   }
 
+// customize style cell of table
    const customStyles = {
     rows: {
       style: {
@@ -42,7 +38,7 @@ const CancelOrders = () => {
       },
     },
   };
-
+// columns header of table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -135,8 +131,9 @@ const CancelOrders = () => {
   
   ];
 
+  // load all cancel orders
   useEffect(() => {
-    GetAllOrders(users.token, "","","cancel").then(res => {
+    GetAllOrders(users.token, "","","","cancel").then(res => {
       setCancelOrder(res.data.data);
     }).catch(err => {
       setCancelOrderEmpty(err.response.data.message);
@@ -166,28 +163,12 @@ const CancelOrders = () => {
     })
   }, []);
 
-  console.log("Cancelled Order", cancelOrder)
+
   return (
     <>
-      {cancelOrderEmpty ?
-        <div className="empty-card">
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{
-              height: 60,
-            }}
-            description={
-              <span>
-                <a>{cancelOrderEmpty}</a>
-              </span>
-            }
-          >
-          </Empty>
-        </div>
-        :
-
+      {
         <div>
-          <TableComponent Status={"cancel"} setCancelOrder={setCancelOrder} setCancelOrderEmpty={setCancelOrderEmpty} columns={columns} customStyles={customStyles} data={cancelOrder} />
+          <TableComponent cancelOrderEmpty={cancelOrderEmpty} Status={"cancel"} setCancelOrder={setCancelOrder} setCancelOrderEmpty={setCancelOrderEmpty} columns={columns} customStyles={customStyles} data={cancelOrder} />
         </div>
       }
 

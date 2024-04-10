@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-// import { ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { Empty, Tooltip, Tabs, Badge, Button } from "antd";
 import icons from "../../assets/image/icons-add.png";
 import { GetAllProduct } from "../../functions/Products";
@@ -12,6 +11,7 @@ import HistoryProduct from "./HistoryProduct";
 import CartProduct from "./CartProduct";
 import CardProduct from "../../components/CardProduct";
 import PaginationComponent from "../../components/PaginationComponent";
+import { formatPrice } from "../../functions/FormatPrices";
 const initialValue = {
   productType: "",
   maxPrice: "",
@@ -24,7 +24,7 @@ const SaleProduct = () => {
   const [product, setProduct] = useState([]);
   const [productTypes, setProductTypes] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [keyword, setKeyword] = useState('');
+
   const [selectedType, setSelectedType] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
 
@@ -32,26 +32,18 @@ const SaleProduct = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [search, setSearch] = useState("");
   const [arg, setArg] = useState(initialValue);
-  // console.log(arg)
+
   const [isActiveDropdownType, setIsActiveDropdownType] = useState(false);
   const [isActiveDropdownPrice, setIsActiveDropdownPrice] = useState(false);
   const [count, setCount] = useState("");
   const [pageSize, setPageSize] = useState(24);
   const [pages, setPages] = useState(1);
   const [productsEmpty, setProductsEmpty] = useState("");
-  const [visible, setVisible] = useState(27);
 
   const [keyTabs, setKeyTabs] = useState("");
   const { state } = useLocation();
 
-
-  // const ProductType = ['ປະເພດຄີມ', 'ປະເພດເຈວ', 'ປະເພດແປ້ງ', 'ປະເພດນ້ຳ'];
   const ProductPrice = [15000, 30000, 50000, 100000];
-
-  const formatPrice = (value) => {
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
 
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
@@ -68,15 +60,13 @@ const SaleProduct = () => {
     }
   }, []);
 
+  // load all products
   const LoadData = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
-        setAllPages(res.data.allPage);
-        setPages(res.data.page);
-        console.log("Product API", res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -96,7 +86,7 @@ const SaleProduct = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -106,26 +96,28 @@ const SaleProduct = () => {
         }
       });
   };
+  // load all products type
   const loadAllProductType = () => {
     GetAllProductType(users.token).then((res) => {
       setProductTypes(res.data.data);
       // console.log("ProductType", res.data)
     });
   };
+
+  // open dropdown product type
   const handleClickOpenType = () => {
     setIsActiveDropdownType((isActiveDropdownType) => !isActiveDropdownType);
     setIsActiveDropdownPrice(false);
   };
-
   let openDropType = isActiveDropdownType ? "active" : "";
-
+  // open dropdown price
   const handleClickOpenPrice = () => {
     setIsActiveDropdownType(false);
     setIsActiveDropdownPrice((isActiveDropdownPrice) => !isActiveDropdownPrice);
   };
-
   let openDropPrice = isActiveDropdownPrice ? "active" : "";
 
+  // set value products type
   const handleClickType = (e) => {
     setProductType(e.target.value);
     setArg({ ...arg, productType: e.target.value });
@@ -133,6 +125,7 @@ const SaleProduct = () => {
     setIsActiveDropdownPrice(false);
     setSelectedType(e.target.textContent);
   };
+  // set value products price
   const handleClickPrice = (e) => {
     setIsActiveDropdownType(false);
     setIsActiveDropdownPrice(false);
@@ -146,19 +139,14 @@ const SaleProduct = () => {
     height: 135,
     width: 110,
   };
-
-  // const searched = (keyword) => (item) => item.name === undefined ? item.name?.toLowerCase().includes(keyword) : item.name.toLowerCase().includes(keyword);
-  // const searched = (keyword) => (item) => item.name.toLowerCase().includes(keyword);
-
+  // search with Produc price , product Type, Product name
   const handleSearch = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
-        setAllPages(res.data.allPage);
         setPages(res.data.page);
-        console.log("Product API", res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -167,7 +155,7 @@ const SaleProduct = () => {
         setProductsEmpty(err.response.data.message);
       });
   };
-
+  // reset search
   const handleReset = () => {
     const maxPrice = [];
     const productType = [];
@@ -176,7 +164,6 @@ const SaleProduct = () => {
     GetAllProduct(users.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
-      setAllPages(res.data.allPage);
       setPages(res.data.page);
       console.log("Product API", res.data);
       setProductsEmpty("");
@@ -185,11 +172,6 @@ const SaleProduct = () => {
       setLoading(false);
     });
   };
-  const handleShowMore = () => {
-    setVisible((show) => show + 27);
-  };
-
-
 
   const PagesSale = () => (
     <div className="Product-card">
@@ -298,53 +280,20 @@ const SaleProduct = () => {
         </div>
       ) : (
         <>
-          {/* // product && product.slice(0, visible).map((items, idx) =>
-            // product && product.filter(searched(keyword)).map((items, idx) =>
-            // thisPageItems && thisPageItems.filter(searched(keyword)).map((items, idx) => */}
           <div className="product-card-content">
             <div className="main-card">
-              {
-                // product &&
-                //   product.slice(0, visible).map((items, idx) => 
-                currentPages && currentPages.map((items, idx) =>(
-                    <>
-                      <CardProduct ordersId={items._id}  items={items} idx={idx} formatPrice={formatPrice} />
-                    </>
-                  ))
-              }
+              {currentPages &&
+                currentPages.map((items, idx) => (
+                  <>
+                    <CardProduct
+                      ordersId={items._id}
+                      items={items}
+                      idx={idx}
+                      formatPrice={formatPrice}
+                    />
+                  </>
+                ))}
             </div>
-
-            {/* {product.length > 0 ? (
-              <>
-                {visible >= count ? (
-                  ""
-                ) : (
-                  <div className="load-more">
-                    <button className="btn" onClick={handleShowMore}>
-                      ສະແດງເພີ່ມເຕີມ
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="empty-card">
-                <Empty
-                  image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                  imageStyle={{
-                    height: 60,
-                  }}
-                  description={
-                    <span>
-                      <a>{productsEmpty}</a>
-                    </span>
-                  }
-                >
-                  <div className="add-btn-empty">
-                    <p>ບໍ່ມີຂໍ້ມູນ</p>
-                  </div>
-                </Empty>
-              </div>
-            )} */}
           </div>
         </>
       )}
@@ -355,20 +304,20 @@ const SaleProduct = () => {
           </Link>
         </div>
         <div className="pagination">
-                <PaginationComponent 
-                 count={count}
-                 setPageSize={setPageSize}
-                 pageSize={pageSize}
-                 setPages={setPages}
-                 pages={pages}
-                />
-          </div>
+          <PaginationComponent
+            count={count}
+            setPageSize={setPageSize}
+            pageSize={pageSize}
+            setPages={setPages}
+            pages={pages}
+          />
+        </div>
       </div>
     </div>
   );
 
   const PagesHistory = () => <HistoryProduct />;
-  const CartProducts = () => <CartProduct  />;
+  const CartProducts = () => <CartProduct />;
 
   const changeKey = (key) => {
     setKeyTabs(key);
@@ -384,7 +333,7 @@ const SaleProduct = () => {
     {
       key: "2",
       label: (
-        <Badge count={carts.length} offset={[9,-2]}>
+        <Badge count={carts.length} offset={[9, -2]}>
           <Button>ກະຕ່າສິນຄ້າ</Button>
         </Badge>
       ),

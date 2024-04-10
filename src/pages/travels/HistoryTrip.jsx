@@ -3,12 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty,Image } from "antd";
+import { Empty, Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
-import {
-  GetAllTripIsSuccess,
-} from "./../../functions/Trip";
+import { GetAllTripIsSuccess } from "./../../functions/Trip";
+import PaginationComponent from "../../components/PaginationComponent";
 
 const HistoryTrip = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -18,23 +17,29 @@ const HistoryTrip = () => {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [tripEmpty, setTripEmpty] = useState("");
-
- 
-
+  const [count, setCount] = useState("");
+  const [pageSize, setPageSize] = useState(4);
+  const [pages, setPages] = useState(1);
+  const [valueInput, setValueInput] = useState("");
 
   useEffect(() => {
     LoadData();
   }, []);
 
-  // console.log("Images",images)
+  // ===========pagination antd =============
+  const indexOfLastPages = pages * pageSize;
+  const indexOfFirstPages = indexOfLastPages - pageSize;
+  const currentPages = trip.slice(indexOfFirstPages, indexOfLastPages);
+  // ================ end pagination antd ===========
 
-
+  // function load data
   const LoadData = () => {
     setLoading(true);
-    GetAllTripIsSuccess(users.token, "true")
+    GetAllTripIsSuccess(users.token, "true","")
       .then((res) => {
         setLoading(false);
         setTrip(res.data.data);
+        setCount(res.data.data.length);
       })
       .catch((err) => {
         setLoading(false);
@@ -54,7 +59,7 @@ const HistoryTrip = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -65,7 +70,47 @@ const HistoryTrip = () => {
       });
   };
 
-  // console.log("Trips", trip)
+  // set value input
+  const handleChange = (e) => {
+    setValueInput(e.target.value);
+  };
+  // search
+  useEffect(() => {
+    setLoading(true);
+    GetAllTripIsSuccess(users.token, "true",valueInput)
+      .then((res) => {
+        setLoading(false);
+        setTrip(res.data.data);
+        setCount(res.data.data.length);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setTripEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  }, [valueInput]);
 
   const styles = {
     margin: 10,
@@ -85,7 +130,6 @@ const HistoryTrip = () => {
     width: 315,
   };
 
- 
   return (
     <>
       <div className="card-main">
@@ -124,7 +168,11 @@ const HistoryTrip = () => {
           </div>
           <div class="search">
             <div class="input-search">
-              <input type="text" placeholder="ຄົ້ນຫາລາຍການ" />
+              <input
+                type="search"
+                placeholder="ຄົ້ນຫາລາຍການ"
+                onChange={handleChange}
+              />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -185,32 +233,43 @@ const HistoryTrip = () => {
                   </div>
                 </div>
               ) : (
-                <div class="trip-cards">
-                  {trip &&
-                    trip.map((item, idx) => (
-                      <div className="cards" key={idx}>
-                        {item.cover && item.cover ? (
-                          <Image style={{height:"14rem"}} src={item.cover} alt={item.name} />
-                        ) : (
-                          <Image style={{height:"14rem"}} src={ImageTravel} alt={item.name} />
-                        )}
-                        <div className="cards-title">
-                          <span className="text-right">{item.name}</span>
-                        </div>
-                        <div className="cards-body">
-                          <h5>{`${
-                            item.placeName && item.placeName.substring(0, 60)
-                          }`}</h5>
-                          <ul className="cards-body-text">
-                            <li>{item.period}</li>
-                            <li>{item.amount} ຄົນ</li>
-                          </ul>
-                          <h3>
-                            ວັນທີເດີນທາງ{" "}
-                            {new Date(item.departureDate).toLocaleDateString()}
-                          </h3>
-                        </div>
-                        <div className="cards-btn">
+                <>
+                  <div class="trip-cards">
+                    {currentPages &&
+                      currentPages.map((item, idx) => (
+                        <div className="cards" key={idx}>
+                          {item.cover && item.cover ? (
+                            <Image
+                              style={{ height: "14rem" }}
+                              src={item.cover}
+                              alt={item.name}
+                            />
+                          ) : (
+                            <Image
+                              style={{ height: "14rem" }}
+                              src={ImageTravel}
+                              alt={item.name}
+                            />
+                          )}
+                          <div className="cards-title">
+                            <span className="text-right">{item.name}</span>
+                          </div>
+                          <div className="cards-body">
+                            <h5>{`${
+                              item.placeName && item.placeName.substring(0, 60)
+                            }`}</h5>
+                            <ul className="cards-body-text">
+                              <li>{item.period}</li>
+                              <li>{item.amount} ຄົນ</li>
+                            </ul>
+                            <h3>
+                              ວັນທີເດີນທາງ{" "}
+                              {new Date(
+                                item.departureDate
+                              ).toLocaleDateString()}
+                            </h3>
+                          </div>
+                          <div className="cards-btn">
                             <Link to={`/travels/DetailSuccesTrip/${item._id}`}>
                               <button
                                 type="button"
@@ -219,10 +278,22 @@ const HistoryTrip = () => {
                                 <i class="bx bx-show-alt"></i> ລາຍລະອຽດ
                               </button>
                             </Link>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
+                      ))}
+                  </div>
+                  {trip.length >= 5 && (
+                    <div className="pagination-trip">
+                      <PaginationComponent
+                        count={count}
+                        setPageSize={setPageSize}
+                        pageSize={pageSize}
+                        setPages={setPages}
+                        pages={pages}
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}

@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { GetWalletWithUserCode } from "../../functions/WithDraw";
+import { GetUserCode } from "../../functions/GetUserWithUsercode";
 import { Spin } from "antd";
 import Swal from "sweetalert2";
 import { CreateOrder } from "../../functions/OrdersAdmin";
@@ -19,17 +19,14 @@ const Pay = () => {
   const [loading, setLoading] = useState(false);
   const [valueSearch, setValueSearch] = useState([]);
   const [value, setValue] = useState([]);
-
-  // console.log("value",value)
-
-
+// set value search 
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
-
+// search customer
   const handleClickSearch = () => {
     setLoading(true);
-    GetWalletWithUserCode(users.token, value.userCode)
+    GetUserCode(users.token, value.userCode)
       .then((res) => {
         setValueSearch(res.data.data);
         setLoading(false);
@@ -61,19 +58,11 @@ const Pay = () => {
       });
       setLoading(false);
   };
-
-  // const product = JSON.stringify(carts);
-  // console.log("product",product);
-  
- 
- 
+// confrim payment
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    // let orderItems = JSON.stringify(orderItems)
-    // let orderItems = JSON.parse(localStorage.getItem("orders"));
-
+  
     const formData = new FormData();
     formData.append("userCode",value.userCode);
     formData.append("paymentType",value.paymentType);
@@ -106,9 +95,7 @@ const Pay = () => {
           type : "EMPTY_ORDER",
           payload : []
         })
-        navigate("/listProducts/saleProducts");
-
-        
+        navigate("/listProducts/saleProducts", { state: { key: 3 } })
       })
       .catch((err) => {
         const Toast = Swal.mixin({

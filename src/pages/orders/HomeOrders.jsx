@@ -21,11 +21,11 @@ const HomeOrders = () => {
       setOrderOverview(res.data.data)
     })
   }, [])
-
+  // set value click
   const handleClick = (e) => {
     setOrderStatus(e)
   }
-
+// format prices
   const formatPrice = (value) => {
     let val = (value / 1).toFixed(0).replace(",", ".");
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const GetAllUsers  = async(token,values)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall?searchName=${values}`,{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall?search=${values}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }
@@ -14,15 +14,15 @@ export const Verify  = async(token,id)=>{
         }
     })
 }
-export const GetAllNotVerify  = async(token)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall/notverified`,{
+export const GetAllNotVerify  = async(token,value)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall/notverified?search=${value}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }
     })
 }
-export const GetAllVerify  = async(token)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall/verified`,{
+export const GetAllVerify  = async(token,value)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/user/getall/verified?search=${value}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }

@@ -6,8 +6,7 @@ import Swal from 'sweetalert2'
 // Functions
 import TableComponent from '../../components/TableComponent';
 import { GetAllOrders } from '../../functions/Orders';
-
-
+import { formatPrice } from "../../functions/FormatPrices"
 
 const ListOrders = () => {
   const { users } = useSelector((state) => ({ ...state }))
@@ -16,12 +15,8 @@ const ListOrders = () => {
   const [orderEmpty, setEmptyOrder] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const formatPrice = (value)=>{
-    let val = (value / 1).toFixed(0).replace(",", ".");
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");      
-   }
-
+  
+// customize style cell of table
   const customStyles = {
     rows: {
       style: {
@@ -48,7 +43,7 @@ const ListOrders = () => {
       },
     },
   };
-  
+  // columns header of table
   const columns = [
     {
       name: "ສະຖານະ",
@@ -144,10 +139,10 @@ const ListOrders = () => {
       width: '162px'
     }
   ];
-
+  // load all cancel orders
   useEffect(() => {
     setLoading(true)
-    GetAllOrders(users.token,"","", "await").then(res => {
+    GetAllOrders(users.token,"", "", "", "await").then(res => {
       setLoading(false)
       setOrders(res.data.data);
     }).catch(err => {
@@ -179,30 +174,13 @@ const ListOrders = () => {
     })
   }, []);
 
-  // console.log(orders)
+
 
   return (
     <>
-      {orderEmpty ?
-        <div className="empty-card">
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{
-              height: 60,
-            }}
-            description={
-              <span>
-                <a>{orderEmpty}</a>
-              </span>
-            }
-          >
-          </Empty>
-        </div>
-        :
         <div>
-          <TableComponent Status={"await"} setOrders={setOrders} setEmptyOrder={setEmptyOrder} columns={columns} customStyles={customStyles} data={orders} loading={loading} />
+          <TableComponent Status={"await"} orderEmpty={orderEmpty}  setOrders={setOrders} setEmptyOrder={setEmptyOrder} columns={columns} customStyles={customStyles} data={orders} loading={loading} />
         </div>
-      }
     </>
 
   )

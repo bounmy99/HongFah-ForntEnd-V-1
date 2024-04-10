@@ -4,6 +4,7 @@ import Loadding from "./Loadding";
 import DatePicker from "react-datepicker";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import {Empty} from "antd"
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
 const TableComponent = ({
@@ -17,7 +18,10 @@ const TableComponent = ({
   setCancelOrder,
   setCancelOrderEmpty,
   setSuccessOrders,
-  setSuccessOrdersEmpty
+  setSuccessOrdersEmpty,
+  orderEmpty,
+  successOrdersEmpty,
+  cancelOrderEmpty
 }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndtDate] = useState();
@@ -27,20 +31,19 @@ const TableComponent = ({
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setValueInput({ ...valueInput, [e.target.name]: e.target.value });
+    setValueInput(e.target.value);
   };
 
   const handleSearch = () => {
-    GetAllOrders(users.token, startDate, endDate, Status)
+    GetAllOrders(users.token, startDate, endDate, valueInput, Status)
       .then((res) => {
-        if(setOrders){
+        if (setOrders) {
           setOrders(res.data.data);
         }
-        if(setCancelOrder){
-
+        if (setCancelOrder) {
           setCancelOrder(res.data.data);
         }
-        if(setSuccessOrders){
+        if (setSuccessOrders) {
           setSuccessOrders(res.data.data);
         }
       })
@@ -51,7 +54,7 @@ const TableComponent = ({
         if (setCancelOrderEmpty) {
           setCancelOrderEmpty(err.response.data.message);
         }
-        if(setSuccessOrdersEmpty){
+        if (setSuccessOrdersEmpty) {
           setSuccessOrdersEmpty(err.response.data.message);
         }
         const Toast = Swal.mixin({
@@ -154,7 +157,22 @@ const TableComponent = ({
             </div>
           </div>
         </div>
-        {loading ? (
+        {
+        orderEmpty || successOrdersEmpty || cancelOrderEmpty ? (
+          <div className="empty-card">
+            <Empty
+              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+              imageStyle={{
+                height: 60,
+              }}
+              description={
+                <span>
+                  <a>{'ບໍ່ມີລາຍການທີ່ຄົ້ນຫາ'}</a>
+                </span>
+              }
+            ></Empty>
+          </div>
+        ) : loading ? (
           <Loadding paragraph={10} />
         ) : (
           <div className="order-table">
