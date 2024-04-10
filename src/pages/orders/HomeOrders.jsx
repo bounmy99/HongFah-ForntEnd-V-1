@@ -12,6 +12,8 @@ const HomeOrders = () => {
   const [orderStatus, setOrderStatus] = useState('');
   const [orderOverview, setOrderOverview] = useState('');
 
+  console.log("State",state)
+
   useEffect(() => {
     setOrderStatus(1)
     if (state) {

@@ -41,8 +41,6 @@ const ListProducts = () => {
 
   const [previewImages, setPreviewImages] = useState([]);
 
-  console.log("previewImages", previewImages);
-
   const ProductPrice = [15000, 30000, 50000, 100000];
 
   // ===========pagination antd =============
@@ -141,14 +139,49 @@ const ListProducts = () => {
   };
 
   // search with Produc price , product Type, Product name
+  useEffect(()=>{
+    setLoading(true);
+    GetAllProduct(users.token, productType, maxPrice, search)
+      .then((res) => {
+        setProduct(res.data.data);
+        setCount(res.data.count);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setProductsEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  },[productType, maxPrice, search])
+
   const handleSearch = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
-
-        console.log("Product API", res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -189,7 +222,6 @@ const ListProducts = () => {
     GetAllProduct(users.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
-      console.log("Product API", res.data);
       setProductsEmpty("");
       setSearch("");
       setArg("");

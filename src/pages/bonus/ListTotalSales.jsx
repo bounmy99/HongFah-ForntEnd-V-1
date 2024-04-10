@@ -129,7 +129,8 @@ const ListTotalSales = () => {
               navigate("/");
             }
           });
-        navigate("/homeSales");
+ 
+
       } else {
         window.location.reload();
       }

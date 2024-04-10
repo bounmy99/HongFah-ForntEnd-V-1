@@ -3,13 +3,13 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Tooltip, message, Image } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import _ from "lodash";
-const CardProduct = ({ ordersId, items, idx, formatPrice }) => {
+const CardProduct = ({ ordersId, items, idx, formatPrice,setPreviewImages }) => {
   const dispatch = useDispatch();
   const { users, carts } = useSelector((state) => ({ ...state }));
   // Tooltip
   const [tooltip, setTooltip] = useState("ເພິ່ມສິນຄ້າໃສ່ກະຕ່າ");
-  const [previewImages, setPreviewImages] = useState([]);
 
+  // function add to cart
   const addToCart = () => {
     let cart = [];
     let ordersId = [];
@@ -86,24 +86,6 @@ const CardProduct = ({ ordersId, items, idx, formatPrice }) => {
             </div>
           </Tooltip>
         </div>
-      {previewImages.length > 0 ? (
-        <Image.PreviewGroup
-          preview={{
-            onChange: (current, prev) =>
-              console.log(`current index: ${current}, prev index: ${prev}`),
-            visible: previewImages.length,
-            onVisibleChange: (value) => {
-              if (!value) {
-                setPreviewImages([]);
-              }
-            },
-          }}
-        >
-          {previewImages.map((image, i) => (
-            <Image src={image} key={i} />
-          ))}
-        </Image.PreviewGroup>
-      ) : null}
       </div>
     </>
   );

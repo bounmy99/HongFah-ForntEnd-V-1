@@ -15,12 +15,11 @@ const ListVerify = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingAwait, setLoadingAwait] = useState(false);
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const [userVerify, setUserVirify] = useState([]);
   const [infoUsersVerify, setInfoUsersVerify] = useState([]);
   const [usersEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
-
 
 // function first load when open pages
   useEffect(() => {
@@ -31,7 +30,6 @@ const ListVerify = () => {
   const loadData = () => {
     GetAllVerify(users.token,"")
       .then((res) => {
-        console.log(res.data)
         setUserVirify(res.data.data);
         setLoading(false);
       })
@@ -70,7 +68,7 @@ const ListVerify = () => {
 
   // function reset password
   const handleSubmit = (e) => {
-    setLoadingAwait(true);
+    setLoadingSearch(true);
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const values = [...formData.values()];
@@ -115,12 +113,12 @@ const ListVerify = () => {
             title: "ອັບເດດລະຫັດຜ່ານສຳເລັດ",
           });
           loadData();
-          setLoadingAwait(false);
+          setLoadingSearch(false);
           setOpenModal(false);
         }
       })
       .catch((err) => {
-        setLoadingAwait(false);
+        setLoadingSearch(false);
         if (err) {
           const Toast = Swal.mixin({
             toast: true,
@@ -310,16 +308,15 @@ const ListVerify = () => {
     setValueSearch(e.target.value);
   };
 
-  console.log(valueSearch)
-
-
+  
 // function search data
   useEffect(()=>{
+    setLoadingSearch(true)
     GetAllVerify(users.token,valueSearch)
     .then((res) => {
-      console.log(res.data)
       setUserVirify(res.data.data);
       setLoading(false);
+      setLoadingSearch(false)
     })
     .catch((err) => {
       setUserEmpty(err.response.data.message);
@@ -347,6 +344,7 @@ const ListVerify = () => {
         navigate("/");
       }
       setLoading(false);
+      setLoadingSearch(false)
     });
   },[valueSearch])
   
@@ -405,13 +403,14 @@ const ListVerify = () => {
         </div>
       ) : (
         <>
+        <Spin spinning={loadingSearch}>
           <div className="user-table">
             <div className="user-card-header">
               <div className="search">
                 <div className="input-search">
                   <input
-                    type="text"
-                    placeholder="ຄົ້າຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                    type="search"
+                    placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
                     onChange={handleChangeSearch}
                   />
                   <svg
@@ -455,6 +454,7 @@ const ListVerify = () => {
               />
             }
           </div>
+        </Spin>
         </>
       )}
 
@@ -499,7 +499,7 @@ const ListVerify = () => {
                   ຍົກເລີກ
                 </button>
                 <button type="submit" className="modal-user-btn btn-info">
-                  {loadingAwait ? (
+                  {loadingSearch ? (
                     <>
                       <span>ກຳລັງ....</span>
                       <Spin

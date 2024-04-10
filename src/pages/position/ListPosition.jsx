@@ -20,7 +20,7 @@ import FormUpdate from "./FormUpdate";
 
 const styles = {
   width: 250,
-  height: 355,
+  height: 255,
   margin: 10,
 };
 const style = {

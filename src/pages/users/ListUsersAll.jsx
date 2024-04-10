@@ -312,7 +312,46 @@ const ListUsersAll = () => {
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
+  
   // function search data
+  useEffect(()=>{
+    setLoadingSearch(true);
+    GetAllUsers(users.token,valueSearch)
+      .then((res) => {
+        setLoadingSearch(false);
+        setUsersAll(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoadingSearch(false);
+        setUserEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+        setLoading(false);
+      });
+  },[valueSearch])
+
   const handleClickSearch = ()=>{
     setLoadingSearch(true);
     GetAllUsers(users.token,valueSearch)
@@ -353,7 +392,7 @@ const ListUsersAll = () => {
 
   return (
     <div className="card-main">
-      <Spin spinning={loadingSearch} >
+      
       {loading ? (
         <div className="empty-card">
           <Empty
@@ -364,20 +403,20 @@ const ListUsersAll = () => {
             description={
               <span>
                 <a>ກຳລັງໂຫຼດ....</a>
-                <Spin />
+                <Spin spinning={loading} />
               </span>
             }
           ></Empty>
         </div>
       ) : (
-        <>
+        <><Spin spinning={loadingSearch} >
           <div className="user-table">
             <div className="user-card-header">
               <div className="search">
                 <div className="input-search">
                   <input
-                    type="text"
-                    placeholder="ຄົ້າຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                    type="search"
+                    placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
                     onChange={handleChangeSearch}
                   />
                   <svg
@@ -421,9 +460,10 @@ const ListUsersAll = () => {
               />
             }
           </div>
+          </Spin>
         </>
       )}
-</Spin>
+
       {/* ================================Modal============================= */}
       <div className={`modal-user ${openModals}`}>
         <div className="modal-user-card Card">

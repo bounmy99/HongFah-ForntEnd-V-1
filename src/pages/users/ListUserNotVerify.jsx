@@ -19,6 +19,7 @@ const ListUserNotVerify = () => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingSearch, setLoadingSearch] = useState(false);
   const [userNotVerify, setUserNotVerify] = useState([]);
   const [infoUsers, setinfoUsers] = useState([]);
   const [userEmpty, setUserEmpty] = useState(null);
@@ -391,14 +392,56 @@ const ListUserNotVerify = () => {
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
+
 // function handle Search
-  const handleClickSearch = ()=>{
+  useEffect(()=>{
+    setLoadingSearch(true)
     GetAllNotVerify(users.token,valueSearch)
       .then((res) => {
         setUserNotVerify(res.data.data);
         setLoading(false);
+        setLoadingSearch(false)
       })
       .catch((err) => {
+        setLoadingSearch(false)
+        setUserEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+        setLoading(false);
+      });
+  },[valueSearch]);
+
+  const handleClickSearch = ()=>{
+    setLoadingSearch(true)
+    GetAllNotVerify(users.token,valueSearch)
+      .then((res) => {
+        setUserNotVerify(res.data.data);
+        setLoading(false);
+        setLoadingSearch(false)
+      })
+      .catch((err) => {
+        setLoadingSearch(false)
         setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
@@ -445,13 +488,14 @@ const ListUserNotVerify = () => {
         </div>
       ) : (
         <>
-          <div className="user-table">
+          <Spin spinning={loadingSearch}>
+            <div className="user-table">
             <div className="user-card-header">
               <div className="search">
                 <div className="input-search">
                   <input
-                    type="text"
-                    placeholder="ຄົ້າຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                    type="search"
+                    placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
                     onChange={handleChangeSearch}
                   />
                   <svg
@@ -494,7 +538,8 @@ const ListUserNotVerify = () => {
                 userEmpty={userEmpty}
               />
             }
-          </div>
+            </div>
+          </Spin>
         </>
       )}
 

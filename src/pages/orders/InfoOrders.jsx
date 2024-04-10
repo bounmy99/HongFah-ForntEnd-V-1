@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-// functions
-import { GetOneOrders, ApprovedOrders, RejectOrders } from '../../functions/Orders';
 import { Link, useParams } from 'react-router-dom'
-import { formatPrice } from "../../functions/FormatPrices"
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import {Table} from 'antd'
+// functions
+import { GetOneOrders, ApprovedOrders, RejectOrders } from '../../functions/Orders';
+import Loading from '../../components/Loadding';
+import { formatPrice } from "../../functions/FormatPrices"
 const InfoOrders = () => {
     const navigate = useNavigate();
     const { users } = useSelector((state) => ({ ...state }))
@@ -14,12 +15,15 @@ const InfoOrders = () => {
     const [order, setOrder] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSiize, setPageSiize] = useState(1);
+    const [loading,setLoading] = useState(false)
 // load one orders
     useEffect(() => {
+        setLoading(true);
         GetOneOrders(users.token, id).then(res => {
-            console.log(res.data.data)
+            setLoading(false);
             setOrder(res.data.data)
         }).catch(err => {
+            setLoading(false);
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -84,6 +88,7 @@ const InfoOrders = () => {
         }
     ];
 
+// cancel orders
     const handleCancel = (id) => {
         Swal.fire({
             title: "ຕ້ອງການປະຕິເສດແທ້ບໍ່",
@@ -139,6 +144,8 @@ const InfoOrders = () => {
             }
         });
     }
+
+// Improved orders
     const handleAllow = (id) => {
         Swal.fire({
             title: "ຢືນຢັນການອະນຸມັດ",
@@ -151,6 +158,7 @@ const InfoOrders = () => {
             cancelButtonText: "ຍົກເລິກ",
         }).then((result) => {
             if (result.isConfirmed) {
+                
                 ApprovedOrders(users.token, id).then(res => {
                     if (res.data.data) {
                         const Toast = Swal.mixin({
@@ -223,10 +231,14 @@ const InfoOrders = () => {
                     </div>
                 </div>
                 <div className="card-info-content">
+                    {loading ? 
+                    <Loading paragraph={13} />
+                    :
+                    <>
                     <div className="info-left">
                         <h3>ຊຳລະຜ່ານ BCEL ONE</h3>
                         <div className="image-transfer">
-                            <img src={order.slip && order.slip[0]} alt="" />
+                        {order.slip && order.slip[0] ? <img src={order.slip && order.slip[0]} alt="" /> : <div className="text-no-image"><h3>ບໍ່ມີຮູບພາບ</h3></div>} 
                         </div>
                     </div>
                     <div className="info-right">
@@ -289,6 +301,9 @@ const InfoOrders = () => {
                             <button type="button" className="success" onClick={() => handleAllow(order._id)}>ອະນຸມັດ</button>
                         </div>
                     </div>
+                    </>
+                    }
+                    
                 </div>
             </div>
 

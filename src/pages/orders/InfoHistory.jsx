@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // functions
-import { GetOneOrders } from '../../functions/Orders';
-import { Link, useParams } from 'react-router-dom'
-import { formatPrice } from "../../functions/FormatPrices"
-import {Table} from 'antd'
+import {Table,Image} from 'antd'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import { Link, useParams } from 'react-router-dom'
+import { GetOneOrders } from '../../functions/Orders';
+import { formatPrice } from "../../functions/FormatPrices"
+import Loading from '../../components/Loadding';
+
 const InfoOrders = () => {
     const navigate = useNavigate();
     const { users } = useSelector((state) => ({ ...state }))
@@ -14,12 +16,15 @@ const InfoOrders = () => {
     const [page, setPage] = useState(1);
     const [pageSiize, setPageSiize] = useState(1);
     const [order, setOrder] = useState([]);
+    const [loading, setLoading] = useState(false)
 // load one success orders
     useEffect(() => {
+        setLoading(true)
         GetOneOrders(users.token, id).then(res => {
-            console.log(res.data.data)
             setOrder(res.data.data)
+            setLoading(false)
         }).catch(err => {
+            setLoading(false)
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -82,20 +87,6 @@ const InfoOrders = () => {
             render : (price)=>formatPrice(price),
             width: '162px'
         }
-        // {
-        //     name: "ສະຖານທີຈັດສົ່ງ",
-        //     sortable: true,
-        //     selector: (row) => row.address,
-        //     cell: row => (
-        //         <div className="name-product">
-        //             <div className="location">
-        //                 <h4>{row.location.company}</h4>
-        //                 <p>{row.location.address}</p>
-        //             </div>
-        //         </div>
-        //     ),
-        //     width: '162px'
-        // }
     ];
 
     return (
@@ -110,7 +101,7 @@ const InfoOrders = () => {
                             ກັບໄປໜ້າກ່ອນ
                         </button>
                     </div>
-                    <div className="btn-del">
+                    {/* <div className="btn-del">
                         <button type="button" onClick={() => { alert("Delete ?") }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <g clipPath="url(#clip0_1116_2180)">
@@ -124,13 +115,18 @@ const InfoOrders = () => {
                                 </defs>
                             </svg>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
+
                 <div className="card-info-content">
-                    <div className="info-left">
+                    {loading ?
+                        <Loading paragraph={13} />
+                    : 
+                    <>
+                     <div className="info-left">
                         <h3>ຊຳລະຜ່ານ BCEL ONE</h3>
                         <div className="image-transfer">
-                            <img src={order.slip && order.slip[0]} alt="" />
+                           {order.slip && order.slip[0] ? <img src={order.slip && order.slip[0]} alt="" /> : <div className="text-no-image"><h3>ບໍ່ມີຮູບພາບ</h3></div>} 
                         </div>
                     </div>
                     <div className="info-right">
@@ -189,6 +185,9 @@ const InfoOrders = () => {
                             </div>
                         </div>
                     </div>
+                    </>
+                    }
+                   
                 </div>
             </div>
 

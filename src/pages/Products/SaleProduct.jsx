@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Empty, Tooltip, Tabs, Badge, Button } from "antd";
+import { Empty, Tabs, Badge, Button,Image } from "antd";
 import icons from "../../assets/image/icons-add.png";
 import { GetAllProduct } from "../../functions/Products";
 import { GetAllProductType } from "../../functions/ProductType";
@@ -39,6 +39,9 @@ const SaleProduct = () => {
   const [pageSize, setPageSize] = useState(24);
   const [pages, setPages] = useState(1);
   const [productsEmpty, setProductsEmpty] = useState("");
+  const [previewImages, setPreviewImages] = useState([]);
+
+  console.log("previewImages",previewImages)
 
   const [keyTabs, setKeyTabs] = useState("");
   const { state } = useLocation();
@@ -290,10 +293,31 @@ const SaleProduct = () => {
                       items={items}
                       idx={idx}
                       formatPrice={formatPrice}
+                      setPreviewImages={setPreviewImages}
                     />
                   </>
                 ))}
             </div>
+            {
+              previewImages.length > 0 ? (
+                <Image.PreviewGroup
+                  preview={{
+                    onChange: (current, prev) =>
+                      console.log(`current index: ${current}, prev index: ${prev}`),
+                    visible: previewImages.length,
+                    onVisibleChange: (value) => {
+                      if (!value) {
+                        setPreviewImages([]);
+                      }
+                    },
+                  }}
+                >
+                  {previewImages.map((image, i) => (
+                    <Image src={image} key={i} />
+                  ))}
+                </Image.PreviewGroup>
+              ) : null
+            }
           </div>
         </>
       )}
