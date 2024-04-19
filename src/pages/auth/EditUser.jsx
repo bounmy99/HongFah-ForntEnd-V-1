@@ -9,7 +9,7 @@ import {
   GetAllUser,
   UpdateUser,
 } from "../../functions/Authentication";
-import { Spin } from "antd";
+import { Spin, Select } from "antd";
 
 const EditUser = () => {
   const { id } = useParams();
@@ -20,7 +20,7 @@ const EditUser = () => {
   const [userEdit, setUserEdit] = useState([]);
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState([]);
-
+  const [roles,setRoles]= useState("")
 
   useEffect(() => {
     GetOneUser(users.token, id)
@@ -43,7 +43,7 @@ const EditUser = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -80,7 +80,7 @@ const EditUser = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -90,11 +90,16 @@ const EditUser = () => {
         }
       });
   };
-// set value edtit
+  // set value edtit
   const handleChange = (e) => {
     setUserEdit({ ...userEdit, [e.target.name]: e.target.value });
   };
-  
+
+  const handleChangeRole = (e) => {
+    setRoles(e);
+    setUserEdit({ ...userEdit, role: e });
+  };
+
   // update users
   const handleSubmit = (e) => {
     setLoading(true);
@@ -122,9 +127,9 @@ const EditUser = () => {
     }
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-    console.log("Data from Input", Data);
+    const FinalData = ({...Data, role : roles})
 
-    UpdateUser(users.token, Data, id)
+    UpdateUser(users.token, FinalData, id)
       .then((res) => {
         if (res.status === 200) {
           const Toast = Swal.mixin({
@@ -163,7 +168,7 @@ const EditUser = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -260,18 +265,32 @@ const EditUser = () => {
                   </div>
                   <div className="input-group">
                     <label htmlFor="">ສິດເຂົ້າໃຊ້</label>
-                    <select
+                    <Select
                       name="role"
+                      style={{
+                        width: 344,
+                        height: 40,
+                      }}
                       value={userEdit && userEdit.role}
-                      className="form-controls-md"
-                      onChange={handleChange}
-                    >
-                      {roleList.map((item, i) => (
-                        <option value={item} key={i}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="ກະລຸນາເລຶອກ"
+                      optionFilterProp="children"
+                      onChange={handleChangeRole}
+                      filterOption={(input, option) =>
+                        (option?.label ?? "").includes(input)
+                      }
+                      filterSort={(optionA, optionB) =>
+                        (optionA?.label ?? "")
+                          .toLowerCase()
+                          .localeCompare((optionB?.label ?? "").toLowerCase())
+                      }
+                      options={
+                        roleList &&
+                        roleList.map((item, idx) => ({
+                          value: item,
+                          label: item,
+                        }))
+                      }
+                    />
                   </div>
                 </div>
               </div>

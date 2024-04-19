@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { Empty, Button, Drawer, Spin } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import DatePicker from "react-datepicker";
+import moment from "moment";
+// function and component
 import PaginationComponent from "../../components/PaginationComponent";
-import { Empty, Button, Drawer, Pagination, Spin } from "antd";
 import { GetUserCode } from "../../functions/GetUserWithUsercode";
 import {
   GetOneTrip,
@@ -12,7 +16,6 @@ import {
   DeleteMemberTrip,
 } from "../../functions/Trip";
 import ImageTravel from "../../assets/image/no-image.png";
-import { DeleteOutlined } from "@ant-design/icons";
 
 const DetailTravels = () => {
   const { id } = useParams();
@@ -36,7 +39,7 @@ const DetailTravels = () => {
     loadData();
   }, []);
 
-// function load data 
+  // function load data
   const loadData = () => {
     GetOneTrip(users.token, id)
       .then((res) => {
@@ -45,10 +48,31 @@ const DetailTravels = () => {
         setCount(res.data.data.members.length);
       })
       .catch((err) => {
-        console.log(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
       });
   };
-
 
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
@@ -65,15 +89,15 @@ const DetailTravels = () => {
   // close sidebar inset member
   const onClose = () => {
     setOpen(false);
-    setUserCode("")
-    setValueSearch("")
-    setStatus(false)
+    setUserCode("");
+    setValueSearch("");
+    setStatus(false);
   };
-// set value search 
+  // set value search
   const handleSeach = (e) => {
     setUserCode(e.target.value);
   };
-// function search data
+  // function search data
   const handleSeachData = () => {
     setLoadingSearch(true);
     GetUserCode(users.token, useCode)
@@ -100,8 +124,8 @@ const DetailTravels = () => {
           title: err.response.data.message,
         });
         setOpen(false);
-        setUserCode("")
-        
+        setUserCode("");
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -111,12 +135,12 @@ const DetailTravels = () => {
         }
       });
   };
-// function delete member
+  // function delete member
   const handleDelete = (memberId) => {
     const Member = {
-      trip_id : value._id,
-      user_id : memberId
-    }
+      trip_id: value._id,
+      user_id: memberId,
+    };
     Swal.fire({
       title: "ທ່ານຕ້ອງການລົບແທ້ບໍ່",
       text: "ຖ້າທ່ານລົບໄປແລ້ວບໍ່ສາມາດກູ້ຄືນໄດ້ອີກ!",
@@ -143,7 +167,7 @@ const DetailTravels = () => {
     });
   };
 
-// set value trip
+  // set value trip
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
@@ -160,8 +184,8 @@ const DetailTravels = () => {
       .then((res) => {
         setOpen(false);
         loadData();
-        setValueSearch("")
-        setStatus(false)
+        setValueSearch("");
+        setStatus(false);
         setLoadingSearch(false);
       })
       .catch((err) => {
@@ -181,7 +205,7 @@ const DetailTravels = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -260,7 +284,7 @@ const DetailTravels = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -355,7 +379,7 @@ const DetailTravels = () => {
                       type="text"
                       name="departureDate"
                       className="form-controls-md"
-                      value={new Date(value.departureDate).toLocaleDateString()}
+                      value={moment(value.departureDate).format("DD-MM-YYYY")}
                       onChange={handleChange}
                     />
                   </div>
@@ -440,18 +464,17 @@ const DetailTravels = () => {
                               ))}
                           </tbody>
                         </table>
-                        { count > 1 && 
-                        <div className="pagination-member">
-                          <PaginationComponent
-                            count={count}
-                            setPageSize={setPageSize}
-                            pageSize={pageSize}
-                            setPages={setPages}
-                            pages={pages}
-                          />
-                        </div>
-                        }
-                        
+                        {count > 1 && (
+                          <div className="pagination-member">
+                            <PaginationComponent
+                              count={count}
+                              setPageSize={setPageSize}
+                              pageSize={pageSize}
+                              setPages={setPages}
+                              pages={pages}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   ) : (
@@ -610,26 +633,24 @@ const DetailTravels = () => {
                       </button>
                     </div>
                   </form>
-                ) : (
-                   loadingSearch ?
-                   <div className="empty-card">
-                     <Spin />
-                   </div>
-                   :
-                
+                ) : loadingSearch ? (
                   <div className="empty-card">
-                  <Empty
-                    image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                    imageStyle={{
-                      height: 60,
-                    }}
-                    description={
-                      <span>
-                        <a>ບໍ່ມີຂໍ້ມູນ</a>
-                      </span>
-                    }
-                  ></Empty>
-                </div>
+                    <Spin />
+                  </div>
+                ) : (
+                  <div className="empty-card">
+                    <Empty
+                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                      imageStyle={{
+                        height: 60,
+                      }}
+                      description={
+                        <span>
+                          <a>ບໍ່ມີຂໍ້ມູນ</a>
+                        </span>
+                      }
+                    ></Empty>
+                  </div>
                 )}
               </div>
             </Drawer>

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Loading from "../../components/Loadding";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import noImage from "../../assets/image/no-image.png"
+import moment from "moment";
 const UsersDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -104,20 +105,20 @@ const UsersDetail = () => {
                     <p>
                       ວັນເດືອນປີເກີດ :{" "}
                       <span>
-                        {new Date(detail.birthday).toLocaleDateString()}
+                        {moment(detail.birthday).format("DD-MM-YYYY")}
                       </span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
-                      ອາຍຸ : <span>{detail.userCode}</span>
+                      ອາຍຸ : <span>{detail.age}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
                       ວັນທີເຂົ້າໃຊ້ :{" "}
                       <span>
-                        {new Date(detail.createdAt).toLocaleDateString()}
+                        {moment(detail.createdAt).format("DD-MM-YYYY")}
                       </span>
                     </p>
                   </div>

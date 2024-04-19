@@ -6,8 +6,12 @@ import { Empty, Spin, Tooltip } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../components/DataTable";
-import { GetAllVerify,ResetPassword,DeleteUsers } from "../../functions/Users";
-import noImage from "../../assets/image/no-image.png"
+import {
+  GetAllVerify,
+  ResetPassword,
+  DeleteUsers,
+} from "../../functions/Users";
+import noImage from "../../assets/image/no-image.png";
 const ListVerify = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,14 +25,14 @@ const ListVerify = () => {
   const [usersEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
 
-// function first load when open pages
+  // function first load when open pages
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
-// function load data
+  // function load data
   const loadData = () => {
-    GetAllVerify(users.token,"")
+    GetAllVerify(users.token, "")
       .then((res) => {
         setUserVirify(res.data.data);
         setLoading(false);
@@ -50,7 +54,7 @@ const ListVerify = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -61,7 +65,7 @@ const ListVerify = () => {
         setLoading(false);
       });
   };
-// function oppen modal
+  // function oppen modal
   const handleModal = () => {
     setOpenModal(true);
   };
@@ -132,9 +136,17 @@ const ListVerify = () => {
             },
           });
           Toast.fire({
-            icon: "success",
+            icon: "warning",
             title: err.response.data.message,
           });
+
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
           loadData();
         }
       });
@@ -146,7 +158,7 @@ const ListVerify = () => {
     setInfoUsersVerify([]);
   };
 
-// function delete users
+  // function delete users
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນລົບ",
@@ -159,9 +171,11 @@ const ListVerify = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoadingSearch(true)
         DeleteUsers(users.token, id)
           .then((res) => {
             if (res.status === 200) {
+              setLoadingSearch(false)
               const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -181,14 +195,37 @@ const ListVerify = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
+            setLoadingSearch(false)
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+  
+            if (err.response.data.message === "unauthorized") {
+              dispatch({
+                type: "USER_LOGOUT",
+                payload: null,
+              });
+              navigate("/");
+            }
           });
       }
     });
   };
   let openModals = openModal ? "open" : "";
 
-// customize style cell
+  // customize style cell
   const customStyles = {
     rows: {
       style: {
@@ -216,15 +253,19 @@ const ListVerify = () => {
     },
   };
 
-// colums of header table
+  // colums of header table
   const columns = [
     {
       name: "ຮູບພາບ",
       cell: (row) => (
-        <div className="images-users"> 
+        <div className="images-users">
           <Tooltip title="ກົດເພື່ອເບິ່ງລະອຽດ" color="#00A5E8">
             <Link to={`/users/detail/${row._id}`}>
-               {row.profile ?<img src={row.profile} alt={row.userCode} /> :<img src={noImage} alt={row.userCode} />}
+              {row.profile ? (
+                <img src={row.profile} alt={row.userCode} />
+              ) : (
+                <img src={noImage} alt={row.userCode} />
+              )}
             </Link>
           </Tooltip>
         </div>
@@ -243,7 +284,7 @@ const ListVerify = () => {
       name: "ຊື່ແລະນາມສະກຸນ",
       cell: (row) => (
         <div>
-            <p className="posit-gold">{`${row.firstName} ${row.lastName}`}</p>
+          <p className="posit-gold">{`${row.firstName} ${row.lastName}`}</p>
         </div>
       ),
       sortable: true,
@@ -261,7 +302,10 @@ const ListVerify = () => {
     {
       name: "ທີ່ຢູ່",
       cell: (row) => (
-        <p className="posit-text-acount-name">{row.address && `${row.address.village}, ${row.address.district}, ${row.address.province}`}</p>
+        <p className="posit-text-acount-name">
+          {row.address &&
+            `${row.address.village}, ${row.address.district}, ${row.address.province}`}
+        </p>
       ),
       sortable: true,
       width: "210px",
@@ -270,88 +314,86 @@ const ListVerify = () => {
       name: "ສະຖານະ",
       sortable: true,
       selector: (row) => row.role,
-      cell: (row) => (<p>{row.role}</p>),
+      cell: (row) => <p>{row.role}</p>,
       width: "100px",
     },
     {
       name: "ຈັດການ",
       cell: (row) => (
-            <>
-              <button
-                style={{width:"50px", height:"30px", margin:"5px"}}
-                className="btn-success"
-                onClick={() => handleModal(row._id)}
-              >
-                ແກ້ໄຂ
-              </button>
-              <button
-                style={{width:"50px", height:"30px", margin:"5px"}}
-                className="btn-danger"
-                onClick={() => handleDelete(row._id)}
-              >
-                ລົບ
-              </button>
-            </>
+        <>
+          <button
+            style={{ width: "50px", height: "30px", margin: "5px" }}
+            className="btn-success"
+            onClick={() => handleModal(row._id)}
+          >
+            ແກ້ໄຂ
+          </button>
+          <button
+            style={{ width: "50px", height: "30px", margin: "5px" }}
+            className="btn-danger"
+            onClick={() => handleDelete(row._id)}
+          >
+            ລົບ
+          </button>
+        </>
       ),
       width: "180px",
     },
   ];
 
-// set value verify
+  // set value verify
   const handleChange = (e) => {
     setInfoUsersVerify({ ...infoUsersVerify, [e.target.name]: e.target.value });
   };
 
-  
-// set value input search
+  // set value input search
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
 
-  
-// function search data
-  useEffect(()=>{
-    setLoadingSearch(true)
-    GetAllVerify(users.token,valueSearch)
-    .then((res) => {
-      setUserVirify(res.data.data);
-      setLoading(false);
-      setLoadingSearch(false)
-    })
-    .catch((err) => {
-      setUserEmpty(err.response.data.message);
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: err.response.data.message,
-      });
-      
-      if (err.response.data.message === "unauthorized") {
-        dispatch({
-          type: "USER_LOGOUT",
-          payload: null,
-        });
-        navigate("/");
-      }
-      setLoading(false);
-      setLoadingSearch(false)
-    });
-  },[valueSearch])
-  
-  const handleClickSearch = ()=>{
-    GetAllVerify(users.token,valueSearch)
+  // function search data
+  useEffect(() => {
+    setLoadingSearch(true);
+    GetAllVerify(users.token, valueSearch)
       .then((res) => {
-        console.log(res.data)
+        setUserVirify(res.data.data);
+        setLoading(false);
+        setLoadingSearch(false);
+      })
+      .catch((err) => {
+        setUserEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+        setLoading(false);
+        setLoadingSearch(false);
+      });
+  }, [valueSearch]);
+
+  const handleClickSearch = () => {
+    GetAllVerify(users.token, valueSearch)
+      .then((res) => {
+        console.log(res.data);
         setUserVirify(res.data.data);
         setLoading(false);
       })
@@ -372,7 +414,7 @@ const ListVerify = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -382,8 +424,7 @@ const ListVerify = () => {
         }
         setLoading(false);
       });
-  }
-
+  };
 
   return (
     <div className="card-main">
@@ -396,65 +437,66 @@ const ListVerify = () => {
             }}
             description={
               <span>
-                <a>ກຳລັງໂຫຼດ....</a><Spin/>
+                <a>ກຳລັງໂຫຼດ....</a>
+                <Spin />
               </span>
             }
           ></Empty>
         </div>
       ) : (
         <>
-        <Spin spinning={loadingSearch}>
-          <div className="user-table">
-            <div className="user-card-header">
-              <div className="search">
-                <div className="input-search">
-                  <input
-                    type="search"
-                    placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
-                    onChange={handleChangeSearch}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    fill="none"
-                  >
-                    <circle
-                      cx="7.27273"
-                      cy="7.27273"
-                      r="6.27273"
-                      stroke="#00A5E8"
-                      stroke-width="2"
-                    ></circle>
-                    <line
-                      x1="14.5858"
-                      y1="16"
-                      x2="11.6364"
-                      y2="13.0506"
-                      stroke="#00A5E8"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                    ></line>
-                  </svg>
-                </div>
-                <div className="btn-search">
-                  <button type="button" onClick={handleClickSearch}>
-                    ຄົ້ນຫາ
-                  </button>
+          <Spin spinning={loadingSearch}>
+            <div className="user-table">
+              <div className="user-card-header">
+                <div className="search">
+                  <div className="input-search">
+                    <input
+                      type="search"
+                      placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                      onChange={handleChangeSearch}
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="17"
+                      viewBox="0 0 16 17"
+                      fill="none"
+                    >
+                      <circle
+                        cx="7.27273"
+                        cy="7.27273"
+                        r="6.27273"
+                        stroke="#00A5E8"
+                        stroke-width="2"
+                      ></circle>
+                      <line
+                        x1="14.5858"
+                        y1="16"
+                        x2="11.6364"
+                        y2="13.0506"
+                        stroke="#00A5E8"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      ></line>
+                    </svg>
+                  </div>
+                  <div className="btn-search">
+                    <button type="button" onClick={handleClickSearch}>
+                      ຄົ້ນຫາ
+                    </button>
+                  </div>
                 </div>
               </div>
+              {
+                <DataTables
+                  columns={columns}
+                  data={userVerify}
+                  customStyles={customStyles}
+                  userEmpty={usersEmpty}
+                />
+              }
             </div>
-            {
-              <DataTables
-                columns={columns}
-                data={userVerify}
-                customStyles={customStyles}
-                userEmpty={usersEmpty}
-              />
-            }
-          </div>
-        </Spin>
+          </Spin>
         </>
       )}
 

@@ -1,0 +1,2 @@
+password = A27614
+useCode = 12345678

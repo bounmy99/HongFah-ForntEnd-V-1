@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
 import { Empty, Image } from "antd";
+import moment from "moment";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import { GetAllTripIsSuccess } from "./../../functions/Trip";
@@ -264,9 +265,9 @@ const HistoryTrip = () => {
                             </ul>
                             <h3>
                               ວັນທີເດີນທາງ{" "}
-                              {new Date(
+                              {moment(
                                 item.departureDate
-                              ).toLocaleDateString()}
+                              ).format("DD/MM/YYYY")}
                             </h3>
                           </div>
                           <div className="cards-btn">

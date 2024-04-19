@@ -4,6 +4,7 @@ import TableComponent from '../../components/TableComponent';
 import { GetAllOrders } from '../../functions/Orders';
 import { useSelector,useDispatch } from 'react-redux';
 import { formatPrice } from "../../functions/FormatPrices"
+import moment from 'moment';
 const CancelOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
@@ -77,7 +78,6 @@ const CancelOrders = () => {
         <div className="name-product">
           <div className="flex-name">
             <p>{`${row.orderFor.firstName} ${row.orderFor.lastName}`}</p>
-            <span>Daimonds</span>
           </div>
         </div>
       ),
@@ -87,7 +87,7 @@ const CancelOrders = () => {
       name: "ວັນທີສັ່ງຊື້",
       sortable: true,
       selector: (row) => row.createdAt,
-      cell: row => (<p>{new Date(row.createdAt).toLocaleDateString()}</p>),
+      cell: row => (<p>{moment(row.createdAt).format("DD-MM-YYYY")}</p>),
       width: '118px'
     },
     {

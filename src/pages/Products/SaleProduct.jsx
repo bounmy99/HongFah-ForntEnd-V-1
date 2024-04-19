@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Empty, Tabs, Badge, Button,Image } from "antd";
+import { Empty, Tabs, Badge, Button, Image } from "antd";
 import icons from "../../assets/image/icons-add.png";
 import { GetAllProduct } from "../../functions/Products";
 import { GetAllProductType } from "../../functions/ProductType";
@@ -40,8 +40,6 @@ const SaleProduct = () => {
   const [pages, setPages] = useState(1);
   const [productsEmpty, setProductsEmpty] = useState("");
   const [previewImages, setPreviewImages] = useState([]);
-
-  console.log("previewImages",previewImages)
 
   const [keyTabs, setKeyTabs] = useState("");
   const { state } = useLocation();
@@ -143,19 +141,76 @@ const SaleProduct = () => {
     width: 110,
   };
   // search with Produc price , product Type, Product name
+  useEffect(() => {
+    setLoading(true);
+    GetAllProduct(users.token, productType, maxPrice, search)
+      .then((res) => {
+        setProduct(res.data.data);
+        setCount(res.data.count);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setProductsEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  }, [productType, maxPrice, search]);
   const handleSearch = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
-        setPages(res.data.page);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err.response.data);
         setProductsEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
       });
   };
   // reset search
@@ -167,7 +222,6 @@ const SaleProduct = () => {
     GetAllProduct(users.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
-      setPages(res.data.page);
       console.log("Product API", res.data);
       setProductsEmpty("");
       setSearch("");
@@ -298,26 +352,26 @@ const SaleProduct = () => {
                   </>
                 ))}
             </div>
-            {
-              previewImages.length > 0 ? (
-                <Image.PreviewGroup
-                  preview={{
-                    onChange: (current, prev) =>
-                      console.log(`current index: ${current}, prev index: ${prev}`),
-                    visible: previewImages.length,
-                    onVisibleChange: (value) => {
-                      if (!value) {
-                        setPreviewImages([]);
-                      }
-                    },
-                  }}
-                >
-                  {previewImages.map((image, i) => (
-                    <Image src={image} key={i} />
-                  ))}
-                </Image.PreviewGroup>
-              ) : null
-            }
+            {previewImages.length > 0 ? (
+              <Image.PreviewGroup
+                preview={{
+                  onChange: (current, prev) =>
+                    console.log(
+                      `current index: ${current}, prev index: ${prev}`
+                    ),
+                  visible: previewImages.length,
+                  onVisibleChange: (value) => {
+                    if (!value) {
+                      setPreviewImages([]);
+                    }
+                  },
+                }}
+              >
+                {previewImages.map((image, i) => (
+                  <Image src={image} key={i} />
+                ))}
+              </Image.PreviewGroup>
+            ) : null}
           </div>
         </>
       )}
@@ -327,15 +381,17 @@ const SaleProduct = () => {
             <button type="button">ກັບໜ້າຫຼັກ</button>
           </Link>
         </div>
-        <div className="pagination">
-          <PaginationComponent
-            count={count}
-            setPageSize={setPageSize}
-            pageSize={pageSize}
-            setPages={setPages}
-            pages={pages}
-          />
-        </div>
+        {product.length >= 25 && (
+          <div className="pagination">
+            <PaginationComponent
+              count={count}
+              setPageSize={setPageSize}
+              pageSize={pageSize}
+              setPages={setPages}
+              pages={pages}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

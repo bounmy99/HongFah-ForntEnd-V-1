@@ -10,7 +10,7 @@ import {
   DeleteProduct,
 } from "../../functions/Products";
 import { Carusel } from "../../components/Carosel";
-import { Spin } from "antd";
+import { Spin,Select } from "antd";
 
 const initialState = {
   name: "",
@@ -55,6 +55,9 @@ const EditProduct = () => {
   // set value
   const handleChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+  const handleChangeType = (e) => {
+    setProduct({ ...product,  productType : e });
   };
 
   // set file list
@@ -287,22 +290,32 @@ const EditProduct = () => {
                 <div className="form-group">
                   <div className="input-group">
                     <label htmlFor="">ປະເພດ:</label>
-                    <select
-                      className="form-select"
-                      value={product.productType._id}
-                      onChange={handleChange}
+                     <Select
                       name="productType"
-                    >
-                      <option selected disabled>
-                        ກະລຸນາເລືອກ
-                      </option>
-                      {productType &&
-                        productType.map((item, idx) => (
-                          <option value={item._id} key={idx}>
-                            {item.name}
-                          </option>
-                        ))}
-                    </select>
+                      style={{
+                        width: 230,
+                        height :48
+                      }}
+                      value={product.productType._id}
+                      placeholder="ເລຶອກປະເພດ"
+                      optionFilterProp="children"
+                      onChange={handleChangeType}
+                      filterOption={(input, option) =>
+                        (option?.label ?? "").includes(input)
+                      }
+                      filterSort={(optionA, optionB) =>
+                        (optionA?.label ?? "")
+                          .toLowerCase()
+                          .localeCompare((optionB?.label ?? "").toLowerCase())
+                      }
+                      options={
+                        productType &&
+                        productType.map((item, idx) => ({
+                          value: item._id,
+                          label: item.name,
+                        }))
+                      }
+                    />
                   </div>
                   <div className="input-group">
                     <label htmlFor="">ຫົວໜ່ວຍສິນຄ້າ:</label>

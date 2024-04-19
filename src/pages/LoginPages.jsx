@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useSelector, useDispatch } from "react-redux";
+import { Spin } from "antd"
+// image
 import Logo from '../assets/logo/logo.png'
 import LogoHeadLeft from '../assets/logo/logo-head-left.png'
 import LogoHeadRight from '../assets/logo/logo-head-right.png'
 import Logo1 from '../assets/logo/Logo1.png'
 import Logo2 from '../assets/logo/Logo2.png'
-import { useSelector, useDispatch } from "react-redux"
+// function
 import { Login } from '../functions/Authentication'
-import Swal from 'sweetalert2'
-import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
+
 const LoginPages = () => {
   const [isPasswordShow, setIsPasswordShow] = useState(false)
   const dispatch = useDispatch();
@@ -116,27 +120,14 @@ const LoginPages = () => {
   }
 
   return (
+    <Spin spinning={loading} style={{marginTop : 80}}>
     <div className="login-pages">
       <div className="card-login-border">
         <div className="card-login">
           <div className="logo-login">
             <img src={Logo} alt={'images'} />
             <div className="text">
-
-              {loading ?
-                <>
-                  <div className="loading">
-                    <h5>ກຳລັງເຂົ້າສູ່ລະບົບ.......</h5>
-                    <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
-                      <CircularProgress style={{ color: 'white' }} />
-                    </Stack>
-                  </div>
-                </>
-                :
-                <>
                   <h5>ບໍລິສັດ ຫົງຟ້າ ຈຳກັດ</h5>
-                </>
-              }
             </div>
           </div>
           <form onSubmit={handleSubmit}>
@@ -185,6 +176,7 @@ const LoginPages = () => {
         </div>
       </div>
     </div>
+    </Spin>
   )
 }
 

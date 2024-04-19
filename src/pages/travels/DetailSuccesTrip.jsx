@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { GetOneTrip } from "../../functions/Trip";
 import { useSelector, useDispatch } from "react-redux";
 import DataTable from "react-data-table-component";
 import { Carousel, Empty,Image } from "antd";
+import moment from "moment";
+import { GetOneTrip } from "../../functions/Trip";
 
 const DetailSuccesTrip = () => {
   const { id } = useParams();
@@ -182,7 +183,7 @@ const DetailSuccesTrip = () => {
                   <p>
                     ມື້ເດີນທາງ :{" "}
                     <span>
-                      {new Date(detail.departureDate).toLocaleDateString()}
+                      {moment(detail.departureDate).format("DD-MM-YYYY")}
                     </span>
                   </p>
                 </div>

@@ -3,15 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Button, Image } from "antd";
+import { Empty, Image } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
+import moment from "moment";
 import {
-  DeleteTrip,
-  InsertImageTrip,
   GetAllTripIsSuccess,
 } from "./../../functions/Trip";
-import UploadImage from "../../components/UploadImage";
 import PaginationComponent from "../../components/PaginationComponent";
 const IsSuccessTrip = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -265,9 +263,7 @@ const IsSuccessTrip = () => {
                             </ul>
                             <h3>
                               ວັນທີເດີນທາງ{" "}
-                              {new Date(
-                                item.departureDate
-                              ).toLocaleDateString()}
+                              {moment(item.departureDate).format("DD/MM/YYYY")}
                             </h3>
                           </div>
                           <div className="cards-btn">

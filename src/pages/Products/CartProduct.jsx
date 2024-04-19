@@ -113,7 +113,7 @@ const CartProduct = () => {
           {carts.length != 0 ? (
             <>
               <div className="clear-cart-btn" onClick={handleClearCart}>
-                <Button type="primary" color="#00A5E8">
+                <Button type="primary" danger>
                   ລ້າງກະຕ່າສິນຄ້າ
                 </Button>
               </div>

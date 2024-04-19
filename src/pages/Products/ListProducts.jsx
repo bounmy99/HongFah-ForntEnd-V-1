@@ -59,12 +59,10 @@ const ListProducts = () => {
   const LoadData = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
-      .then((res) => {
+    .then(res => {
+        setLoading(false);
         setProduct(res.data.data);
         setCount(res.data.count);
-
-        console.log("Product API", res.data);
-        setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
@@ -132,13 +130,29 @@ const ListProducts = () => {
     setArg({ ...arg, maxPrice: e.target.textContent });
   };
 
-  const styles = {
+// loading skeleton
+  const large = {
     margin: 5,
-    height: 135,
-    width: 110,
+    height: 130,
+    width: 135,
+  };
+  const medium = {
+    margin: 5,
+    height: 240,
+    width: 175,
+  };
+  const small = {
+    margin: 5,
+    height: 236,
+    width: 215,
+  };
+  const smaller = {
+    margin: 5,
+    height: 250,
+    width: 260,
   };
 
-  // search with Produc price , product Type, Product name
+// search with Produc price , product Type, Product name
   useEffect(()=>{
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
@@ -334,7 +348,18 @@ const ListProducts = () => {
             </div>
           ) : loading ? (
             <div className="content">
-              <LoadingCard count={27} styles={styles} />
+              <div className="ProductLarge">
+                  <LoadingCard count={24} styles={large} />
+              </div>
+              <div className="ProductMedium">
+                  <LoadingCard count={16} styles={medium} />
+              </div>
+              <div className="ProductSmall">
+                  <LoadingCard count={12} styles={small} />
+              </div>
+              <div className="ProductSmaller">
+                  <LoadingCard count={3} styles={smaller} />
+              </div>
             </div>
           ) : (
             <>
@@ -405,6 +430,7 @@ const ListProducts = () => {
                 <img src={icons} alt="" />
               </Link>
             </div>
+            { product.length >= 25 &&
             <div className="pagination">
               <PaginationComponent
                 count={count}
@@ -414,6 +440,7 @@ const ListProducts = () => {
                 pages={pages}
               />
             </div>
+            }
             <div className="pagination">
               <button
                 className="btn-show-more"

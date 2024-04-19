@@ -42,7 +42,7 @@ const FormCreate = ({handleSubmit, handleChangeAdd, handleModalCancel,loadingSav
                     <div className="input-group">
                       <label htmlFor="">ເງື່ອນໄຂໃນການຂື້ນຂັນ</label>
                       <input type="text" name="PV" className="form-modal-control" onChange={handleChangeAdd} />
-                      <span>PV</span>
+                      <span className="span-text">PV</span>
                     </div>
                   </div>
                 </div>
@@ -69,12 +69,12 @@ const FormCreate = ({handleSubmit, handleChangeAdd, handleModalCancel,loadingSav
                     <div className="input-group">
                       <label htmlFor="">ລາຄາຊື້</label>
                       <input type="text" name="price" className="form-modal-control" onChange={handleChangeAdd} />
-                      <span>₭</span>
+                      <span className="span-text">₭</span>
                     </div>
                     <div className="input-group">
                       <label htmlFor="">ຄ່າແນະນຳ</label>
                       <input type="text" name="recommendedFee" className="form-modal-control" onChange={handleChangeAdd} />
-                      <span>PV</span>
+                      <span className="span-text">PV</span>
                     </div>
                   </div>
                 </div>
@@ -101,7 +101,7 @@ const FormCreate = ({handleSubmit, handleChangeAdd, handleModalCancel,loadingSav
                     <div className="input-group">
                       <label htmlFor="">ເປີເຊັນຄ່າບໍລິຫານ</label>
                       <input type="text" name="percentShare" className="form-modal-control" onChange={handleChangeAdd} />
-                      <span>%</span>
+                      <span className="span-text">%</span>
                     </div>
                     <div className="input-group">
                       <label htmlFor="">ອື່ນໆ</label>

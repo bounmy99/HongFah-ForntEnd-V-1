@@ -322,7 +322,7 @@ const ListPackage = () => {
   }
 
   const style = {
-    width: 350,
+    width: 300,
     height: 400,
     margin: 10
   }
@@ -331,6 +331,12 @@ const ListPackage = () => {
     height: 255,
     margin: 10
   }
+  const small = {
+    width: 250,
+    height: 255,
+    margin: 10
+  }
+
 // show more package
   const handleShowMore = () => {
     setVisible((show) => show + 7)
@@ -365,6 +371,9 @@ const ListPackage = () => {
               </div>
               <div className="PackageMaximum">
                     <LoadingCard count={8} styles={styles} />
+              </div>
+              <div className="PackageSmall">
+                    <LoadingCard count={3} styles={small} />
               </div>
             </>
             :

@@ -27,7 +27,7 @@ const DetailProductSale = () => {
       title: "ຮູບພາບ",
       dataIndex: "image",
       key: "image",
-      render: (image) => <Image style={{ width: 60 }} src={image} />,
+      render: (image) => <Image style={{ width: 60, height : 55 }} src={image} />,
     },
     {
       title: "ຊື່",
@@ -115,7 +115,7 @@ const DetailProductSale = () => {
             <div className="detail-cart-top">
               <div className="detail-cart-top-left">
                 <p>
-                  ຜູ້ຂາຍ :{" "}
+                  ຜູ້ຂາຍ :
                   <span>
                     {detail.admin &&
                       `${detail.admin.firstName} ${detail.admin.lastName}`}
@@ -137,7 +137,7 @@ const DetailProductSale = () => {
                   ຈຳນວນທັງໝົດ : <span>{detail.totalQty}</span>
                 </p>
                 <p>
-                  ສະຖານະ :{" "}
+                  ສະຖານະ :
                   <span className="detail-status">{detail.status}</span>
                 </p>
               </div>
@@ -156,15 +156,15 @@ const DetailProductSale = () => {
                 </div>
                 <p>ຮູບພາບ</p>
                 <p>
-                  ຊື່ :{" "}
+                  ຊື່ :
                   <span>{detail.customer && detail.customer.firstName}</span>
                 </p>
                 <p>
-                  ນາມສະກຸນ :{" "}
+                  ນາມສະກຸນ :
                   <span>{detail.customer && detail.customer.lastName}</span>
                 </p>
                 <p>
-                  ລະຫັດພະນັກງານ :{" "}
+                  ລະຫັດພະນັກງານ :
                   <span>{detail.customer && detail.customer.userCode}</span>
                 </p>
               </div>

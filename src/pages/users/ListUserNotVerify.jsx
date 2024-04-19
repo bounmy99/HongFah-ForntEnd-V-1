@@ -146,6 +146,13 @@ const ListUserNotVerify = () => {
             icon: "success",
             title: err.response.data.message,
           });
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
           loadData();
         }
       });
@@ -171,9 +178,11 @@ const ListUserNotVerify = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoadingSearch(true)
         DeleteUsers(users.token, id)
           .then((res) => {
             if (res.status === 200) {
+              setLoadingSearch(false)
               const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -193,7 +202,30 @@ const ListUserNotVerify = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
+            setLoadingSearch(false)
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+    
+            if (err.response.data.message === "unauthorized") {
+              dispatch({
+                type: "USER_LOGOUT",
+                payload: null,
+              });
+              navigate("/");
+            }
           });
       }
     });

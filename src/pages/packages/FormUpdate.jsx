@@ -38,12 +38,11 @@ const FormUpdate = ({handleSubmit, handleChangeUpdate, handleModalCancel,loading
                             <div className="input-group">
                                 <label htmlFor="">ຊື່ແພັກເກດ</label>
                                 <input type="text" name="packageName" value={packageEdit && packageEdit.packageName} className="form-modal-control" onChange={handleChangeUpdate} />
-                                <span></span>
                             </div>
                             <div className="input-group">
                                 <label htmlFor="">ເງື່ອນໄຂໃນການຂື້ນຂັນ</label>
                                 <input type="text" name="PV" value={packageEdit && packageEdit.PV} className="form-modal-control" onChange={handleChangeUpdate} />
-                                <span>PV</span>
+                                <span className="span-text">PV</span>
                             </div>
                         </div>
                     </div>
@@ -70,12 +69,12 @@ const FormUpdate = ({handleSubmit, handleChangeUpdate, handleModalCancel,loading
                             <div className="input-group">
                                 <label htmlFor="">ລາຄາຊື້</label>
                                 <input type="text" name="price" value={packageEdit && packageEdit.price} className="form-modal-control" onChange={handleChangeUpdate} />
-                                <span>₭</span>
+                                <span className="span-text">₭</span>
                             </div>
                             <div className="input-group">
                                 <label htmlFor="">ຄ່າແນະນຳ</label>
                                 <input type="text" name="recommendedFee" value={packageEdit && packageEdit.recommendedFee} className="form-modal-control" onChange={handleChangeUpdate} />
-                                <span>PV</span>
+                                <span className="span-text">PV</span>
                             </div>
                         </div>
                     </div>
@@ -102,7 +101,7 @@ const FormUpdate = ({handleSubmit, handleChangeUpdate, handleModalCancel,loading
                             <div className="input-group">
                                 <label htmlFor="">ເປີເຊັນຄ່າບໍລິຫານ</label>
                                 <input type="text" name="percentShare" value={packageEdit && packageEdit.percentShare} className="form-modal-control" onChange={handleChangeUpdate} />
-                                <span>%</span>
+                                <span className="span-text">%</span>
                             </div>
                             <div className="input-group">
                                 <label htmlFor="">ອື່ນໆ</label>

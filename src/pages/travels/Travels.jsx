@@ -3,7 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Modal, Spin, Tabs, Image } from "antd";
+import moment from "moment";
+import { Empty, Modal, Spin, Tabs, Image,Button } from "antd";
 import ImageTravel from "../../assets/image/no-image.png";
 import LoadingCard from "../../components/LoadingCard";
 import {
@@ -494,7 +495,7 @@ const Travels = () => {
                           </ul>
                           <h3>
                             ວັນທີເດີນທາງ{" "}
-                            {new Date(item.departureDate).toLocaleDateString()}
+                            {moment(item.departureDate).format("DD/MM/YYYY")}
                           </h3>
                         </div>
                         <div className="cards-btn">
@@ -584,6 +585,14 @@ const Travels = () => {
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
+          footer={[
+            <Button key="back" type="primary" danger onClick={handleCancel}>
+              ຍົກເລິກ
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleOk}>
+              ຢືນຢັນທິບ
+            </Button>,
+          ]}
         >
           <UploadImage fileList={fileList} handleChange={handleChange} />
         </Modal>

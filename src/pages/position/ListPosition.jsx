@@ -23,8 +23,13 @@ const styles = {
   height: 255,
   margin: 10,
 };
+const small = {
+  width: 250,
+  height: 255,
+  margin: 10,
+};
 const style = {
-  width: 350,
+  width: 300,
   height: 400,
   margin: 10,
 };
@@ -314,11 +319,14 @@ const ListPosition = () => {
           {loading ? (
             <>
               <div className="position-container">
-                <div className="maximum">
+                <div className="PositionMaximum">
                   <LoadingCard count={8} styles={styles} />
                 </div>
-                <div className="minimum">
+                <div className="PositionMinimum">
                   <LoadingCard count={6} styles={style} />
+                </div>
+                <div className="PositionSmall">
+                  <LoadingCard count={3} styles={small} />
                 </div>
               </div>
             </>

@@ -21,19 +21,20 @@ const ListUsersAll = () => {
   const [infoUser, setInfoUser] = useState([]);
   const [userEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
-  const [loadingSearch, setLoadingSearch] = useState(false)
-// function forst load when open pages
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  // function forst load when open pages
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
-// function load data
+  // function load data
   const loadData = () => {
-  
-    GetAllUsers(users.token,"").then((res) => {
+    GetAllUsers(users.token, "")
+      .then((res) => {
         setUsersAll(res.data.data);
         setLoading(false);
-      }).catch((err) => {
+      })
+      .catch((err) => {
         setUserEmpty(err.response.data.message);
         const Toast = Swal.mixin({
           toast: true,
@@ -61,11 +62,11 @@ const ListUsersAll = () => {
         setLoading(false);
       });
   };
-// function open button
+  // function open button
   const handleModal = () => {
     setOpenModal(true);
   };
-// function update password
+  // function update password
   const handleSubmit = (e) => {
     setLoadingAwait(true);
     e.preventDefault();
@@ -138,13 +139,13 @@ const ListUsersAll = () => {
         }
       });
   };
-// function cancel button
+  // function cancel button
   const handleModalCancel = () => {
     setOpenModal(false);
     setFormType(true);
     setInfoUser([]);
   };
-// function delete 
+  // function delete
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນລົບ",
@@ -157,9 +158,11 @@ const ListUsersAll = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoadingSearch(true);
         DeleteUsers(users.token, id)
           .then((res) => {
             if (res.status === 200) {
+              setLoadingSearch(false);
               const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -179,7 +182,32 @@ const ListUsersAll = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
+            setLoadingSearch(false);
+            setUserEmpty(err.response.data.message);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+
+            if (err.response.data.message === "unauthorized") {
+              dispatch({
+                type: "USER_LOGOUT",
+                payload: null,
+              });
+              navigate("/");
+            }
+            setLoading(false);
           });
       }
     });
@@ -187,7 +215,7 @@ const ListUsersAll = () => {
 
   let openModals = openModal ? "open" : "";
 
-// customize style header of table
+  // customize style header of table
   const customStyles = {
     rows: {
       style: {
@@ -215,7 +243,7 @@ const ListUsersAll = () => {
     },
   };
 
-// colunms headers of table
+  // colunms headers of table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -303,7 +331,7 @@ const ListUsersAll = () => {
     },
   ];
 
-// set value change passwprd
+  // set value change passwprd
   const handleChange = (e) => {
     setInfoUser({ ...infoUser, [e.target.name]: e.target.value });
   };
@@ -312,11 +340,11 @@ const ListUsersAll = () => {
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
-  
+
   // function search data
-  useEffect(()=>{
+  useEffect(() => {
     setLoadingSearch(true);
-    GetAllUsers(users.token,valueSearch)
+    GetAllUsers(users.token, valueSearch)
       .then((res) => {
         setLoadingSearch(false);
         setUsersAll(res.data.data);
@@ -350,11 +378,11 @@ const ListUsersAll = () => {
         }
         setLoading(false);
       });
-  },[valueSearch])
+  }, [valueSearch]);
 
-  const handleClickSearch = ()=>{
+  const handleClickSearch = () => {
     setLoadingSearch(true);
-    GetAllUsers(users.token,valueSearch)
+    GetAllUsers(users.token, valueSearch)
       .then((res) => {
         setLoadingSearch(false);
         setUsersAll(res.data.data);
@@ -388,11 +416,10 @@ const ListUsersAll = () => {
         }
         setLoading(false);
       });
-  }
+  };
 
   return (
     <div className="card-main">
-      
       {loading ? (
         <div className="empty-card">
           <Empty
@@ -409,57 +436,58 @@ const ListUsersAll = () => {
           ></Empty>
         </div>
       ) : (
-        <><Spin spinning={loadingSearch} >
-          <div className="user-table">
-            <div className="user-card-header">
-              <div className="search">
-                <div className="input-search">
-                  <input
-                    type="search"
-                    placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
-                    onChange={handleChangeSearch}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    fill="none"
-                  >
-                    <circle
-                      cx="7.27273"
-                      cy="7.27273"
-                      r="6.27273"
-                      stroke="#00A5E8"
-                      stroke-width="2"
-                    ></circle>
-                    <line
-                      x1="14.5858"
-                      y1="16"
-                      x2="11.6364"
-                      y2="13.0506"
-                      stroke="#00A5E8"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                    ></line>
-                  </svg>
-                </div>
-                <div className="btn-search">
-                  <button type="button" onClick={handleClickSearch}>
-                    ຄົ້ນຫາ
-                  </button>
+        <>
+          <Spin spinning={loadingSearch}>
+            <div className="user-table">
+              <div className="user-card-header">
+                <div className="search">
+                  <div className="input-search">
+                    <input
+                      type="search"
+                      placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                      onChange={handleChangeSearch}
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="17"
+                      viewBox="0 0 16 17"
+                      fill="none"
+                    >
+                      <circle
+                        cx="7.27273"
+                        cy="7.27273"
+                        r="6.27273"
+                        stroke="#00A5E8"
+                        stroke-width="2"
+                      ></circle>
+                      <line
+                        x1="14.5858"
+                        y1="16"
+                        x2="11.6364"
+                        y2="13.0506"
+                        stroke="#00A5E8"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                      ></line>
+                    </svg>
+                  </div>
+                  <div className="btn-search">
+                    <button type="button" onClick={handleClickSearch}>
+                      ຄົ້ນຫາ
+                    </button>
+                  </div>
                 </div>
               </div>
+              {
+                <DataTables
+                  columns={columns}
+                  data={usersAll}
+                  customStyles={customStyles}
+                  userEmpty={userEmpty}
+                />
+              }
             </div>
-            {
-              <DataTables
-                columns={columns}
-                data={usersAll}
-                customStyles={customStyles}
-                userEmpty={userEmpty}
-              />
-            }
-          </div>
           </Spin>
         </>
       )}

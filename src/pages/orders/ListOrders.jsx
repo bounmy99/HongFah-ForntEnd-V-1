@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Empty } from 'antd';
+import moment from 'moment';
+
 import Swal from 'sweetalert2'
 // Functions
 import TableComponent from '../../components/TableComponent';
@@ -121,7 +122,7 @@ const ListOrders = () => {
       name: "ວັນທີສັ່ງຊື້",
       sortable: true,
       selector: (row) => row.createdAt,
-      cell: row => (<p>{new Date(row.createdAt).toLocaleDateString()}</p>),
+      cell: row => (<p>{moment(row.createdAt).format("DD-MM-YYYY")}</p>),
       width: '118px'
     },
     {
