@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload } from 'antd';
-import { useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Image, Upload } from "antd";
+import { useSelector } from "react-redux";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -11,12 +11,11 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-
-const UploadImage = ({fileList,handleChange}) => {
-  const {users} = useSelector((state)=>({...state}))
+const UploadImage = ({ fileList, handleChange }) => {
+  const { users } = useSelector((state) => ({ ...state }));
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
- 
+  const [previewImage, setPreviewImage] = useState("");
+
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -25,12 +24,11 @@ const UploadImage = ({fileList,handleChange}) => {
     setPreviewOpen(true);
   };
 
-  
   const uploadButton = (
     <button
       style={{
         border: 0,
-        background: 'none',
+        background: "none",
       }}
       type="button"
     >
@@ -40,20 +38,21 @@ const UploadImage = ({fileList,handleChange}) => {
           marginTop: 8,
         }}
       >
-        Upload
+        ອັບໂຫຼບຮູບພາບ
       </div>
     </button>
   );
   return (
     <>
-      <Upload multiple
+      <Upload
+        multiple
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
         accept=".png, .jpg, .jpeg"
-        beforeUpload={(files)=>{
-            return false
+        beforeUpload={(files) => {
+          return false;
         }}
         name={`images`}
       >
@@ -62,12 +61,12 @@ const UploadImage = ({fileList,handleChange}) => {
       {previewImage && (
         <Image
           wrapperStyle={{
-            display: 'none',
+            display: "none",
           }}
           preview={{
             visible: previewOpen,
             onVisibleChange: (visible) => setPreviewOpen(visible),
-            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+            afterOpenChange: (visible) => !visible && setPreviewImage(""),
           }}
           src={previewImage}
         />

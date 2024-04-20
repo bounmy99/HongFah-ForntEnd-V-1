@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useSelector, useDispatch } from "react-redux";
 import { Spin } from "antd"
 // image
@@ -27,12 +25,18 @@ const LoginPages = () => {
 
 // function first load open page
   useEffect(() => {
-    if (users) {
-      navigate("/dashboard")
-    } else {
-      navigate("/")
-    }
+    if (RoleBaseDirection) {
+      return
+    } 
   }, [users]);
+
+  const RoleBaseDirection = (Role) => {
+      if (Role === 'admin') {
+        navigate('/dashboard')
+      } else {
+        navigate('/listProducts/saleProducts')
+      }
+  }
 
 // function show hide password
   const showHide = () => {
@@ -91,7 +95,7 @@ const LoginPages = () => {
         icon: "success",
         title: "ເຂົ້າສູ່ລະບົບສຳເລັດ"
       });
-      navigate('/dashboard')
+      RoleBaseDirection(res.data.data.role)
       localStorage.setItem("data", JSON.stringify(res.data.data))
     }).catch(err => {
       setLoading(false)

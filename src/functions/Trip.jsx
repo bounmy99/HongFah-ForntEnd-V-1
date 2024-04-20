@@ -15,12 +15,21 @@ export const GetAllTripIsSuccess = async (token, status,value) =>
       },
     }
   );
+
 export const GetOneTrip = async (token, id) =>
   await axios.get(`${import.meta.env.VITE_HONGFHA_API}/trip/getone/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
+export const GetMemberTrip = async (token, id) =>
+  await axios.get(`${import.meta.env.VITE_HONGFHA_API}/trip/admin/getone/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
 export const CreateTrip = async (Data, token) =>
   await axios.post(`${import.meta.env.VITE_HONGFHA_API}/trip/create`, Data, {
     headers: {

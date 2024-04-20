@@ -5,13 +5,15 @@ const RouteProtect = ({children}) => {
     const { users } = useSelector((state)=>({...state}));
     const [logined,setLogined] = useState(false)
 
+    let getData = JSON.parse(localStorage.getItem("data"));
+
     useEffect(()=>{
-      if(users && users.token && users.role === "admin"){
+      if(getData && getData.token && getData.role === "admin"){
         setLogined(true)
       }
-    },[users.token,users.role,users.role === "admin"]);
+    },[getData.token,getData.role,getData.role === "admin"]);
 
-  return logined && users.token && users.role === "admin" 
+  return logined && getData.token && getData.role === "admin" 
   ? 
   children 
   : 

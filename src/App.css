@@ -7,19 +7,50 @@
   font-family: 'Noto Sans Lao', sans-serif;
 }
 
+:root {
+
+  /* ====== Colors ====== */
+  --conten-color: #f3f3f3;
+  --panel-color: #ffffff;
+  --text-color: #000;
+  --black-light-color: #707070;
+  --border-color: #e6e5e5;
+  --toggle-color: #c8c5c5;
+  --box1-color: #E3F5FF;
+  --box2-color: #E5ECF6;
+  --box3-color: #e7d1fc;
+  --title-icon-color: #fff;
+  --text-nav-color: #ffff;
+  --main-color: #0DB5E8;
+  --card-color: #FCFCFC;
+
+  /* ========= border-radius ========= */
+  --border-radius-1: 15px;
+  --border-radius-2: 5px;
+  --border-radius-circle: 50%;
+
+
+  /* ========== Transition ========== */
+  --tran-05: all 0.5s ease;
+  --tran-03: all 0.3s ease;
+  --tran-02: all 0.2s ease;
+
+}
+
+/* ==================== spacial class start ================== */
 :where(.css-dev-only-do-not-override-p7e5j5).ant-image {
   position: relative;
   display: inline-block;
   width: 100%;
   border-radius: 10px 10px 0 0;
 }
-
 :where(.css-dev-only-do-not-override-p7e5j5).ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload-list.ant-upload-list-picture-card .ant-upload-list-item-container, :where(.css-dev-only-do-not-override-p7e5j5).ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-card .ant-upload-list-item-container, :where(.css-dev-only-do-not-override-p7e5j5).ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-container, :where(.css-dev-only-do-not-override-p7e5j5).ant-upload-wrapper.ant-upload-picture-circle-wrapper .ant-upload-list.ant-upload-list-picture-circle .ant-upload-list-item-container {
   width: 110px;
 }
 :where(.css-dev-only-do-not-override-p7e5j5).ant-modal .ant-modal-footer {
   text-align: center;
 }
+/* ==================== spacial class end ================== */
 
 .empty-card {
   display: flex;
@@ -28,6 +59,7 @@
   height: 27rem;
 
 }
+
 /* ================= start loading ================ */
 
 .cards-loading-trips_2,.cards-loading-trips,.cards-loading-trips_1 {
@@ -46,6 +78,7 @@
 }
 
 /* ======================== end loading ====================== */
+
 .empty-card .add-btn-empty {
   display: flex;
   align-items: center;
@@ -101,35 +134,7 @@
   }
 }
 
-:root {
 
-  /* ====== Colors ====== */
-  --conten-color: #f3f3f3;
-  --panel-color: #ffffff;
-  --text-color: #000;
-  --black-light-color: #707070;
-  --border-color: #e6e5e5;
-  --toggle-color: #c8c5c5;
-  --box1-color: #E3F5FF;
-  --box2-color: #E5ECF6;
-  --box3-color: #e7d1fc;
-  --title-icon-color: #fff;
-  --text-nav-color: #ffff;
-  --main-color: #0DB5E8;
-  --card-color: #FCFCFC;
-
-  /* ========= border-radius ========= */
-  --border-radius-1: 15px;
-  --border-radius-2: 5px;
-  --border-radius-circle: 50%;
-
-
-  /* ========== Transition ========== */
-  --tran-05: all 0.5s ease;
-  --tran-03: all 0.3s ease;
-  --tran-02: all 0.2s ease;
-
-}
 
 /* ======================= btn-color =================== */
 .btn-info {
@@ -1876,11 +1881,20 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
+.Product-card .product-card-header .btn-search button.btns-export{
+  padding: 7px;
+  border-radius: 0.625rem;
+  background: linear-gradient(180deg, #49f327 0%, #13a306 100%);
+  width: 5rem;
+  border: none;
+  color: #F4F7FC;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 
 .Product-card .product-card-header .btn-search button:hover {
-
   background: linear-gradient(180deg, #2493be 0%, #0089be 100%);
-
 }
 
 .Product-card .product-card-content .title-content {
@@ -2634,11 +2648,37 @@ body {
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
 }
+.list-order-filter .btn-search button.btns-export {
+  padding: 7px;
+  border-radius: 0.625rem;
+  width: 5rem;
+  color: #F4F7FC;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  border: 1px solid #D0D5DD;
+  background: linear-gradient(180deg, #0de006 0%, #18cb00 100%), var(--main-color);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+.list-order-filter .btn-search button.btns-export.disable {
+  cursor: not-allowed;
+  background: linear-gradient(180deg, #20991c 0%, #1b800d 100%), var(--main-color);
+
+  padding: 7px;
+  border-radius: 0.625rem;
+  width: 5rem;
+  color: #F4F7FC;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  border: 1px solid #D0D5DD;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
 
 .list-order-filter .btn-search button:hover {
-
   background: linear-gradient(180deg, #2493be 0%, #0089be 100%);
-
+}
+.list-order-filter .btn-search button.btns-export:hover {
+  background: linear-gradient(180deg, #24be38 0%, #098d30 100%);
 }
 
 .status-order {
@@ -2762,6 +2802,9 @@ body {
 
 .emp-dash-boxes .number .right .icons .img-icon {
   width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 
@@ -2935,8 +2978,6 @@ body {
   gap: .3rem;
   margin-top: 6px;
 }
-
-
 
 .icons-show-hide .btn-show {
   cursor: pointer;
@@ -3189,6 +3230,9 @@ body {
 
 .market-member .icons img {
   width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .market-member .text h3 {
@@ -5738,8 +5782,22 @@ body {
   border: none;
   margin-top: 2px;
   position: relative;
-  font-weight: bold
+  font-weight: bold;
+  border : 1px solid var(--toggle-color);
 }
+.input-group-user .form-modal-control-user:focus {
+ caret-color: var(--main-color);
+ border : 1px solid var(--main-color);
+}
+.input-group-user .icon-right {
+ position: absolute;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ top : .8rem;
+ left: 50rem;
+}
+
 
 .modals-user-btn {
   margin-top: 16px;
@@ -6282,7 +6340,7 @@ body {
 
 /* -------------MEDIA QUERY---------------- */
 
-@media (max-width : 1440px) {
+@media screen and (max-width : 1440px) {
   .Product-card {
     margin-top: 15px;
     width: calc(100%);
@@ -6333,7 +6391,7 @@ body {
 }
 }
 
-@media (max-width : 1024px) {
+@media screen and (max-width : 1024px) {
   .dash-content .boxes .box {
     width: (100% / 2 - 15px);
     margin-top: 15px;
@@ -6934,7 +6992,6 @@ body {
   .ProductSmall{
     display: block;
   }
-
   .dash-content .boxes .box {
     width: (100% / 2 - 15px);
     margin-top: 15px;
@@ -6966,7 +7023,7 @@ body {
     z-index: -1;
     transition: var(--tran-05);
   }
-
+  .nav-icons-toggle,
   .bell-notification,
   .bages,
   .image-auth,
@@ -6975,9 +7032,22 @@ body {
     display: none;
     transition: var(--tran-05);
   }
+  .dashboard .dash-content .overview .boxes-card .card-boxes-users {
+    width: calc(100% - 57%);
+   && .text-bottom {
+    && .top-bottom {
+      p {
+          font-size: 13px;
+          font-weight: bolder;
+          color: #0089be;
+      }
+      }
+   }
+
+}
 
   .dashboard .dash-content .overview .boxes-card .card-boxes {
-    width: 19.5rem;
+    width: calc(100% - 47%);
     height: 18rem;
     display: flex;
     flex-direction: column;

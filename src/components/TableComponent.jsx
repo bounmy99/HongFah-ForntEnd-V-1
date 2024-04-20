@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import Loadding from "./Loadding";
 import DatePicker from "react-datepicker";
+import { read, writeFileXLSX, utils } from "xlsx";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {Empty} from "antd"
@@ -27,12 +28,15 @@ const TableComponent = ({
   const [endDate, setEndtDate] = useState();
   const [valueInput, setValueInput] = useState();
   const { users } = useSelector((state) => ({ ...state }));
+  const [dataExport, setDataExport] = useState([])
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setValueInput(e.target.value);
   };
+
+  console.log("dataExport",dataExport)
 
   const handleSearch = () => {
     GetAllOrders(users.token, startDate, endDate, valueInput, Status)
@@ -82,6 +86,35 @@ const TableComponent = ({
         }
       });
   };
+
+  const handleExport = ()=>{
+    setDataExport("");
+    const heading = [
+      [
+        "ລະຫັດຜູ້ໃຊ້",
+        "ຊື່ທະນາຄານ",
+        "ຊື່ບັນຊີ",
+        "ເລກບັນຊີ",
+        "ຮູບພາບ",
+        "ຊື່",
+        "ນາມສະກຸນ",
+        "ຕຳແໜ່ງ",
+        "ລະຫັດ ID",
+        "ລູກທີມ",
+        "ຮັກສາຍອດ",
+        "ຄະແນນ",
+        "ຄະແນນທີມ",
+        "ເງິນທອນ",
+      ],
+    ];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, heading);
+    utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
+    utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
+    writeFileXLSX(wb, "History.xlsx");
+    window.location.reload();
+  }
 
   return (
     <>
@@ -151,8 +184,11 @@ const TableComponent = ({
               </svg>
             </div>
             <div className="btn-search">
-              <button type="button" onClick={handleSearch}>
+              <button type="button" className="btns-search" onClick={handleSearch}>
                 ຄົ້ນຫາ
+              </button>
+              <button type="button" disabled={dataExport.length == 0} className={`${dataExport.length == 0 ? "btns-export disable" : "btns-export"}`} onClick={handleExport}>
+                Export 
               </button>
             </div>
           </div>
@@ -180,7 +216,8 @@ const TableComponent = ({
               columns={columns}
               data={data}
               pagination
-              // fixedHeader
+              selectableRows
+              onSelectedRowsChange={(row) => setDataExport(row.selectedRows)}
               customStyles={customStyles}
             />
           </div>

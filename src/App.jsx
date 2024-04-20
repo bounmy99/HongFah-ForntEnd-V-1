@@ -7,46 +7,51 @@ import RouteProtect from "./protectRoute/RouteProtect";
 //==================== Layout ======================
 import Headers from "./layouts/Headers";
 import SideBar from "./layouts/SideBar";
+import SideBarUser from "./layouts/SideBarUser";
 
 //==================== Pages  =====================
 import LoginPages from "./pages/LoginPages";
 import ForgetPassword from "./pages/ForgetPassword";
 import Dashboard from "./pages/Dashboard";
 
-import ListProducts from "./pages/Products/ListProducts";
-import EditProduct from "./pages/Products/EditProduct";
-import AddProduct from "./pages/Products/AddProduct";
-import SaleProduct from "./pages/Products/SaleProduct";
-import CartProduct from "./pages/Products/CartProduct";
-import Pay from "./pages/Products/Pay";
-import DetailProductSale from "./pages/Products/DetailProductSale";
+// =================== admin access =================
+import ListProducts from "./pages/admin/Products/ListProducts";
+import EditProduct from "./pages/admin/Products/EditProduct";
+import AddProduct from "./pages/admin/Products/AddProduct";
+import SaleProduct from "./pages/admin/Products/SaleProduct";
+import CartProduct from "./pages/admin/Products/CartProduct";
+import Pay from "./pages/admin/Products/Pay";
+import DetailProductSale from "./pages/admin/Products/DetailProductSale";
 
-import HomeOrders from "./pages/orders/HomeOrders";
-import InfoOrders from "./pages/orders/InfoOrders";
-import InfoCancel from "./pages/orders/InfoCancel";
-import InfoHistory from "./pages/orders/InfoHistory";
-import ListLineWork from "./pages/lineWorks/ListLineWork";
-import DetailsEmp from "./pages/lineWorks/DetailsEmp";
-import ListPackage from "./pages/packages/ListPackage";
+import HomeOrders from "./pages/admin/orders/HomeOrders";
+import InfoOrders from "./pages/admin/orders/InfoOrders";
+import InfoCancel from "./pages/admin/orders/InfoCancel";
+import InfoHistory from "./pages/admin/orders/InfoHistory";
+import ListLineWork from "./pages/admin/lineWorks/ListLineWork";
+import DetailsEmp from "./pages/admin/lineWorks/DetailsEmp";
+import ListPackage from "./pages/admin/packages/ListPackage";
 
-import Travels from "./pages/travels/Travels";
-import AddTravels from "./pages/travels/AddTravels";
-import DetailTravels from "./pages/travels/DetailTravels";
-import DetailSuccesTrip from "./pages/travels/DetailSuccesTrip";
+import Travels from "./pages/admin/travels/Travels";
+import AddTravels from "./pages/admin/travels/AddTravels";
+import DetailTravels from "./pages/admin/travels/DetailTravels";
+import DetailSuccesTrip from "./pages/admin/travels/DetailSuccesTrip";
 
-import Auth from "./pages/auth/Auth";
-import EditUser from "./pages/auth/EditUser";
-import AddUser from "./pages/auth/AddUser";
+import Auth from "./pages/admin/auth/Auth";
+import EditUser from "./pages/admin/auth/EditUser";
+import AddUser from "./pages/admin/auth/AddUser";
 
-import HomeSales from "./pages/bonus/HomeSales";
-import HistoryTransfer from "./pages/bonus/HistoryTransfer";
-import MaintainFalse from "./pages/bonus/MaintainFalse";
-import MaintainTrue from "./pages/bonus/MaintainTrue";
+import HomeSales from "./pages/admin/bonus/HomeSales";
+import HistoryTransfer from "./pages/admin/bonus/HistoryTransfer";
+import MaintainFalse from "./pages/admin/bonus/MaintainFalse";
+import MaintainTrue from "./pages/admin/bonus/MaintainTrue";
 
-import ListPosition from "./pages/position/ListPosition";
+import ListPosition from "./pages/admin/position/ListPosition";
 
-import ListUsers from "./pages/users/ListUsers";
-import UsersDetail from "./pages/users/UsersDetail";
+import ListUsers from "./pages/admin/users/ListUsers";
+import UsersDetail from "./pages/admin/users/UsersDetail";
+
+// ====================== user access ================
+import HomeUser from "./pages/user/SaleProduct";
 
 function App() {
   const { users } = useSelector((state) => ({ ...state }));
@@ -88,7 +93,7 @@ function App() {
                     element={
                       <RouteProtect>
                         <Dashboard />
-                       </RouteProtect>
+                      </RouteProtect>
                     }
                   />
                   <Route
@@ -332,6 +337,26 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPages />} />
           <Route path="/ForgetPassword" element={<ForgetPassword />} />
+          <Route
+            path="/listProducts/saleProducts"
+            element={
+              <>
+                <SideBarUser />
+                <section className="dashboard">
+                  <Headers />
+                  <div className="dash-content">
+                    <div className="container">
+                      <HomeUser />
+                    </div>
+                  </div>
+                </section>
+              </>
+            }
+          />
+          <Route
+            path="/listProducts/DetailProductSale/:id"
+            element={<DetailProductSale />}
+          />
         </Routes>
       )}
     </>

@@ -44,6 +44,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [counterUsers, setCounterUsers] = useState([]);
   const [bestSell, setBestSell] = useState([]);
+  
 
   const data = [
     {
@@ -306,7 +307,7 @@ const Dashboard = () => {
               <LineChartOutlined className="icons" />
             </div>
             <div className="titie-box">
-              <h5>ປະຫວັດການຂາຍ</h5>
+              <h5>ຈັດການອໍເດີ້</h5>
             </div>
           </div>
         </Tooltip>
@@ -426,7 +427,7 @@ const Dashboard = () => {
             <div className="text-bottom">
               <div className="top-bottom">
                 <p>
-                  ຜູ້ໃຊ້ເດືອນນີ້ <span>4000 ຄົນ</span>, ສູງກວ່າເດືອນກ່ອນ 10%
+                  ຜູ້ໃຊ້ເດືອນນີ້ <span>{counterUsers.countUser ? counterUsers.countUser : 0} ຄົນ</span>, ສູງກວ່າເດືອນກ່ອນ {counterUsers.countUser ? (counterUsers.countUser * 100) / counterUsers.countUser  : 0} %
                 </p>
               </div>
               <div className="middle">
