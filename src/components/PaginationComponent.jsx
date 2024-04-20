@@ -1,9 +1,6 @@
 import React from 'react'
 import { Pagination } from 'antd';
 const PaginationComponent = ({count,pageSize,setPages,pages,setPageSize}) => {
-
-  console.log("pages",pages);
-
   const onShowSizeChange = (current,pageSize)=>{
     setPageSize(pageSize)
   }

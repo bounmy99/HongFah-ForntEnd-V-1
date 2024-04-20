@@ -19,7 +19,7 @@ const initialValue = {
 };
 const SaleProduct = () => {
   const { users, carts } = useSelector((state) => ({ ...state }));
-  
+  let getData = JSON.parse(localStorage.getItem("data"));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = useState([]);
@@ -65,7 +65,7 @@ const SaleProduct = () => {
   // load all products
   const LoadData = () => {
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search)
+    GetAllProduct(getData.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -100,7 +100,7 @@ const SaleProduct = () => {
   };
   // load all products type
   const loadAllProductType = () => {
-    GetAllProductType(users.token).then((res) => {
+    GetAllProductType(getData.token).then((res) => {
       setProductTypes(res.data.data);
       // console.log("ProductType", res.data)
     });
@@ -144,7 +144,7 @@ const SaleProduct = () => {
   // search with Produc price , product Type, Product name
   useEffect(() => {
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search)
+    GetAllProduct(getData.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -180,7 +180,7 @@ const SaleProduct = () => {
   }, [productType, maxPrice, search]);
   const handleSearch = () => {
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search)
+    GetAllProduct(getData.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -220,7 +220,7 @@ const SaleProduct = () => {
     const productType = [];
     const search = [];
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search).then((res) => {
+    GetAllProduct(getData.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
       console.log("Product API", res.data);

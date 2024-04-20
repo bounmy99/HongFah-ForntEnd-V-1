@@ -114,7 +114,7 @@ const Travels = () => {
     const formData = new FormData();
     if (fileItem) {
       fileItem.forEach((file) => {
-        console.log("item loop", file);
+        // console.log("item loop", file);
         formData.append("images", file);
       });
     }

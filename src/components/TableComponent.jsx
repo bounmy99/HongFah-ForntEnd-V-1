@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import { read, writeFileXLSX, utils } from "xlsx";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import {Empty} from "antd"
+import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
 const TableComponent = ({
@@ -22,21 +22,20 @@ const TableComponent = ({
   setSuccessOrdersEmpty,
   orderEmpty,
   successOrdersEmpty,
-  cancelOrderEmpty
+  cancelOrderEmpty,
 }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndtDate] = useState();
   const [valueInput, setValueInput] = useState();
   const { users } = useSelector((state) => ({ ...state }));
-  const [dataExport, setDataExport] = useState([])
+  const [dataExport, setDataExport] = useState([]);
+  const [toggleCleared, setToggleCleared] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setValueInput(e.target.value);
   };
-
-  console.log("dataExport",dataExport)
 
   const handleSearch = () => {
     GetAllOrders(users.token, startDate, endDate, valueInput, Status)
@@ -87,8 +86,31 @@ const TableComponent = ({
       });
   };
 
-  const handleExport = ()=>{
-    setDataExport("");
+
+
+
+  const handleExport = () => {
+    console.log("dataExport",dataExport)
+    return
+    if (dataExport.length === 0) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
+      });
+      return;
+    }
+    setDataExport([]);
     const heading = [
       [
         "ລະຫັດຜູ້ໃຊ້",
@@ -113,8 +135,10 @@ const TableComponent = ({
     utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
     utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
     writeFileXLSX(wb, "History.xlsx");
-    window.location.reload();
-  }
+    setToggleCleared(true);
+  };
+
+ 
 
   return (
     <>
@@ -184,17 +208,24 @@ const TableComponent = ({
               </svg>
             </div>
             <div className="btn-search">
-              <button type="button" className="btns-search" onClick={handleSearch}>
+              <button
+                type="button"
+                className="btns-search"
+                onClick={handleSearch}
+              >
                 ຄົ້ນຫາ
               </button>
-              <button type="button" disabled={dataExport.length == 0} className={`${dataExport.length == 0 ? "btns-export disable" : "btns-export"}`} onClick={handleExport}>
-                Export 
+              <button
+                type="button"
+                className={`btns-export`}
+                onClick={handleExport}
+              >
+                Export
               </button>
             </div>
           </div>
         </div>
-        {
-        orderEmpty || successOrdersEmpty || cancelOrderEmpty ? (
+        {orderEmpty || successOrdersEmpty || cancelOrderEmpty ? (
           <div className="empty-card">
             <Empty
               image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -203,7 +234,7 @@ const TableComponent = ({
               }}
               description={
                 <span>
-                  <a>{'ບໍ່ມີລາຍການທີ່ຄົ້ນຫາ'}</a>
+                  <a>{"ບໍ່ມີລາຍການທີ່ຄົ້ນຫາ"}</a>
                 </span>
               }
             ></Empty>
@@ -217,7 +248,10 @@ const TableComponent = ({
               data={data}
               pagination
               selectableRows
-              onSelectedRowsChange={(row) => setDataExport(row.selectedRows)}
+              onSelectedRowsChange={({selectedRows}) => {
+                setDataExport(selectedRows);
+              }}
+              clearSelectedRows={toggleCleared}
               customStyles={customStyles}
             />
           </div>

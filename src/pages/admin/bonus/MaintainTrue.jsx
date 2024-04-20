@@ -111,7 +111,7 @@ const columns = [
   },
 ];
 
-const MaintainTrue = ({setSelectableRow,valueInput }) => {
+const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -240,6 +240,7 @@ const MaintainTrue = ({setSelectableRow,valueInput }) => {
           onSelectedRowsChange={(row) => {
             setSelectableRow(row.selectedRows);
           }}
+          clearSelectedRows={toggleCleared}
         />
       )}
     </div>

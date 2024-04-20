@@ -14,7 +14,13 @@ const AddUser = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState([]);
-  const [roles,setRoles]= useState("")
+  const [roles, setRoles] = useState("");
+  const [isPasswordShow, setIsPasswordShow] = useState(false);
+
+  // function show hide password
+  const showHide = () => {
+    setIsPasswordShow((isPasswordShow) => !isPasswordShow);
+  };
 
   // load all users
   useEffect(() => {
@@ -87,7 +93,7 @@ const AddUser = () => {
 
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-    const FinalData = ({...Data, role : roles})
+    const FinalData = { ...Data, role: roles };
 
     AdminSignStaff(users.token, FinalData)
       .then((res) => {
@@ -199,11 +205,18 @@ const AddUser = () => {
             <div className="input-group">
               <label htmlFor="">ລະຫັດຜ່ານ</label>
               <input
-                type="password"
+                type={`${isPasswordShow ? "text" : "password"}`}
                 name="password"
                 className="form-controls-md"
                 onChange={handleChange}
               />
+              <div className="icon-right" onClick={showHide}>
+                <i
+                  className={`bx ${
+                    isPasswordShow ? "bx-show-alt" : "bx-low-vision"
+                  }`}
+                ></i>
+              </div>
             </div>
             <div className="input-group">
               <label htmlFor="">ເບີໂທ</label>
@@ -218,10 +231,11 @@ const AddUser = () => {
               <label htmlFor="">ສິດເຂົ້າໃຊ້</label>
               <Select
                 name="role"
-                style={{
-                  width: 612,
-                  height: 40,
-                }}
+                // style={{
+                //   width: 650,
+                //   height: 40,
+                // }}
+                className="form-select-input"
                 placeholder="ກະລຸນາເລຶອກ"
                 optionFilterProp="children"
                 onChange={handleChangeRole}
@@ -244,7 +258,7 @@ const AddUser = () => {
             </div>
           </div>
           <div className="user-btn">
-            <button type="submit"  className="btn-add-user">
+            <button type="submit" className="btn-add-user">
               ບັນທຶກ
             </button>
             <button type="reset" className="btn-cancel-user">
@@ -298,7 +312,7 @@ const AddUser = () => {
             </div>
           </div>
           <div className="user-btn">
-            <button type="submit"  className="btn-add-user">
+            <button type="submit" className="btn-add-user">
               ບັນທຶກ
             </button>
             <button type="reset" className="btn-cancel-user">

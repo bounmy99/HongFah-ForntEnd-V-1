@@ -13,7 +13,7 @@ const ListTotalSales = () => {
   const [selectableRow, setSelectableRow] = useState([]);
   const [hiddenBtn, setHiddenBtn] = useState(false);
   const [valueInput,setValueInput] = useState("")
-
+  const [toggleCleared, setToggleCleared] = useState(false);
 
   useEffect(() => {
     setTableChange(1);
@@ -71,8 +71,9 @@ const ListTotalSales = () => {
         });
         utils.book_append_sheet(wb, ws, "ການເຄື່ອນໄຫວ");
         writeFileXLSX(wb, "History.xlsx");
+        setToggleCleared(false);
       } else {
-        window.location.reload();
+        setToggleCleared(true);
       }
     });
   };
@@ -130,9 +131,11 @@ const ListTotalSales = () => {
             }
           });
  
-
+          setToggleCleared(true);
+          setSelectableRow([])
       } else {
-        window.location.reload();
+          setToggleCleared(true);
+          setSelectableRow([])
       }
     });
   };
@@ -196,8 +199,11 @@ const ListTotalSales = () => {
               navigate("/");
             }
           });
+          setToggleCleared(true);
+          setSelectableRow([])
       } else {
-        window.location.reload();
+          setToggleCleared(true);
+          setSelectableRow([])
       }
     });
   };
@@ -327,10 +333,10 @@ const ListTotalSales = () => {
         </div>
         <>
           {tablechange === 1 && (
-            <MaintainTrue valueInput={valueInput} setSelectableRow={setSelectableRow} />
+            <MaintainTrue valueInput={valueInput} toggleCleared={toggleCleared} setSelectableRow={setSelectableRow} />
           )}
           {tablechange === 2 && (
-            <MaintainFalse valueInput={valueInput} setSelectableRow={setSelectableRow} />
+            <MaintainFalse valueInput={valueInput} toggleCleared={toggleCleared} setSelectableRow={setSelectableRow} />
           )}
         </>
       </div>

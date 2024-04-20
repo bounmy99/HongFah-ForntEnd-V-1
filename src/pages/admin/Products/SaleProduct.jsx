@@ -19,6 +19,7 @@ const initialValue = {
 };
 const SaleProduct = () => {
   const { users, carts } = useSelector((state) => ({ ...state }));
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [product, setProduct] = useState([]);

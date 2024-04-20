@@ -114,7 +114,8 @@ const HistoryTransfer = () => {
   const [emptyData, setEmptyData] = useState("");
   const [dataImport, setDataImport] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [valueInput,setValueInput] = useState("")
+  const [valueInput,setValueInput] = useState("");
+  const [toggleCleared, setToggleCleared] = useState(false)
   const navigate = useNavigate();
 
 
@@ -159,7 +160,7 @@ const HistoryTransfer = () => {
     setValueInput(e.target.value)
   }
 
-  console.log(valueInput)
+  // console.log(valueInput)
 
   // search
   useEffect(()=>{
@@ -214,12 +215,12 @@ const HistoryTransfer = () => {
       };
       reader.readAsArrayBuffer(file);
     }
-    setSelectRows("");
+    setSelectRows([]);
   };
 
   // export file csv or excel
   const handleExport = () => {
-    setSelectRows("");
+    setSelectRows([]);
     const heading = [
       [
         "ລະຫັດຜູ້ໃຊ້",
@@ -244,7 +245,7 @@ const HistoryTransfer = () => {
     utils.sheet_add_json(ws, selectRows, { origin: "A2", skipHeader: true });
     utils.book_append_sheet(wb, ws, "ການເຄື່ອນໄຫວ");
     writeFileXLSX(wb, "History.xlsx");
-    window.location.reload();
+    setToggleCleared(true)
   };
 
   return (
@@ -385,6 +386,7 @@ const HistoryTransfer = () => {
               pagination
               customStyles={customStyles}
               selectableRows
+              clearSelectedRows={toggleCleared}
               onSelectedRowsChange={(row) => setSelectRows(row.selectedRows)}
             />
 
@@ -395,6 +397,7 @@ const HistoryTransfer = () => {
               pagination
               customStyles={customStyles}
               selectableRows
+              clearSelectedRows={toggleCleared}
               onSelectedRowsChange={(row) => setSelectRows(row.selectedRows)}
             />
           )}

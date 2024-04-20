@@ -6,10 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { GetAllMaintain } from "../../../functions/Bonus";
 import Swal from "sweetalert2"
 // format price
-const formatPrice = (value) => {
-  let val = (value / 1).toFixed(0).replace(",", ".");
-  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
+import {formatPrice} from "../../../functions/FormatPrices"
 // customize style cell of table
 const customStyles = {
   rows: {
@@ -110,13 +107,15 @@ const columns = [
   },
 ];
 
-const MaintainFalse = ({setSelectableRow,valueInput }) => {
+const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
   const [maintain, setMainTain] = useState([]);
   const [emptyData, setEmptyData] = useState("");
   const [loading, setLoading] = useState(false);
+
+  console.log("toggleCleared",toggleCleared)
 
   useEffect(() => {
     loadData();
@@ -239,6 +238,7 @@ const MaintainFalse = ({setSelectableRow,valueInput }) => {
             setSelectableRow(row.selectedRows);
             
           }}
+          clearSelectedRows={toggleCleared}
         />
       )}
     </div>
