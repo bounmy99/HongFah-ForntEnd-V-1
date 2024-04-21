@@ -5,7 +5,7 @@ import moment from 'moment';
 
 import Swal from 'sweetalert2'
 // Functions
-import TableComponent from '../../../components/TableComponent';
+import TableOrderUser from '../../../components/TableOrderUser';
 import { GetAllOrders } from '../../../functions/Orders';
 import { formatPrice } from "../../../functions/FormatPrices"
 
@@ -180,7 +180,7 @@ const ListOrders = () => {
   return (
     <>
         <div>
-          <TableComponent Status={"await"} orderEmpty={orderEmpty}  setOrders={setOrders} setEmptyOrder={setEmptyOrder} columns={columns} customStyles={customStyles} data={orders} loading={loading} />
+          <TableOrderUser Status={"await"} orderEmpty={orderEmpty}  setOrders={setOrders} setEmptyOrder={setEmptyOrder} columns={columns} customStyles={customStyles} data={orders} loading={loading} />
         </div>
     </>
 

@@ -4,13 +4,10 @@ import { Empty, Spin } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GetAllBonus } from "../../../functions/Bonus";
+import { formatPrice } from "../../../functions/FormatPrices";
 import Swal from "sweetalert2"
 
-// format price
-const formatPrice = (value) => {
-  let val = (value / 1).toFixed(0).replace(",", ".");
-  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
+
 // customize style cell of table
 const customStyles = {
   rows: {

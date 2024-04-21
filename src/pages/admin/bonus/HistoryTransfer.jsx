@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Empty, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import {formatPrice} from "../../../functions/FormatPrices"
+import { formatPrice } from "../../../functions/FormatPrices";
 
 // customize style cell of table
 const customStyles = {
@@ -114,15 +114,15 @@ const HistoryTransfer = () => {
   const [emptyData, setEmptyData] = useState("");
   const [dataImport, setDataImport] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [valueInput,setValueInput] = useState("");
-  const [toggleCleared, setToggleCleared] = useState(false)
+  const [valueInput, setValueInput] = useState("");
+  const [toggleCleared, setToggleCleared] = useState(false);
   const navigate = useNavigate();
-
 
   // load all success transfer
   useEffect(() => {
     setLoading(true);
-    GetAllSuccess(users.token,"true","").then((res) => {
+    GetAllSuccess(users.token, "true", "")
+      .then((res) => {
         setLoading(false);
         setMainTain(res.data.data);
       })
@@ -156,16 +156,17 @@ const HistoryTransfer = () => {
   }, []);
 
   // set value input
-  const handleChange = (e)=>{
-    setValueInput(e.target.value)
-  }
+  const handleChange = (e) => {
+    setValueInput(e.target.value);
+  };
 
   // console.log(valueInput)
 
   // search
-  useEffect(()=>{
+  useEffect(() => {
     setLoading(true);
-    GetAllSuccess(users.token,"true",valueInput).then((res) => {
+    GetAllSuccess(users.token, "true", valueInput)
+      .then((res) => {
         setLoading(false);
         setMainTain(res.data.data);
       })
@@ -196,11 +197,10 @@ const HistoryTransfer = () => {
         }
         setEmptyData(err.response.data.message);
       });
-  },[valueInput])
+  }, [valueInput]);
 
   // import file csv or excel
   const handleImport = (e) => {
-
     const files = e.target.files;
     if (files.length) {
       const file = files[0];
@@ -221,22 +221,52 @@ const HistoryTransfer = () => {
   // export file csv or excel
   const handleExport = () => {
     setSelectRows([]);
+
+    console.log("selectRows", selectRows);
+    // return;
+
+    if (selectRows.length === 0) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
+      });
+      return;
+    }
     const heading = [
       [
-        "ລະຫັດຜູ້ໃຊ້",
-        "ຊື່ທະນາຄານ",
-        "ຊື່ບັນຊີ",
-        "ເລກບັນຊີ",
-        "ຮູບພາບ",
-        "ຊື່",
-        "ນາມສະກຸນ",
-        "ຕຳແໜ່ງ",
-        "ລະຫັດ ID",
-        "ລູກທີມ",
-        "ຮັກສາຍອດ",
-        "ຄະແນນ",
-        "ຄະແນນທີມ",
-        "ເງິນທອນ",
+        "user_id",
+        "userCode",
+        "profile",
+        "firstName",
+        "lastName",
+        "userPosition",
+        "_id",
+        "lineWork_id",
+        "children_count",
+        "isMaintainSales",
+        "PV",
+        "teamePV",
+        "recommended",
+        "totalBonus",
+        "isActive",
+        "isApproved",
+        "createdAt",
+        "updatedAt",
+        "_v",
+        "bonusPV",
+        "bonusTeamePV",
+        "cashback",
       ],
     ];
     const wb = utils.book_new();
@@ -245,12 +275,12 @@ const HistoryTransfer = () => {
     utils.sheet_add_json(ws, selectRows, { origin: "A2", skipHeader: true });
     utils.book_append_sheet(wb, ws, "ການເຄື່ອນໄຫວ");
     writeFileXLSX(wb, "History.xlsx");
-    setToggleCleared(true)
+    setToggleCleared(true);
   };
 
   return (
     <div className="card-main">
-      <Spin spinning={loading} style={{marginTop: 80}}>
+      <Spin spinning={loading} style={{ marginTop: 80 }}>
         <div class="orders-button">
           <>
             <button
@@ -303,7 +333,11 @@ const HistoryTransfer = () => {
                 </svg>
               </div>
               <div class="input-search">
-                <input type="text" placeholder="ຄົ້ນຫາ..........."  onChange={handleChange}/>
+                <input
+                  type="text"
+                  placeholder="ຄົ້ນຫາ..........."
+                  onChange={handleChange}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -354,7 +388,7 @@ const HistoryTransfer = () => {
 
                 <button
                   type="button"
-                  disabled={selectRows.length ? false : true}
+                  // disabled={selectRows.length ? false : true}
                   onClick={handleExport}
                   class="btn"
                 >
@@ -379,7 +413,6 @@ const HistoryTransfer = () => {
               ></Empty>
             </div>
           ) : dataImport.length ? (
-            
             <DataTable
               columns={columns}
               data={dataImport}
@@ -389,7 +422,6 @@ const HistoryTransfer = () => {
               clearSelectedRows={toggleCleared}
               onSelectedRowsChange={(row) => setSelectRows(row.selectedRows)}
             />
-
           ) : (
             <DataTable
               columns={columns}

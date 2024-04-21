@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
-const TableComponent = ({
+const TableOrderAdmin = ({
   Status,
   columns,
   customStyles,
@@ -28,7 +28,7 @@ const TableComponent = ({
   const [endDate, setEndtDate] = useState();
   const [valueInput, setValueInput] = useState();
   const { users } = useSelector((state) => ({ ...state }));
-  const [dataExport, setDataExport] = useState([]);
+  const [dataExport, setDataExport] = useState();
   const [toggleCleared, setToggleCleared] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -87,12 +87,10 @@ const TableComponent = ({
   };
 
 
-
-
   const handleExport = () => {
     console.log("dataExport",dataExport)
-    return
-    if (dataExport.length === 0) {
+    // return
+    if (!dataExport) {
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -113,20 +111,25 @@ const TableComponent = ({
     setDataExport([]);
     const heading = [
       [
-        "ລະຫັດຜູ້ໃຊ້",
-        "ຊື່ທະນາຄານ",
-        "ຊື່ບັນຊີ",
-        "ເລກບັນຊີ",
-        "ຮູບພາບ",
-        "ຊື່",
-        "ນາມສະກຸນ",
-        "ຕຳແໜ່ງ",
-        "ລະຫັດ ID",
-        "ລູກທີມ",
-        "ຮັກສາຍອດ",
-        "ຄະແນນ",
-        "ຄະແນນທີມ",
-        "ເງິນທອນ",
+        "id",
+        "adminuserCode",
+        "adminfirstName",
+        "customeruserCode",
+        "customerfirstName",
+        "productname",
+        "productprice",
+        "productcashback",
+        "productpoint",
+        "productqty",
+        "totalQty",
+        "totalPrice",
+        "totalCashback",
+        "totalPoint",
+        "paymentType",
+        "status",
+        "isActive",
+        "createdAt",
+        "updatedAt"
       ],
     ];
     const wb = utils.book_new();
@@ -137,8 +140,6 @@ const TableComponent = ({
     writeFileXLSX(wb, "History.xlsx");
     setToggleCleared(true);
   };
-
- 
 
   return (
     <>
@@ -261,4 +262,4 @@ const TableComponent = ({
   );
 };
 
-export default TableComponent;
+export default TableOrderAdmin;

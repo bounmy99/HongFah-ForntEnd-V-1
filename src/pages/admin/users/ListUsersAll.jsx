@@ -26,7 +26,8 @@ const ListUsersAll = () => {
   const [userEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
   const [loadingSearch, setLoadingSearch] = useState(false);
-  const [isPasswordShow, setIsPasswordShow] = useState(false)
+  const [isPasswordShow, setIsPasswordShow] = useState(false);
+
 
   // function show hide password
   const showHide = () => {
@@ -531,6 +532,7 @@ const ListUsersAll = () => {
                         className="form-modal-control-user"
                         onChange={handleChange}
                       />
+                      { infoUser.newPassword && 
                       <div className="icon-right" onClick={showHide}>
                         <i
                           className={`bx ${
@@ -538,6 +540,7 @@ const ListUsersAll = () => {
                           }`}
                         ></i>
                       </div>
+                      }
                     </div>
                   </div>
                 </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TableComponent from "../../../components/TableComponent";
+import TableOrderAdmin from "../../../components/TableOrderAdmin";
 import { Empty, Spin, Image, Tooltip } from "antd";
-import { GetAllOrderAdmin } from "../../../functions/OrdersAdmin";
+import { GetAllOrderAdmin,GetAllOrderAdminExport } from "../../../functions/OrdersAdmin";
 import { useSelector, useDispatch } from "react-redux";
 import { EyeOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
@@ -46,38 +46,46 @@ const HistoryProduct = () => {
   // colums header of data
   const columns = [
     {
-      name: "ຮູບພາບ",
-      selector: (row) => row.products[0].image,
-      cell: (row) => (
-        <div className="name-product">
-          <Image
-            src={row.products[0] && row.products[0].image}
-            alt={row.products.name}
-            width={50}
-            height={50}
-          />
-        </div>
-      ),
+      name: "ລະຫັດແອັດມິນ",
+      selector: (row) => row.adminuserCode,
       sortable: true,
       width: "100px",
     },
     {
       name: "ໍຊື່ສິນຄ້າ",
-      selector: (row) => row.products[0] && row.products[0].name,
+      selector: (row) => row.productname,
       sortable: true,
       width: "130px",
     },
     {
       name: "ຈຳນວນ",
-      selector: (row) => row.products[0] && row.products[0].qty,
+      selector: (row) => row.productqty,
       sortable: true,
       width: "100px",
     },
     {
       name: "ລາຄາ",
       sortable: true,
-      selector: (row) => formatPrice(row.products[0] && row.products[0].price),
+      selector: (row) => formatPrice(row.productprice),
       width: "118px",
+    },
+    {
+      name: "ລາຄາລວມ",
+      sortable: true,
+      selector: (row) => formatPrice(row.totalPrice),
+      width: "118px",
+    },
+    {
+      name: "ລະຫັດລູກຄ້າ",
+      sortable: true,
+      cell: (row) => (
+        <div className="name-product">
+          <div className="flex-name">
+            <p>{`${row.customeruserCode}`}</p>
+          </div>
+        </div>
+      ),
+      width: "190px",
     },
     {
       name: "ຊື່ລູກຄ້າ",
@@ -85,7 +93,7 @@ const HistoryProduct = () => {
       cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{`${row.customer.firstName} ${row.customer.lastName}`}</p>
+            <p>{`${row.customerfirstName}`}</p>
           </div>
         </div>
       ),
@@ -113,6 +121,19 @@ const HistoryProduct = () => {
     {
       name: "ຄະແນນ",
       sortable: true,
+      selector: (row) => row.productpoint,
+      cell: (row) => (
+        <div className="status-score-history">
+          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
+            {row.productpoint}
+          </p>
+        </div>
+      ),
+      width: "162px",
+    },
+    {
+      name: "ຄະແນນລວມ",
+      sortable: true,
       selector: (row) => row.totalPoint,
       cell: (row) => (
         <div className="status-score-history">
@@ -126,12 +147,19 @@ const HistoryProduct = () => {
     {
       name: "ຜູ້ຂາຍ",
       sortable: true,
-      selector: (row) => row.admin[0],
       cell: (row) => (
         <div className="status-score-history">
-          {`${row.admin && row.admin.firstName} ${
-            row.admin && row.admin.lastName
-          }`}
+          {`${row.adminfirstName}`}
+        </div>
+      ),
+      width: "162px",
+    },
+    {
+      name: "ສະຖານະ",
+      sortable: true,
+      cell: (row) => (
+        <div className="status-score-history">
+          {`${row.status}`}
         </div>
       ),
       width: "162px",
@@ -139,7 +167,6 @@ const HistoryProduct = () => {
     {
       name: "ເພີ່ມເຕີມ",
       sortable: true,
-      selector: (row) => row._id,
       cell: (row) => (
         <div className="status-status">
           <Tooltip
@@ -148,7 +175,7 @@ const HistoryProduct = () => {
             placement="topRight"
           >
             <Link
-              to={`/listProducts/DetailProductSale/${row._id}`}
+              to={`/listProducts/DetailProductSale/${row.id}`}
               style={{ textDecoration: "none" }}
             >
               <EyeOutlined
@@ -164,12 +191,10 @@ const HistoryProduct = () => {
   // load data
   useEffect(() => {
     setLoading(true);
-    GetAllOrderAdmin(users.token)
-      .then((res) => {
+    GetAllOrderAdminExport(users.token,"true").then((res) => {
         setLoading(false);
         setSuccessOrders(res.data.data);
-      })
-      .catch((err) => {
+      }).catch((err) => {
         setLoading(false);
         setSuccessOrdersEmpty(err.response.data.message);
 
@@ -232,11 +257,12 @@ const HistoryProduct = () => {
               ></Empty>
             </div>
           ) : (
-            <TableComponent
+            <TableOrderAdmin
               columns={columns}
               customStyles={customStyles}
               data={successOrders}
             />
+
           )}
         </div>
       )}

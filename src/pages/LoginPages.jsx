@@ -99,7 +99,7 @@ const LoginPages = () => {
       localStorage.setItem("data", JSON.stringify(res.data.data))
     }).catch(err => {
       setLoading(false)
-      if(err.response.data.message === "not found"){
+      if(err.response.data.message){
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -113,7 +113,7 @@ const LoginPages = () => {
         });
         Toast.fire({
           icon: "error",
-          title: "ບໍ່ພົບຜູ້ໃຊ້ນີ້ໃນລະບົບ"
+          title: err.response.data.message
         });
       }
     })
@@ -137,20 +137,22 @@ const LoginPages = () => {
           <form onSubmit={handleSubmit}>
             <label htmlFor="">AdminID</label>
             <div className="input-group">
-              <input type="text" name="userCode" value={value.userCode} className="form-control" onChange={handleChange} placeholder="0236" />
+              <input type="text" name="userCode" value={value.userCode} className="form-control" onChange={handleChange} placeholder="ກະລຸນາປ້ອນລະຫັດຜູ້ໃຊ້" />
               <div className="icon">
                 <i className='bx bx-user' ></i>
               </div>
             </div>
             <label htmlFor="">Password</label>
             <div className="input-group">
-              <input type={`${isPasswordShow ? 'text' : 'password'}`} value={value.password} name="password" className="form-control" onChange={handleChange} placeholder="Enter Password" />
+              <input type={`${isPasswordShow ? 'text' : 'password'}`} value={value.password} name="password" className="form-control" onChange={handleChange} placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ" />
               <div className="icon-left" >
                 <i className='bx bxs-key bx-rotate-180'></i>
               </div>
-              <div className="icon-right" onClick={showHide}>
+              { value.password && 
+              <div className="icons-right" onClick={showHide}>
                 <i className={`bx ${isPasswordShow ? 'bx-show-alt' : 'bx-low-vision'}`}></i>
               </div>
+              }
             </div>
             <div className="input-check">
               <div className="remember-check">

@@ -11,8 +11,11 @@ const HomeOrders = () => {
   const { users } = useSelector((state) => ({ ...state }))
   const [orderStatus, setOrderStatus] = useState('');
   const [orderOverview, setOrderOverview] = useState('');
+  const [btnExport, setBtnExport] = useState(false);
 
-  console.log("State",state)
+
+
+  console.log("btnExport",btnExport)
 
   useEffect(() => {
     setOrderStatus(1)
@@ -85,15 +88,19 @@ const HomeOrders = () => {
           </div>
         </div>
       </div>
+
       <div className="orders-button">
         <button type="button" className={`btn-order btn-waiting ${orderStatus === 1 ? 'active' : ''} `} onClick={() => handleClick(1)}>ລໍຖ້າອະນຸມັດ</button>
         <button type="button" className={`btn-order btn-order-cancel ${orderStatus === 2 ? 'active' : ''} `} onClick={() => handleClick(2)}>ອໍເດີທີຍົກເລີກ</button>
-        <button type="button" className={`btn-order btn-order-success ${orderStatus === 3 ? 'active' : ''} `} onClick={() => handleClick(3)}>ປະຫວັດການຂາຍ</button>
+        <button type="button" className={`btn-order btn-order-success ${orderStatus === 3 ? 'active' : ''} `} onClick={() =>{
+          handleClick(3)
+          setBtnExport(true)
+        } }>ປະຫວັດການຂາຍ</button>
       </div>
 
       {orderStatus === 1 && <ListOrders />}
       {orderStatus === 2 && <CancelOrders />}
-      {orderStatus === 3 && <HistoryOrders />}
+      {orderStatus === 3 && <HistoryOrders btnExport={btnExport} />}
     </div>
   )
 }

@@ -2439,7 +2439,7 @@ body {
 
 .btn-order-success {
   background: transparent;
-  border: 2px solid #60f792;
+  border: 2px solid #28e667;
   color: #0f042c
 }
 
@@ -2462,8 +2462,8 @@ body {
 }
 
 .btn-order-success.active {
-  background: #60f792;
-  border: 2px solid #60f792;
+  background: #28e667;
+  border: 2px solid #28e667;
   color: #ffff
 }
 
@@ -6248,7 +6248,7 @@ body {
   color: var(--main-color);
 }
 
-.icon-right {
+.icons-right {
   position: absolute;
   left: 90%;
   top: 0;

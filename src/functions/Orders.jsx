@@ -6,6 +6,13 @@ export const GetAllOrders = async (token,startDate,endDate,values,status) => {
         }
     })
 }
+export const GetAllOrdersExport = async (token,startDate,endDate,values,status) => {
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/order/getall?startDate=${startDate}&endDate=${endDate}&productName=${values}&status=${status}&toexport=true`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+}
 export const GetOneOrders = async (token, id) => {
 
     return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/order/getone/${id}`, {

@@ -14,6 +14,13 @@ export const GetAllOrderAdmin = async(token)=>{
         }
     })
 }
+export const GetAllOrderAdminExport = async(token, status)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/admin/order/getall?toexport=${status}`,{
+        headers:{
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+}
 export const GetOneOrderAdmin = async(token,id)=>{
     return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/admin/order/getone/${id}`,{
         headers:{

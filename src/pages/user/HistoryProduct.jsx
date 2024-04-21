@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TableComponent from "../../components/TableComponent";
+import TableOrderAdmin from "../../components/TableOrderAdmin";
 import { Empty, Spin, Image, Tooltip } from "antd";
 import { GetAllOrderAdmin } from "../../functions/OrdersAdmin";
 import { useSelector, useDispatch } from "react-redux";
@@ -232,7 +232,7 @@ const HistoryProduct = () => {
               ></Empty>
             </div>
           ) : (
-            <TableComponent
+            <TableOrderAdmin
               columns={columns}
               customStyles={customStyles}
               data={successOrders}

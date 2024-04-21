@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
-import TableComponent from '../../../components/TableComponent';
+import TableOrderUser from '../../../components/TableOrderUser';
 import { GetAllOrders } from '../../../functions/Orders';
 import { useSelector,useDispatch } from 'react-redux';
 import { formatPrice } from "../../../functions/FormatPrices"
@@ -168,7 +168,7 @@ const CancelOrders = () => {
     <>
       {
         <div>
-          <TableComponent cancelOrderEmpty={cancelOrderEmpty} Status={"cancel"} setCancelOrder={setCancelOrder} setCancelOrderEmpty={setCancelOrderEmpty} columns={columns} customStyles={customStyles} data={cancelOrder} />
+          <TableOrderUser cancelOrderEmpty={cancelOrderEmpty} Status={"cancel"} setCancelOrder={setCancelOrder} setCancelOrderEmpty={setCancelOrderEmpty} columns={columns} customStyles={customStyles} data={cancelOrder} />
         </div>
       }
 

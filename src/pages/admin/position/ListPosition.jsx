@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import { useSelector, useDispatch } from "react-redux";
-import { Empty,Image } from "antd";
+import { Empty,Image,Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 // function
 import {
@@ -294,6 +294,7 @@ const ListPosition = () => {
 
   return (
     <div className="card-main">
+      <Spin spinning={loadSave}>
       {positionEmpty ? (
         <div className="empty-card">
           <Empty
@@ -638,6 +639,7 @@ const ListPosition = () => {
           </div>
         )}
       </div>
+      </Spin>
     </div>
   );
 };

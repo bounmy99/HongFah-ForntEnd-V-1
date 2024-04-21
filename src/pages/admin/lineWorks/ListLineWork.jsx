@@ -5,9 +5,9 @@ import { useLocation,useNavigate } from 'react-router-dom';
 import DiagramEm from './DiagramEm';
 import { Empty } from 'antd'
 
-import Patinum from "../../../assets/image/position/P-removebg-preview.png"
-import BlackDiamond from "../../../assets/image/position/BKD-removebg-preview.png"
-import BluekDiamond from "../../../assets/image/position/BD-removebg-preview.png"
+import Diamond from "../../../assets/image/position/diamond.jpg"
+import BlackDiamond from "../../../assets/image/position/BKD-removebg-preview.jpg"
+import BluekDiamond from "../../../assets/image/position/BD-removebg-preview.jpg"
 import Manager from "../../../assets/image/position/Manager.jpg"
 import Leader from "../../../assets/image/position/Leader.jpg"
 import Start from "../../../assets/image/position/Start.jpg"
@@ -321,12 +321,12 @@ const ListLineWork = () => {
             <div className="emp-dash-boxes emp-leader">
               <div className="number">
                 <div className="left">
-                  <div className="title-left"> Platinum</div>
+                  <div className="title-left"> Diamond</div>
                   <h5>0</h5>
                 </div>
                 <div className="right">
                   <div className="icons">
-                    <img src={Patinum} className="img-icon" alt="" />
+                    <img src={Diamond} className="img-icon" alt="" />
                   </div>
                 </div>
               </div>
@@ -460,10 +460,10 @@ const ListLineWork = () => {
                           </div>
                           <div className="member-card">
                             <div className="icons">
-                              <img src={Patinum} alt="" className="img-icon" />
+                              <img src={Diamond} alt="" className="img-icon" />
                             </div>
                             <div className="text">
-                              <h3>Platinum</h3>
+                              <h3>Diamond</h3>
                               <span>0 ຄົນ</span>
                             </div>
                           </div>

@@ -5,14 +5,14 @@ import MaintainTrue from "./MaintainTrue";
 import { Paybonus, Deletebonus } from "../../../functions/Bonus";
 import { read, writeFileXLSX, utils } from "xlsx";
 import { useSelector } from "react-redux";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 const ListTotalSales = () => {
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
   const [tablechange, setTableChange] = useState("");
   const [selectableRow, setSelectableRow] = useState([]);
   const [hiddenBtn, setHiddenBtn] = useState(false);
-  const [valueInput,setValueInput] = useState("")
+  const [valueInput, setValueInput] = useState("");
   const [toggleCleared, setToggleCleared] = useState(false);
 
   useEffect(() => {
@@ -20,14 +20,14 @@ const ListTotalSales = () => {
   }, []);
 
   // set value input
-  const handleChage = (e)=>{
-    setValueInput(e.target.value)
-  }
+  const handleChage = (e) => {
+    setValueInput(e.target.value);
+  };
 
-  const user_id = selectableRow.map((item) => item._id); // loop id 
-  
+  const user_id = selectableRow.map((item) => item._id); // loop id
+
   // function export to excels
-  const handleExport = () => {
+  const handleExport = () => {;
     Swal.fire({
       title: "ເເຈ້ງເຕືອນ",
       text: `ທ່ານຕ້ອງການ Export ເປັນ Excel ບໍ່`,
@@ -42,24 +42,24 @@ const ListTotalSales = () => {
         setHiddenBtn(true);
         const heading = [
           [
-            "ລະຫັດຜູ້ໃຊ້",
-            "ຊື່ທະນາຄານ",
-            "ຊື່ບັນຊີ",
-            "ເລກບັນຊີ",
-            "ຮູບພາບ",
-            "ຊື່",
-            "ນາມສະກຸນ",
-            "ຕຳແໜ່ງ",
-            "ລະຫັດ ID",
-            "ລູກທີມ",
-            "ຄະແນນ",
-            "ຮັກສາຍອດ",
-            "ຄະແນນທີມ",
-            "ເງິນທອນ",
-            "ໂບນັດທີມ",
-            "ຄ່າແນະນຳ",
-            "ໂບນັດລວມ",
-            "ໂບນັດຄະແນນ",
+            "userCode",
+            "bankName",
+            "accountName",
+            "accountNo",
+            "profile",
+            "firstName",
+            "lastName",
+            "userPosition",
+            "_id",
+            "children_count",
+            "PV",
+            "isMaintainSales",
+            "teamePV",
+            "cashback",
+            "bonusPV",
+            "recommended",
+            "bonusTeamePV",
+            "totalBonus",
           ],
         ];
         const wb = utils.book_new();
@@ -130,12 +130,12 @@ const ListTotalSales = () => {
               navigate("/");
             }
           });
- 
-          setToggleCleared(true);
-          setSelectableRow([])
+
+        setToggleCleared(true);
+        setSelectableRow([]);
       } else {
-          setToggleCleared(true);
-          setSelectableRow([])
+        setToggleCleared(true);
+        setSelectableRow([]);
       }
     });
   };
@@ -153,8 +153,8 @@ const ListTotalSales = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
-        
-        Paybonus(users.token, user_id).then((res) => {
+        Paybonus(users.token, user_id)
+          .then((res) => {
             if (res.data.message === "success") {
               const Toast = Swal.mixin({
                 toast: true,
@@ -171,7 +171,7 @@ const ListTotalSales = () => {
                 icon: "success",
                 title: "ການຈ່າຍໂບນັດສຳເລັດແລ້ວ",
               });
-              navigate("/Bonus/history")
+              navigate("/Bonus/history");
             }
           })
           .catch((err) => {
@@ -199,11 +199,11 @@ const ListTotalSales = () => {
               navigate("/");
             }
           });
-          setToggleCleared(true);
-          setSelectableRow([])
+        setToggleCleared(true);
+        setSelectableRow([]);
       } else {
-          setToggleCleared(true);
-          setSelectableRow([])
+        setToggleCleared(true);
+        setSelectableRow([]);
       }
     });
   };
@@ -300,7 +300,11 @@ const ListTotalSales = () => {
               </svg>
             </div>
             <div class="input-search">
-              <input type="text" placeholder="ຄົ້ນຫາ..............." onChange={handleChage} />
+              <input
+                type="text"
+                placeholder="ຄົ້ນຫາ..............."
+                onChange={handleChage}
+              />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -333,10 +337,18 @@ const ListTotalSales = () => {
         </div>
         <>
           {tablechange === 1 && (
-            <MaintainTrue valueInput={valueInput} toggleCleared={toggleCleared} setSelectableRow={setSelectableRow} />
+            <MaintainTrue
+              valueInput={valueInput}
+              toggleCleared={toggleCleared}
+              setSelectableRow={setSelectableRow}
+            />
           )}
           {tablechange === 2 && (
-            <MaintainFalse valueInput={valueInput} toggleCleared={toggleCleared} setSelectableRow={setSelectableRow} />
+            <MaintainFalse
+              valueInput={valueInput}
+              toggleCleared={toggleCleared}
+              setSelectableRow={setSelectableRow}
+            />
           )}
         </>
       </div>

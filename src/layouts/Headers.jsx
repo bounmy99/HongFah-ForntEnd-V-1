@@ -1,23 +1,32 @@
-import React,{useState} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate,Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip, notification } from "antd";
 import UserImage from "../assets/image/profile-1.jpg";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { Badge } from "antd";
 const Headers = () => {
-  const { users } = useSelector((state) => ({ ...state }));
+  const { users, Notification } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [toggle, setToggle] = useState("")
+  const [toggle, setToggle] = useState("");
 
-  const openNotification = () => {
+  const openNotification = (placement) => {
     notification.open({
-      message: "Notification Title",
+      message: "ເເຈ້ງເຕືອນ",
       description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      <>
+      <p>"ມີຈຳນວນຜູ້ໃຊ້ໃໝ່ທີ່ລໍຖ້າການຢືນຢັນ", <span style={{cursor : "pointer", color : "#00a5e8"}} onClick={()=>{
+        navigate("/users",{state : {key : 2}})
+      }}>ເບິ່ງລາຍລະອຽດ</span></p>
+      </>,
+      placement,
     });
+    dispatch({
+      type : "READ_USER",
+      payload : []
+    })
   };
   const openInforUser = () => {
     notification.open({
@@ -48,21 +57,21 @@ const Headers = () => {
     window.location.reload();
   };
 
-  const handToggle = ()=>{
-    setToggle(pre=>!pre)
-  }
+  const handToggle = () => {
+    setToggle((pre) => !pre);
+  };
 
-  const ToggleSides = toggle ? (
-    dispatch({
-      type : "OPEN",
-      payload : true
-    })
-  ):(
-    dispatch({
-      type : "CLOSE",
-      payload : false
-    })
-  )
+  const ToggleSides = toggle
+    ? dispatch({
+        type: "OPEN",
+        payload: true,
+      })
+    : dispatch({
+        type: "CLOSE",
+        payload: false,
+      });
+
+  
 
   return (
     <div>
@@ -93,11 +102,20 @@ const Headers = () => {
         </div>
 
         <div className="nav-right">
-          <Badge count={"1"} size="small" className="bages">
-            <div className="bell-notification" onClick={openNotification}>
-              <i className="bx bxs-bell"></i>
-            </div>
-          </Badge>
+          {Notification?.length ? (
+            <Badge count={Notification?.length} size="small" className="bages">
+              <div className="bell-notification" onClick={()=>openNotification('top')}>
+                <i className="bx bxs-bell"></i>
+              </div>
+            </Badge>
+          ) : (
+            <Badge count={""} size="small" className="bages">
+              <div className="bell-notification">
+                <i className="bx bxs-bell"></i>
+              </div>
+            </Badge>
+          )}
+
           <div className="image-auth" onClick={openInforUser}>
             <img
               src={users && users.profile ? users.profile : UserImage}
@@ -107,10 +125,14 @@ const Headers = () => {
           <div className="name-auth">
             <h5>{users && users.username}</h5>
           </div>
-          <Tooltip placement="bottomRight" color={"#2db7f5"} title="ກົດເພື່ອອອກຈາກລະບົບ">
-          <div className="icon-logout" onClick={logout}>
-            <i className="bx bx-log-in"></i>
-          </div>
+          <Tooltip
+            placement="bottomRight"
+            color={"#2db7f5"}
+            title="ກົດເພື່ອອອກຈາກລະບົບ"
+          >
+            <div className="icon-logout" onClick={logout}>
+              <i className="bx bx-log-in"></i>
+            </div>
           </Tooltip>
         </div>
       </div>

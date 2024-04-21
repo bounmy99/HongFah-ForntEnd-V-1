@@ -6,6 +6,7 @@ import { Spin, Table, Image } from "antd";
 import NoImage from "../../../assets/image/no-image.png";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 const DetailProductSale = () => {
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));

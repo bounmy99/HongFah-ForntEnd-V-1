@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
-import TableComponent from '../../../components/TableComponent';
-import { GetAllOrders } from '../../../functions/Orders';
+import TableOrderUser from '../../../components/TableOrderUser';
+import { GetAllOrdersExport } from '../../../functions/Orders';
 import { useSelector, useDispatch } from 'react-redux';
 import { formatPrice } from "../../../functions/FormatPrices"
 import moment from "moment"
-const HistoryOrders = () => {
+import { Tooltip } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
+const HistoryOrders = ({btnExport}) => {
   const { users } = useSelector((state) => ({ ...state }))
   const [successOrders, setSuccessOrders] = useState([]);
   const [successOrdersEmpty, setSuccessOrdersEmpty] = useState("");
@@ -41,95 +43,135 @@ const HistoryOrders = () => {
   // columns header of table
   const columns = [
     {
-      name: "ຮູບພາບ",
-      selector: (row) => (row.products[0].image),
-      cell: row => (
-        <div className="name-product">
-          <img src={row.products[0].image} alt={row.products[0].name} width={50} height={50} />
-        </div>
-      ),
-      sortable: true,
-      width: '100px'
-    },
-    {
       name: "ໍຊື່ສິນຄ້າ",
-      selector: (row) => row.products[0].name,
+      selector: (row) => row.productname,
       sortable: true,
-      width: '130px'
+      width: "130px",
     },
     {
       name: "ຈຳນວນ",
-      selector: (row) => row.products[0].qty,
+      selector: (row) => row.productqty,
       sortable: true,
-      width: '100px'
+      width: "100px",
     },
     {
       name: "ລາຄາ",
       sortable: true,
-      selector: (row) => formatPrice(row.products[0].price),
-      width: '118px'
+      selector: (row) => formatPrice(row.productprice),
+      width: "118px",
     },
     {
-      name: "ຜູ້ຮັບ",
+      name: "ລາຄາລວມ",
       sortable: true,
-      cell: row => (
+      selector: (row) => formatPrice(row.totalPrice),
+      width: "118px",
+    },
+    {
+      name: "ລະຫັດລູກຄ້າ",
+      sortable: true,
+      cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{`${row.orderFor.firstName} ${row.orderFor.lastName}`}</p>
+            <p>{`${row.customeruserCode}`}</p>
           </div>
         </div>
       ),
-      width: '190px'
+      width: "190px",
+    },
+    {
+      name: "ຊື່ລູກຄ້າ",
+      sortable: true,
+      cell: (row) => (
+        <div className="name-product">
+          <div className="flex-name">
+            <p>{`${row.customerfirstName}`}</p>
+          </div>
+        </div>
+      ),
+      width: "190px",
     },
     {
       name: "ວັນທີສັ່ງຊື້",
       sortable: true,
       selector: (row) => row.createdAt,
-      cell: row => (<p>{moment(row.createdAt).format("DD-MM-YYYY")}</p>),
-      width: '118px'
+      cell: (row) => <p>{new Date(row.createdAt).toLocaleDateString()}</p>,
+      width: "118px",
     },
     {
-      name: "ຈຸດໝາຍ",
+      name: "ປະເພດການຊຳລະ",
       sortable: true,
-      selector: (row) => row.delivery.type,
-      cell: row => (
+      cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{row.delivery.type}</p>
-            <span>{`${row.delivery.express}`}</span>
+            <p>{row.paymentType}</p>
           </div>
         </div>
       ),
-      width: '162px'
+      width: "162px",
     },
     {
       name: "ຄະແນນ",
       sortable: true,
-      selector: (row) => row.totalPoint,
-      cell: row => (
+      selector: (row) => row.productpoint,
+      cell: (row) => (
         <div className="status-score-history">
-          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>{row.totalPoint}</p>
+          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
+            {row.productpoint}
+          </p>
         </div>
       ),
-      width: '162px'
+      width: "162px",
+    },
+    {
+      name: "ຄະແນນລວມ",
+      sortable: true,
+      selector: (row) => row.totalPoint,
+      cell: (row) => (
+        <div className="status-score-history">
+          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
+            {row.totalPoint}
+          </p>
+        </div>
+      ),
+      width: "162px",
+    },
+    {
+      name: "ສະຖານະ",
+      sortable: true,
+      cell: (row) => (
+        <div className="status-score-history">
+          {`${row.status}`}
+        </div>
+      ),
+      width: "162px",
     },
     {
       name: "ເພີ່ມເຕີມ",
       sortable: true,
-      selector: (row) => row._id,
-      cell: row => (
+      cell: (row) => (
         <div className="status-status">
-          <Link to={`/HomeOrders/infoHistory/${row._id}`} style={{ textDecoration: 'none' }}>
-            <p style={{ color: '#00A4CD', fontWeight: "bold" }}>ລາຍລະອຽດ</p>
-          </Link>
+          <Tooltip
+            title="ກົດເພື່ອເບິ່ງລາຍລະອຽດ"
+            color="#00A5E8"
+            placement="topRight"
+          >
+            <Link
+              to={`/HomeOrders/infoHistory/${row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <EyeOutlined
+                style={{ color: "#00A4CD", fontSize: 20, margin: 5 }}
+              />
+            </Link>
+          </Tooltip>
         </div>
       ),
-      width: '162px'
+      width: "162px",
     },
   ];
 // load all success orders
   useEffect(() => {
-    GetAllOrders(users.token,"","","", "success").then(res => {
+    GetAllOrdersExport(users.token,"","","", "success").then(res => {
       setSuccessOrders(res.data.data);
     }).catch(err => {
       setSuccessOrdersEmpty(err.response.data.message);
@@ -163,7 +205,7 @@ const HistoryOrders = () => {
   return (
     <>
           <div>
-            <TableComponent successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
+            <TableOrderUser btnExport={btnExport} successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
           </div>
     </>
 

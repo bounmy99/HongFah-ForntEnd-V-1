@@ -536,6 +536,8 @@ const ListVerify = () => {
                         className="form-modal-control-user"
                         onChange={handleChange}
                       />
+                      {
+                      infoUsersVerify.newPassword && 
                       <div className="icon-right" onClick={showHide}>
                         <i
                           className={`bx ${
@@ -543,6 +545,7 @@ const ListVerify = () => {
                           }`}
                         ></i>
                       </div>
+                      }
                     </div>
                   </div>
                 </div>

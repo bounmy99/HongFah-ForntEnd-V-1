@@ -16,6 +16,9 @@ const AddUser = () => {
   const [roleList, setRoleList] = useState([]);
   const [roles, setRoles] = useState("");
   const [isPasswordShow, setIsPasswordShow] = useState(false);
+  const [value,setValue] = useState([]);
+
+  // console.log("value",value)
 
   // function show hide password
   const showHide = () => {
@@ -57,8 +60,7 @@ const AddUser = () => {
   }, []);
 
   const handleChange = (e) => {
-    console.log(e.target.name);
-    console.log(e.target.value);
+    setValue({...value, [e.target.name] : e.target.value})
   };
   const handleChangeRole = (e) => {
     setRoles(e);
@@ -210,6 +212,7 @@ const AddUser = () => {
                 className="form-controls-md"
                 onChange={handleChange}
               />
+              { value.password && 
               <div className="icon-right" onClick={showHide}>
                 <i
                   className={`bx ${
@@ -217,6 +220,7 @@ const AddUser = () => {
                   }`}
                 ></i>
               </div>
+              }
             </div>
             <div className="input-group">
               <label htmlFor="">ເບີໂທ</label>
@@ -231,10 +235,6 @@ const AddUser = () => {
               <label htmlFor="">ສິດເຂົ້າໃຊ້</label>
               <Select
                 name="role"
-                // style={{
-                //   width: 650,
-                //   height: 40,
-                // }}
                 className="form-select-input"
                 placeholder="ກະລຸນາເລຶອກ"
                 optionFilterProp="children"

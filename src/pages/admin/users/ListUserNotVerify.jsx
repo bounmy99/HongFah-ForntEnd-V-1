@@ -32,7 +32,6 @@ const ListUserNotVerify = () => {
     setIsPasswordShow(isPasswordShow => !isPasswordShow);
   }
 
-
 // function first load when open pages
   useEffect(() => {
     setLoading(true);
@@ -45,6 +44,10 @@ const ListUserNotVerify = () => {
       .then((res) => {
         setUserNotVerify(res.data.data);
         setLoading(false);
+        dispatch({
+          type : "NEW_USER",
+          payload : res.data.data
+        })
       })
       .catch((err) => {
         setUserEmpty(err.response.data.message);
@@ -611,6 +614,8 @@ const ListUserNotVerify = () => {
                         className="form-modal-control-user"
                         onChange={handleChange}
                       />
+                      {
+                      userNotVerify.newPassword && 
                       <div className="icon-right" onClick={showHide}>
                         <i
                           className={`bx ${
@@ -618,6 +623,7 @@ const ListUserNotVerify = () => {
                           }`}
                         ></i>
                       </div>
+                      }
                     </div>
                   </div>
                 </div>

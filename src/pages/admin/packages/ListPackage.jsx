@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Empty } from 'antd'
+import { Empty,Spin } from 'antd'
 import { useNavigate } from 'react-router-dom';
 // function 
 import { GetAllPackage, CreatePackage, DeletePackage, GetOnePackage, UpdatePackage } from '../../../functions/Packages';
@@ -345,6 +345,7 @@ const ListPackage = () => {
 
   return (
     <div className="card-main">
+      <Spin spinning={loadingSave}>
       {packageEmpty ?
 
         <div className="empty-card">
@@ -527,6 +528,7 @@ const ListPackage = () => {
 
         }
       </div>
+      </Spin>
     </div>
   )
 }
