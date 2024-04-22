@@ -138,7 +138,7 @@ const columns = [
       <p>Level : {detail.level}</p>
       <p>LineUp : {detail.lineUp}</p>
       <p>PriceTotal : {detail.priceTotal}</p>
-      <p>PV Total : {detail.pvTotal}</p>
+       <p>PV Total : {detail.pvTotal}</p>
       <hr />
       <div>
         IMAGE : <img src={detail.user_id && detail.user_id.profile} style={{width:50,height:50}} alt="" />
@@ -147,7 +147,7 @@ const columns = [
       <p>PACKAGE ID : {detail.user_id && detail.user_id.package_id}</p>
       <p>POSITION ID : {detail.user_id && detail.user_id.position_id}</p>
       <p>
-        FULL NAME :{" "}
+        FULL NAME :
         {detail.user_id &&
           `${detail.user_id.firstName}  ${detail.user_id.lastName}`}
       </p>
