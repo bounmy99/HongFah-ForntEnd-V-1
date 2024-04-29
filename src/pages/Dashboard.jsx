@@ -44,7 +44,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [counterUsers, setCounterUsers] = useState([]);
   const [bestSell, setBestSell] = useState([]);
-  
 
   const data = [
     {
@@ -105,11 +104,21 @@ const Dashboard = () => {
       key: "images",
       width: "100px",
       render: (row) => (
-        <div className="name-product">
+        <div>
           {row ? (
-            <Image src={row[0]} width={40} height={40} />
+            <Image
+              src={row[0]}
+              width={40}
+              height={40}
+              className="image-product"
+            />
           ) : (
-            <Image src={noImage} width={40} height={40} />
+            <Image
+              src={noImage}
+              width={40}
+              height={40}
+              className="image-product"
+            />
           )}
         </div>
       ),
@@ -120,7 +129,7 @@ const Dashboard = () => {
       key: "name",
       width: "250px",
       render: (row) => (
-        <div className="name-product">
+        <div>
           <div className="flex-name">
             <p>{row}</p>
             <span> ລະຫັດ : {row}</span>
@@ -280,128 +289,132 @@ const Dashboard = () => {
 
   return (
     <div className="container mt-3">
-      <div className="boxes">
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/bonus");
-            }}
-          >
-            <div className="images-icons">
-              <TransactionOutlined className="icons" />
+      {users.role === "admin" || users.role === "super" ? (
+        <div className="boxes">
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => {
+                navigate("/bonus");
+              }}
+            >
+              <div className="images-icons">
+                <TransactionOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ໂອນໂບນັດ</h5>
+              </div>
             </div>
-            <div className="titie-box">
-              <h5>ໂອນໂບນັດ</h5>
+          </Tooltip>
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => {
+                navigate("/HomeOrders", { state: { key: 3 } });
+              }}
+            >
+              <div className="images-icons">
+                <LineChartOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ຈັດການອໍເດີ້</h5>
+              </div>
             </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/HomeOrders", { state: { key: 3 } });
-            }}
-          >
-            <div className="images-icons">
-              <LineChartOutlined className="icons" />
+          </Tooltip>
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => {
+                navigate("/listProducts/saleProducts", { state: { key: 1 } });
+              }}
+            >
+              <div className="images-icons">
+                <ShoppingCartOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ສັ່ງສິນຄ້າ</h5>
+              </div>
             </div>
-            <div className="titie-box">
-              <h5>ຈັດການອໍເດີ້</h5>
+          </Tooltip>
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => {
+                navigate("/auth/addUser");
+              }}
+            >
+              <div className="images-icons">
+                <UserAddOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ເພີ່ມຄົນເຂົ້າໃຊ້ລະບົບ</h5>
+              </div>
             </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/listProducts/saleProducts", { state: { key: 1 } });
-            }}
-          >
-            <div className="images-icons">
-              <ShoppingCartOutlined className="icons" />
+          </Tooltip>
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => {
+                navigate("/listProducts");
+              }}
+            >
+              <div className="images-icons">
+                <AppstoreOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ສິນຄ້າ</h5>
+              </div>
             </div>
-            <div className="titie-box">
-              <h5>ສັ່ງສິນຄ້າ</h5>
+          </Tooltip>
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => {
+                navigate("/travels");
+              }}
+            >
+              <div className="images-icons">
+                <GoldOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ທິບທ່ອງທ່ຽວ</h5>
+              </div>
             </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/auth/addUser");
-            }}
-          >
-            <div className="images-icons">
-              <UserAddOutlined className="icons" />
-            </div>
-            <div className="titie-box">
-              <h5>ເພີ່ມຄົນເຂົ້າໃຊ້ລະບົບ</h5>
-            </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/listProducts");
-            }}
-          >
-            <div className="images-icons">
-              <AppstoreOutlined className="icons" />
-            </div>
-            <div className="titie-box">
-              <h5>ສິນຄ້າ</h5>
-            </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/travels");
-            }}
-          >
-            <div className="images-icons">
-              <GoldOutlined className="icons" />
-            </div>
-            <div className="titie-box">
-              <h5>ທິບທ່ອງທ່ຽວ</h5>
-            </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => {
-              navigate("/listProducts/saleProducts", { state: { key: 3 } });
-            }}
-          >
-            <div className="images-icons">
-              <FileProtectOutlined className="icons" />
-            </div>
-            <div className="titie-box">
-              <h5>ປະຫວັດຂາຍຂອງເຊວ</h5>
-            </div>
-          </div>
-        </Tooltip>
-        <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
-          <div
-            className="box"
-            onClick={() => navigate("/lineWork", { state: { key: 2 } })}
-          >
-            <div className="images-icons">
-              <ApartmentOutlined className="icons" />
-            </div>
-            <div className="titie-box">
-              <h5>ສາຍງານ</h5>
-            </div>
-          </div>
-        </Tooltip>
-      </div>
+          </Tooltip>
+          {users.role === "super" ? (
+            <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+              <div
+                className="box"
+                onClick={() => {
+                  navigate("/listProducts/saleProducts", { state: { key: 3 } });
+                }}
+              >
+                <div className="images-icons">
+                  <FileProtectOutlined className="icons" />
+                </div>
+                <div className="titie-box">
+                  <h5>ປະຫວັດຂາຍຂອງເຊວ</h5>
+                </div>
+              </div>
+            </Tooltip>
+          ) : null}
 
-      
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
+            <div
+              className="box"
+              onClick={() => navigate("/lineWork", { state: { key: 2 } })}
+            >
+              <div className="images-icons">
+                <ApartmentOutlined className="icons" />
+              </div>
+              <div className="titie-box">
+                <h5>ສາຍງານ</h5>
+              </div>
+            </div>
+          </Tooltip>
+        </div>
+      ) : null}
+
       <div className="overview">
         <div className="boxes-card">
           {/* ========================== Progress ====================== */}
@@ -427,7 +440,15 @@ const Dashboard = () => {
             <div className="text-bottom">
               <div className="top-bottom">
                 <p>
-                  ຜູ້ໃຊ້ເດືອນນີ້ <span>{counterUsers.countUser ? counterUsers.countUser : 0} ຄົນ</span>, ສູງກວ່າເດືອນກ່ອນ {counterUsers.countUser ? (counterUsers.countUser * 100) / counterUsers.countUser  : 0} %
+                  ຜູ້ໃຊ້ເດືອນນີ້{" "}
+                  <span>
+                    {counterUsers.countUser ? counterUsers.countUser : 0} ຄົນ
+                  </span>
+                  , ສູງກວ່າເດືອນກ່ອນ{" "}
+                  {counterUsers.countUser
+                    ? (counterUsers.countUser * 100) / counterUsers.countUser
+                    : 0}{" "}
+                  %
                 </p>
               </div>
               <div className="middle">

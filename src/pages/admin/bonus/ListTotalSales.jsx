@@ -6,6 +6,7 @@ import { Paybonus, Deletebonus } from "../../../functions/Bonus";
 import { read, writeFileXLSX, utils } from "xlsx";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {Spin} from "antd"
 const ListTotalSales = () => {
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
@@ -14,6 +15,7 @@ const ListTotalSales = () => {
   const [hiddenBtn, setHiddenBtn] = useState(false);
   const [valueInput, setValueInput] = useState("");
   const [toggleCleared, setToggleCleared] = useState(false);
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
     setTableChange(1);
@@ -42,24 +44,24 @@ const ListTotalSales = () => {
         setHiddenBtn(true);
         const heading = [
           [
-            "userCode",
-            "bankName",
-            "accountName",
-            "accountNo",
-            "profile",
-            "firstName",
-            "lastName",
-            "userPosition",
+            "ລະຫັດຜູ້ໃຊ້",
+            "ຊື່ທະນາຄານ",
+            "ຊື່ບັນຊີ",
+            "ເລກບັນຊີ",
+            "ຮູບ",
+            "ຊື່",
+            "ນາມສະກຸນ",
+            "ຕຳແນ່ງ",
             "_id",
-            "children_count",
-            "PV",
-            "isMaintainSales",
-            "teamePV",
-            "cashback",
-            "bonusPV",
-            "recommended",
-            "bonusTeamePV",
-            "totalBonus",
+            "ລູກທີມ",
+            "ຄະແນນ PV",
+            "ຮັກສາຍອດ",
+            "ທີມ PV",
+            "ເງິນທີໄດ້ຮັບ",
+            "ໂບນັດ PV",
+            "ຄ່າແນະນຳ",
+            "ໂບນັດທີມ PV",
+            "ລວມໂບນັດ",
           ],
         ];
         const wb = utils.book_new();
@@ -84,6 +86,7 @@ const ListTotalSales = () => {
 
   // delete all Maintain False
   const handleDelete = () => {
+    
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
       text: `ທ່ານຕ້ອງການລົບສະມາຊິກຈຳນວນ ${user_id.length} ຄົນ`,
@@ -95,6 +98,7 @@ const ListTotalSales = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoading(true)
         Deletebonus(users.token, user_id)
           .then((res) => {
             Swal.fire({
@@ -103,9 +107,11 @@ const ListTotalSales = () => {
               icon: "success",
               confirmButtonText: "ຕົກລົງ",
             });
-            window.location.reload();
+            setToggleCleared(true);
+            setLoading(false)
           })
           .catch((err) => {
+            setLoading(false)
             const Toast = Swal.mixin({
               toast: true,
               position: "top-end",
@@ -210,6 +216,7 @@ const ListTotalSales = () => {
 
   return (
     <div className="card-main">
+      <Spin spinning={loading}>
       <div className="employee-table">
         <div class="employee-card-header">
           <div class="button">
@@ -352,6 +359,7 @@ const ListTotalSales = () => {
           )}
         </>
       </div>
+      </Spin>
     </div>
   );
 };

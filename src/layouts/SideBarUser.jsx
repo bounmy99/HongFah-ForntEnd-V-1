@@ -12,8 +12,13 @@ const SideBarUser = () => {
     const menu = [
         {
             name: "ໜ້າຂາຍສິນຄ້າ",
-            path: "/listProducts/saleProducts",
+            path: "/users/listProducts/saleProducts",
             icon: <i className='bx bxs-home'></i>
+        },
+        {
+            name: "ຈັດການອໍເດີ້",
+            path: "/users/homeOrders",
+            icon: <i className='bx bxs-cart'></i>
         }
     ]
     return (

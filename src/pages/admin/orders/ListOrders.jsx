@@ -64,8 +64,8 @@ const ListOrders = () => {
       name: "ຮູບພາບ",
       selector: (row) => (row.products[0].image),
       cell: row => (
-        <div className="name-product">
-          <img src={row.products[0].image} alt="product" width={50} height={50} />
+        <div>
+          <img className="image-product" src={row.products[0].image} alt="product" width={50} height={50} />
         </div>
       ),
       sortable: true,

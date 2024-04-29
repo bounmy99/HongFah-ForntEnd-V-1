@@ -1,8 +1,22 @@
 import axios from "axios";
+import { values } from "lodash";
 
 export const Login = async(value)=>{
     return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/login`,value)
 }
+export const forgetPassword = async(value,token)=>{
+    return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/forgetpassword`,value)
+} 
+
+export const resetPassword = async(value,token)=>{
+    return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/reset/password`,value,{
+        headers :{
+            'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+} 
+
 
 export const AdminSignStaff = async(token,value)=>{
     return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/admin/signstaff`,value,{

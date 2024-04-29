@@ -59,7 +59,7 @@ const ListProducts = () => {
   const LoadData = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
-    .then(res => {
+      .then((res) => {
         setLoading(false);
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -130,7 +130,7 @@ const ListProducts = () => {
     setArg({ ...arg, maxPrice: e.target.textContent });
   };
 
-// loading skeleton
+  // loading skeleton
   const large = {
     margin: 5,
     height: 130,
@@ -152,8 +152,8 @@ const ListProducts = () => {
     width: 260,
   };
 
-// search with Produc price , product Type, Product name
-  useEffect(()=>{
+  // search with Produc price , product Type, Product name
+  useEffect(() => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
       .then((res) => {
@@ -188,7 +188,7 @@ const ListProducts = () => {
           navigate("/");
         }
       });
-  },[productType, maxPrice, search])
+  }, [productType, maxPrice, search]);
 
   const handleSearch = () => {
     setLoading(true);
@@ -349,16 +349,16 @@ const ListProducts = () => {
           ) : loading ? (
             <div className="content">
               <div className="ProductLarge">
-                  <LoadingCard count={24} styles={large} />
+                <LoadingCard count={24} styles={large} />
               </div>
               <div className="ProductMedium">
-                  <LoadingCard count={16} styles={medium} />
+                <LoadingCard count={16} styles={medium} />
               </div>
               <div className="ProductSmall">
-                  <LoadingCard count={12} styles={small} />
+                <LoadingCard count={12} styles={small} />
               </div>
               <div className="ProductSmaller">
-                  <LoadingCard count={3} styles={smaller} />
+                <LoadingCard count={3} styles={smaller} />
               </div>
             </div>
           ) : (
@@ -374,8 +374,9 @@ const ListProducts = () => {
                             <div className="images">
                               <Image
                                 src={items.images[0]}
-                                preview={{visible : false}}
+                                preview={{ visible: false }}
                                 onClick={() => setPreviewImages(items.images)}
+                                // className="images-products"
                               />
                             </div>
                             <div className="description">
@@ -407,16 +408,16 @@ const ListProducts = () => {
                         console.log(
                           `current index: ${current}, prev index: ${prev}`
                         ),
-                      visible : previewImages.length, 
-                      onVisibleChange : (value)=>{
-                        if(!value){
-                          setPreviewImages([])
+                      visible: previewImages.length,
+                      onVisibleChange: (value) => {
+                        if (!value) {
+                          setPreviewImages([]);
                         }
-                      }
+                      },
                     }}
                   >
                     {previewImages.map((image, i) => (
-                      <Image src={image} key={i}/>
+                      <Image src={image} key={i} />
                     ))}
                   </Image.PreviewGroup>
                 ) : null}
@@ -430,25 +431,27 @@ const ListProducts = () => {
                 <img src={icons} alt="" />
               </Link>
             </div>
-            { product.length >= 25 &&
-            <div className="pagination">
-              <PaginationComponent
-                count={count}
-                setPageSize={setPageSize}
-                pageSize={pageSize}
-                setPages={setPages}
-                pages={pages}
-              />
-            </div>
-            }
-            <div className="pagination">
-              <button
-                className="btn-show-more"
-                onClick={() => navigate("/listProducts/saleProducts")}
-              >
-                <ShoppingCartOutlined /> ຂາຍສິນຄ້າ
-              </button>
-            </div>
+            {product.length >= 25 && (
+              <div className="pagination">
+                <PaginationComponent
+                  count={count}
+                  setPageSize={setPageSize}
+                  pageSize={pageSize}
+                  setPages={setPages}
+                  pages={pages}
+                />
+              </div>
+            )}
+            {users?.role === "super" ? (
+              <div className="pagination">
+                <button
+                  className="btn-show-more"
+                  onClick={() => navigate("/listProducts/saleProducts")}
+                >
+                  <ShoppingCartOutlined /> ຂາຍສິນຄ້າ
+                </button>
+              </div>
+             ) : null} 
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const AddUser = () => {
   const [roleList, setRoleList] = useState([]);
   const [roles, setRoles] = useState("");
   const [isPasswordShow, setIsPasswordShow] = useState(false);
-  const [value,setValue] = useState([]);
+  const [value, setValue] = useState([]);
 
   // console.log("value",value)
 
@@ -60,7 +60,7 @@ const AddUser = () => {
   }, []);
 
   const handleChange = (e) => {
-    setValue({...value, [e.target.name] : e.target.value})
+    setValue({ ...value, [e.target.name]: e.target.value });
   };
   const handleChangeRole = (e) => {
     setRoles(e);
@@ -192,6 +192,7 @@ const AddUser = () => {
                 type="text"
                 name="firstName"
                 className="form-controls-md"
+                placeholder="ກະລຸນາປ້ອນຊື່"
                 onChange={handleChange}
               />
             </div>
@@ -201,6 +202,7 @@ const AddUser = () => {
                 type="text"
                 name="lastName"
                 className="form-controls-md"
+                placeholder="ກະລຸນາປ້ອນນາມສະກຸນ"
                 onChange={handleChange}
               />
             </div>
@@ -210,17 +212,18 @@ const AddUser = () => {
                 type={`${isPasswordShow ? "text" : "password"}`}
                 name="password"
                 className="form-controls-md"
+                placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ"
                 onChange={handleChange}
               />
-              { value.password && 
-              <div className="icon-right" onClick={showHide}>
-                <i
-                  className={`bx ${
-                    isPasswordShow ? "bx-show-alt" : "bx-low-vision"
-                  }`}
-                ></i>
-              </div>
-              }
+              {value.password && (
+                <div className="icon-right-auth" onClick={showHide}>
+                  <i
+                    className={`bx ${
+                      isPasswordShow ? "bx-show-alt" : "bx-low-vision"
+                    }`}
+                  ></i>
+                </div>
+              )}
             </div>
             <div className="input-group">
               <label htmlFor="">ເບີໂທ</label>
@@ -228,6 +231,7 @@ const AddUser = () => {
                 type="text"
                 name="phoneNumber"
                 className="form-controls-md"
+                placeholder="020 xxxx xxxxx"
                 onChange={handleChange}
               />
             </div>
@@ -269,60 +273,67 @@ const AddUser = () => {
       </div>
     </form>
   );
-  const SignupSpperAdmin = () => (
-    <form onSubmit={handleSubmitSuperAdmin}>
-      <div className="card-user-add-content">
-        <div className="user-add-form">
-          <div className="form-group">
-            <div className="input-group">
-              <label htmlFor="">ຊື່</label>
-              <input
-                type="text"
-                name="firstName"
-                className="form-controls-md"
-                onChange={handleChange}
-              />
+  const SignupSpperAdmin = () =>
+    users.role === "super" ? (
+      <form onSubmit={handleSubmitSuperAdmin}>
+        <div className="card-user-add-content">
+          <div className="user-add-form">
+            <div className="form-group">
+              <div className="input-group">
+                <label htmlFor="">ຊື່</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  className="form-controls-md"
+                  placeholder="ກະລຸນາປ້ອນຊື່"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="">ນາມສະກຸນ</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  className="form-controls-md"
+                  placeholder="ກະລຸນາປ້ອນນາມສະກຸນ"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="">ລະຫັດຜ່ານ</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-controls-md"
+                  placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="">ເບີໂທ</label>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  className="form-controls-md"
+                  placeholder="020 xxxx xxxx"
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-            <div className="input-group">
-              <label htmlFor="">ນາມສະກຸນ</label>
-              <input
-                type="text"
-                name="lastName"
-                className="form-controls-md"
-                onChange={handleChange}
-              />
+            <div className="user-btn">
+              <button type="submit" className="btn-add-user">
+                ບັນທຶກ
+              </button>
+              <button type="reset" className="btn-cancel-user">
+                ຍົກເລິກ
+              </button>
             </div>
-            <div className="input-group">
-              <label htmlFor="">ລະຫັດຜ່ານ</label>
-              <input
-                type="password"
-                name="password"
-                className="form-controls-md"
-                onChange={handleChange}
-              />
-            </div>
-            <div className="input-group">
-              <label htmlFor="">ເບີໂທ</label>
-              <input
-                type="text"
-                name="phoneNumber"
-                className="form-controls-md"
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="user-btn">
-            <button type="submit" className="btn-add-user">
-              ບັນທຶກ
-            </button>
-            <button type="reset" className="btn-cancel-user">
-              ຍົກເລິກ
-            </button>
           </div>
         </div>
-      </div>
-    </form>
-  );
+      </form>
+    ) : (
+      "ທ່ານບໍ່ແມ່ນ super admin ບໍ່ສາມາດເຂົ້າເຖິງໜ້ານີ້ໄດ້"
+    );
 
   const onChange = (key) => {
     console.log(key);

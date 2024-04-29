@@ -4,6 +4,7 @@ import { CartReducer } from './CartReducer';
 import { OrderItems } from './OrderItems';
 import { ToggleSideBar } from './ToggleSideBar';
 import { Notification } from './Notification';
+import { ResetPassword } from './ResetPassword';
 
 
 const rootReducer = combineReducers({
@@ -11,8 +12,8 @@ const rootReducer = combineReducers({
     carts : CartReducer,
     orderItems : OrderItems,
     ToggleSideBar,
-    Notification
-
+    Notification,
+    ResetPassword
 })
 
 export default rootReducer

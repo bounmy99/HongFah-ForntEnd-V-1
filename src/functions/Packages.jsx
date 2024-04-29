@@ -3,7 +3,7 @@ import axios from "axios";
 export const CreatePackage = async (token,value) => {
     return await axios.post(`${import.meta.env.VITE_HONGFHA_API}/package/insert`,value,{
         headers:{
-            'Content-Type' : 'application/json',
+            'Content-Type' : 'multipart/form-data',
             'Authorization' : `Bearer ${token}`
         }
     });
@@ -32,6 +32,7 @@ export const GetOnePackage = async (token,id) => {
 export const UpdatePackage = async (token,value,id) => {
     return await axios.put(`${import.meta.env.VITE_HONGFHA_API}/package/update/${id}`,value,{
         headers:{
+            'Content-Type' : 'multipart/form-data',
             'Authorization' : `Bearer ${token}`
         }
     });

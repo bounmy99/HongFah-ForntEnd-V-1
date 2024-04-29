@@ -33,13 +33,14 @@ const TableOrderUser = ({
   const [toggleCleared, setToggleCleared] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let getData = JSON.parse(localStorage.getItem("data"));
 
   const handleChange = (e) => {
     setValueInput(e.target.value);
   };
 
   const handleSearch = () => {
-    GetAllOrders(users.token, startDate, endDate, valueInput, Status)
+    GetAllOrders(getData.token, startDate, endDate, valueInput, Status)
       .then((res) => {
         if (setOrders) {
           setOrders(res.data.data);
@@ -112,22 +113,22 @@ const TableOrderUser = ({
     setDataExport([]);
     const heading = [
       [
-        "id",
-        "customeruserCode",
-        "customerfirstName",
-        "productname",
-        "productprice",
-        "productcashback",
-        "productpoint",
-        "productqty",
-        "totalQty",
-        "totalPrice",
-        "totalCashback",
-        "totalPoint",
-        "paymentType",
-        "status",
+        "ລະຫັດໄອດີ",
+        "ລະຫັດລູກຄ້າ",
+        "ຊື່ລູກຄ້າ",
+        "ຊື່ສິນຄ້າ",
+        "ລາຄາສິນຄ້າ",
+        "ເງິນທີ່ໄດ້ຮັບ",
+        "ຄະແນນສິນຄ້າ",
+        "ຈຳນວນສິນຄ້າ",
+        "ຈຳນວນລວມ",
+        "ລາຄາລວມ",
+        "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
+        "ຄະແນນທັງໝົດ",
+        "ປະເພດການຈ່າຍ",
+        "ສະຖານະ",
         "isActive",
-        "createdAt",
+        "ວັນທີສັ່ງ",
         "updatedAt"
       ],
     ];
@@ -236,7 +237,7 @@ const TableOrderUser = ({
               }}
               description={
                 <span>
-                  <a>{"ບໍ່ມີລາຍການທີ່ຄົ້ນຫາ"}</a>
+                  <a>{"ບໍ່ມີຂໍ້ມູນ"}</a>
                 </span>
               }
             ></Empty>

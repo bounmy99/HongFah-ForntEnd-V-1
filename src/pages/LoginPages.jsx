@@ -24,19 +24,19 @@ const LoginPages = () => {
   })
 
 // function first load open page
-  useEffect(() => {
-    if (RoleBaseDirection) {
-      return
-    } 
-  }, [users]);
+  // useEffect(() => {
+  //   if (RoleBaseDirection) {
+  //     return
+  //   } 
+  // }, [users]);
 
-  const RoleBaseDirection = (Role) => {
-      if (Role === 'admin') {
-        navigate('/dashboard')
-      } else {
-        navigate('/listProducts/saleProducts')
-      }
-  }
+  // const RoleBaseDirection = (Role) => {
+  //     if (Role === 'admin') {
+  //       navigate('/dashboard')
+  //     } else {
+  //       navigate('/users/listProducts/saleProducts')
+  //     }
+  // }
 
 // function show hide password
   const showHide = () => {
@@ -95,7 +95,8 @@ const LoginPages = () => {
         icon: "success",
         title: "ເຂົ້າສູ່ລະບົບສຳເລັດ"
       });
-      RoleBaseDirection(res.data.data.role)
+      // RoleBaseDirection(res.data.data.role)
+      navigate('/dashboard')
       localStorage.setItem("data", JSON.stringify(res.data.data))
     }).catch(err => {
       setLoading(false)
@@ -144,7 +145,7 @@ const LoginPages = () => {
             </div>
             <label htmlFor="">Password</label>
             <div className="input-group">
-              <input type={`${isPasswordShow ? 'text' : 'password'}`} value={value.password} name="password" className="form-control" onChange={handleChange} placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ" />
+              <input onKeyUp={handleSubmit} type={`${isPasswordShow ? 'text' : 'password'}`} value={value.password} name="password" className="form-control" onChange={handleChange} placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ" />
               <div className="icon-left" >
                 <i className='bx bxs-key bx-rotate-180'></i>
               </div>

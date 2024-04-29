@@ -246,27 +246,27 @@ const HistoryTransfer = () => {
     const heading = [
       [
         "user_id",
-        "userCode",
+        "ລະຫັດພະນັກງານ",
         "profile",
-        "firstName",
-        "lastName",
-        "userPosition",
+        "ຊື່",
+        "ນາມສະກຸນ",
+        "ຕຳແໜ່ງ",
         "_id",
         "lineWork_id",
-        "children_count",
+        "ລູກທີມ",
         "isMaintainSales",
-        "PV",
-        "teamePV",
-        "recommended",
-        "totalBonus",
+        "ຄະແນນ",
+        "ຄະແນນທີມ",
+        "ຄ່າແນະນຳ",
+        "ໂບນັດລວມ",
         "isActive",
         "isApproved",
-        "createdAt",
+        "ວັນທີສ້າງ",
         "updatedAt",
         "_v",
-        "bonusPV",
-        "bonusTeamePV",
-        "cashback",
+        "ໂບນັດຄະແນນ",
+        "ໂບນັດຄະແນນທີມ",
+        "ເງິນທີ່ໄດ້ຮັບ",
       ],
     ];
     const wb = utils.book_new();
@@ -377,14 +377,14 @@ const HistoryTransfer = () => {
                   onChange={handleImport}
                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 />
-                <button
+                {/* <button
                   type="button"
                   style={{ marginRight: 5 }}
                   class="btn"
                   onClick={() => document.querySelector(".input-field").click()}
                 >
                   Import ຂໍ້ມູນ
-                </button>
+                </button> */}
 
                 <button
                   type="button"

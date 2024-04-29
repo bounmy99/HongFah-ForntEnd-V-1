@@ -119,35 +119,49 @@ const DetailProductSale = () => {
                   ຜູ້ຂາຍ :
                   <span>
                     {detail.admin &&
-                      `${detail.admin.firstName} ${detail.admin.lastName}`}
+                      `${
+                        detail.admin.firstName
+                          ? detail.admin.firstName
+                          : "ບໍ່ມີ"
+                      } ${
+                        detail.admin.lastName ? detail.admin.lastName : "ບໍ່ມີ"
+                      }`}
                   </span>
                 </p>
                 <p>
-                  ປະເພດການຊຳລະ : <span>{detail.paymentType}</span>
+                  ປະເພດການຊຳລະ :{" "}
+                  <span>
+                    {detail.paymentType ? detail.paymentType : "ບໍ່ມີ"}
+                  </span>
                 </p>
                 <p>
-                  ເງິນທອນທັງໝົດ : <span>{detail.totalCashback}</span>
+                  ເງິນທອນທັງໝົດ :{" "}
+                  <span>
+                    {detail.totalCashback ? detail.totalCashback : "ບໍ່ມີ"}
+                  </span>
                 </p>
                 <p>
-                  ຄະແນນລວມ : <span>{detail.totalPoint}</span>
+                  ຄະແນນລວມ :{" "}
+                  <span>{detail.totalPoint ? detail.totalPoint : "ບໍ່ມີ"}</span>
                 </p>
                 <p>
-                  ລາຍຈ່າຍລວມ : <span>{detail.totalPoint}</span>
+                  ລາຍຈ່າຍລວມ :{" "}
+                  <span>{detail.totalPrice ? detail.totalPrice : "ບໍ່ມີ"}</span>
                 </p>
                 <p>
-                  ຈຳນວນທັງໝົດ : <span>{detail.totalQty}</span>
+                  ຈຳນວນທັງໝົດ :{" "}
+                  <span>{detail.totalQty ? detail.totalQty : "ບໍ່ມີ"}</span>
                 </p>
                 <p>
-                  ສະຖານະ :
-                  <span className="detail-status">{detail.status}</span>
+                  ສະຖານະ :<span className="detail-status">{detail.status}</span>
                 </p>
               </div>
               <div className="detail-cart-top-right">
                 <div>
                   <span>
-                    {detail.customer && detail.customer.profile ? (
+                    {detail.customer?.profile ? (
                       <Image
-                        src={detail.customer && detail.customer.profile}
+                        src={detail.customer?.profile}
                         className="image-custormer"
                       />
                     ) : (
@@ -158,15 +172,27 @@ const DetailProductSale = () => {
                 <p>ຮູບພາບ</p>
                 <p>
                   ຊື່ :
-                  <span>{detail.customer && detail.customer.firstName}</span>
+                  <span>
+                    {detail.customer?.firstName
+                      ? detail.customer?.firstName
+                      : "ບໍ່ມີ"}
+                  </span>
                 </p>
                 <p>
                   ນາມສະກຸນ :
-                  <span>{detail.customer && detail.customer.lastName}</span>
+                  <span>
+                    {detail.customer?.lastName
+                      ? detail.customer?.lastName
+                      : "ບໍ່ມີ"}
+                  </span>
                 </p>
                 <p>
                   ລະຫັດພະນັກງານ :
-                  <span>{detail.customer && detail.customer.userCode}</span>
+                  <span>
+                    {detail.customer?.userCode
+                      ? detail.customer?.userCode
+                      : "ບໍ່ມີ"}
+                  </span>
                 </p>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ArrowLeftOutlined,
   DollarOutlined,
@@ -8,10 +8,14 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { GetUserCode } from "../../../functions/GetUserWithUsercode";
 import { Spin, Empty } from "antd";
 import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
+
+import { GetUserCode } from "../../../functions/GetUserWithUsercode";
 import { CreateOrder } from "../../../functions/OrdersAdmin";
+import Invoice from "../../../components/invoice/Invoice";
+
 const Pay = () => {
   const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -20,6 +24,10 @@ const Pay = () => {
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [valueSearch, setValueSearch] = useState("");
   const [value, setValue] = useState([]);
+
+
+
+  const orders = [];
   // set value search
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
@@ -69,53 +77,118 @@ const Pay = () => {
     formData.append("paymentType", value.paymentType);
     formData.append("orderItems", JSON.stringify(orderItems));
 
-    CreateOrder(users.token, formData)
-      .then((res) => {
-        setLoading(false);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
-        Toast.fire({
-          icon: "success",
-          title: res.data.message,
-        });
+    Swal.fire({
+      title: "ພິມໃບບິນ",
+      text: "ທ່ານຕ້ອງການພິມໃບບິນບໍ່ ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#00a5e8",
+      confirmButtonText: "ພິມບິນ",
+      cancelButtonText: "ບັນທຶກ",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // return
+        CreateOrder(users.token, formData)
+          .then((res) => {
+            setLoading(false);
+            let Id = res.data.data._id
+            // return
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: res.data.message,
+            });
 
-        dispatch({
-          type: "EMPTY_CART",
-          payload: [],
-        });
-        dispatch({
-          type: "EMPTY_ORDER",
-          payload: [],
-        });
-        navigate("/listProducts/saleProducts", { state: { key: 3 } });
-      })
-      .catch((err) => {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
-        Toast.fire({
-          icon: "warning",
-          title: err.response.data.message,
-        });
+            dispatch({
+              type: "EMPTY_CART",
+              payload: [],
+            });
+            dispatch({
+              type: "EMPTY_ORDER",
+              payload: [],
+            });
+            navigate(`/listProducts/Bill/${Id}`);
+          })
+          .catch((err) => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+            setLoading(false);
+          });
+      } else {
         setLoading(false);
-      });
+        CreateOrder(users.token, formData)
+          .then((res) => {
+            setLoading(false);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: res.data.message,
+            });
+
+            dispatch({
+              type: "EMPTY_CART",
+              payload: [],
+            });
+            dispatch({
+              type: "EMPTY_ORDER",
+              payload: [],
+            });
+            navigate("/listProducts/saleProducts", { state: { key: 3 } });
+          })
+          .catch((err) => {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: err.response.data.message,
+            });
+            setLoading(true);
+          });
+      }
+    });
   };
 
   return (
@@ -145,6 +218,7 @@ const Pay = () => {
                     name="userCode"
                     className="form-input-pay"
                     onChange={handleChange}
+                    onKeyUp={handleClickSearch}
                   />
                   <UserOutlined className="icons user1" />
                   <SearchOutlined
@@ -213,6 +287,9 @@ const Pay = () => {
                     <button className="btns-confirm" type="submit">
                       ຢືນຢັນ
                     </button>
+
+                    {/* <Invoice /> */}
+
                     <button className="btns-cancel" type="reset">
                       ຍົກເລິກ
                     </button>
@@ -221,21 +298,22 @@ const Pay = () => {
               ) : (
                 <div className="">
                   <Spin spinning={loadingSearch}>
-                  <Empty
-                    image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                    imageStyle={{
-                      height: 60,
-                    }}
-                    description={
-                      <span>
-                        <a>ບໍ່ທັນມີຂໍ້ມູນ</a>
-                      </span>
-                    }
-                  ></Empty>
+                    <Empty
+                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                      imageStyle={{
+                        height: 60,
+                      }}
+                      description={
+                        <span>
+                          <a>ບໍ່ທັນມີຂໍ້ມູນ</a>
+                        </span>
+                      }
+                    ></Empty>
                   </Spin>
                 </div>
               )}
             </form>
+            
           </div>
         </div>
       </>

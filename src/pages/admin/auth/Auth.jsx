@@ -13,7 +13,6 @@ import Swal from "sweetalert2";
 import { Button, Tooltip, Empty, Spin } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
-
 const Auth = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -32,13 +31,12 @@ const Auth = () => {
     loadData();
   }, []);
 
-// create pagination
+  // create pagination
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = user.slice(indexOfFirstPages, indexOfLastPages);
 
-
-// load all users
+  // load all users
   const loadData = () => {
     GetAllUser(users.token)
       .then((res) => {
@@ -77,7 +75,7 @@ const Auth = () => {
       });
   };
 
-// change role users
+  // change role users
   const handleRoles = (e, id) => {
     setLoadingChangeRole(true);
     e.preventDefault();
@@ -104,7 +102,7 @@ const Auth = () => {
       });
   };
 
-// delete users
+  // delete users
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
@@ -175,19 +173,28 @@ const Auth = () => {
                 currentPages.map((u, i) => (
                   <tr>
                     <td>
-                      <Link to={`/auth/EditUser/${u._id}`}>
-                        <Tooltip
-                          placement="topLeft"
-                          color={"#00A5E8"}
-                          title={"ເບິ່ງລາຍລະອຽດ"}
-                        >
-                          <img
-                            src={u.profile}
-                            alt="image"
-                            className="image-auth"
-                          />
-                        </Tooltip>
-                      </Link>
+                      {users.role === "super" ? (
+                        <Link to={`/auth/EditUser/${u._id}`}>
+                          <Tooltip
+                            placement="topLeft"
+                            color={"#00A5E8"}
+                            title={"ເບິ່ງລາຍລະອຽດ"}
+                          >
+                            <img
+                              src={u.profile}
+                              alt="image"
+                              className="image-auth"
+                            />
+                          </Tooltip>
+                        </Link>
+                      ) : (
+                        <img
+                          src={u.profile}
+                          alt="image"
+                          className="image-auth"
+                        />
+                      )}
+
                       <div className="username">
                         <h4>{`${u.firstName} ${u.lastName}`}</h4>
                         <p>
@@ -199,47 +206,53 @@ const Auth = () => {
                     <td>{u.email}</td>
                     <td>{u.userCode}</td>
                     <td>
-                      <select
-                        name="role"
-                        defaultValue={u.role}
-                        className="select-roles"
-                        onChange={(e) => handleRoles(e, u._id)}
-                      >
-                        {roleList.map((role, index) => (
-                          <option value={role} index={index}>
-                            {role}
-                          </option>
-                        ))}
-                      </select>
+                      {users.role === "supper" ? (
+                        <select
+                          name="role"
+                          defaultValue={u.role}
+                          className="select-roles"
+                          onChange={(e) => handleRoles(e, u._id)}
+                        >
+                          {roleList.map((role, index) => (
+                            <option value={role} index={index}>
+                              {role}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        u.role
+                      )}
                     </td>
-                    <td>
-                      <div className="btn-auth-action">
-                        <Link to={`/auth/EditUser/${u._id}`}>
+                    {users.role === "super" ? (
+                      <td>
+                        <div className="btn-auth-action">
+                          <Link to={`/auth/EditUser/${u._id}`}>
+                            <Tooltip
+                              placement="top"
+                              color={"#00A5E8"}
+                              title={"ເບິ່ງລາຍລະອຽດ"}
+                            >
+                              <button className="btn-user-detail">
+                                <EyeOutlined />
+                              </button>
+                            </Tooltip>
+                          </Link>
+
                           <Tooltip
                             placement="top"
                             color={"#00A5E8"}
-                            title={"ເບິ່ງລາຍລະອຽດ"}
+                            title={"ລົບຂໍ້ມູນ"}
                           >
-                            <button className="btn-user-detail">
-                              <EyeOutlined />
+                            <button
+                              className="btn-user-delete"
+                              onClick={() => handleDelete(u._id)}
+                            >
+                              <DeleteOutlined />
                             </button>
                           </Tooltip>
-                        </Link>
-
-                        <Tooltip
-                          placement="top"
-                          color={"#00A5E8"}
-                          title={"ລົບຂໍ້ມູນ"}
-                        >
-                          <button
-                            className="btn-user-delete"
-                            onClick={() => handleDelete(u._id)}
-                          >
-                            <DeleteOutlined />
-                          </button>
-                        </Tooltip>
-                      </div>
-                    </td>
+                        </div>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
             </table>

@@ -12,6 +12,7 @@ import SideBarUser from "./layouts/SideBarUser";
 //==================== Pages  =====================
 import LoginPages from "./pages/LoginPages";
 import ForgetPassword from "./pages/ForgetPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 
 // =================== admin access =================
@@ -51,7 +52,8 @@ import ListUsers from "./pages/admin/users/ListUsers";
 import UsersDetail from "./pages/admin/users/UsersDetail";
 
 // ====================== user access ================
-import HomeUser from "./pages/user/SaleProduct";
+import HomeUser from "./pages/user/products/SaleProduct";
+import Bill from "./pages/admin/Products/Bill";
 
 function App() {
   const { users } = useSelector((state) => ({ ...state }));
@@ -80,7 +82,7 @@ function App() {
 
   return (
     <>
-      {users && users.token && users.role === "admin" ? (
+      {users && users.token && users.role ? (
         <>
           <SideBar />
           <section className="dashboard">
@@ -145,11 +147,26 @@ function App() {
                     }
                   />
                   <Route
+                    path="/listProducts/Bill/:id"
+                    element={
+                      <RouteProtect>
+                        <Bill />
+                      </RouteProtect>
+                    }
+                  />
+                  <Route
                     path="/listProducts/addProduct"
                     element={
                       <RouteProtect>
                         <AddProduct />
                       </RouteProtect>
+                    }
+                  />
+
+                  <Route
+                    path="listProducts/saleProducts/users"
+                    element={
+                        <HomeUser />
                     }
                   />
 
@@ -337,26 +354,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPages />} />
           <Route path="/ForgetPassword" element={<ForgetPassword />} />
-          <Route
-            path="/listProducts/saleProducts"
-            element={
-              <>
-                <SideBarUser />
-                <section className="dashboard">
-                  <Headers />
-                  <div className="dash-content">
-                    <div className="container">
-                      <HomeUser />
-                    </div>
-                  </div>
-                </section>
-              </>
-            }
-          />
-          <Route
-            path="/listProducts/DetailProductSale/:id"
-            element={<DetailProductSale />}
-          />
+          <Route path="/ResetPassword" element={<ResetPassword />} />
         </Routes>
       )}
     </>

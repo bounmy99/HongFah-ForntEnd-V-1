@@ -95,7 +95,7 @@ const HomeOrders = () => {
         <button type="button" className={`btn-order btn-order-success ${orderStatus === 3 ? 'active' : ''} `} onClick={() =>{
           handleClick(3)
           setBtnExport(true)
-        } }>ປະຫວັດການຂາຍ</button>
+        } }>ອໍເດີ້ທີ່ສຳເລັດ</button>
       </div>
 
       {orderStatus === 1 && <ListOrders />}
