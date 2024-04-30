@@ -8,12 +8,12 @@ const RouteProtect = ({children}) => {
     let getData = JSON.parse(localStorage.getItem("data"));
 
     useEffect(()=>{
-      if(getData || getData.token || getData.role === "admin"  || getData.role ==="super" ){
+      if(users && users.token && users.role === "admin"  || users.role ==="super" ){
         setLogined(true)
       }
-    },[getData.token,getData.role,getData.role === "admin" ||  getData.role ==="super"]);
+    },[users.token,users.role,users.role === "admin" ||  users.role ==="super"]);
 
-  return logined || getData.token || getData.role === "admin" ||  getData.role ==="super" 
+  return logined && users.token && users.role === "admin" ||  users.role ==="super" 
   ? 
   children 
   : 

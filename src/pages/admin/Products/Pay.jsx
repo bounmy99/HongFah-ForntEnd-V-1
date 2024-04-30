@@ -15,6 +15,7 @@ import { useReactToPrint } from "react-to-print";
 import { GetUserCode } from "../../../functions/GetUserWithUsercode";
 import { CreateOrder } from "../../../functions/OrdersAdmin";
 import Invoice from "../../../components/invoice/Invoice";
+import EmptyContent from "../../../components/EmptyContent";
 
 const Pay = () => {
   const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
@@ -76,6 +77,29 @@ const Pay = () => {
     formData.append("userCode", value.userCode);
     formData.append("paymentType", value.paymentType);
     formData.append("orderItems", JSON.stringify(orderItems));
+
+    for (const [key, value] of formData.entries()) {
+      // console.log(`${key}: ${value}`);
+      if (value === "undefined") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "ປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+        });
+        setLoading(false);
+        return;
+      }
+    }
 
     Swal.fire({
       title: "ພິມໃບບິນ",
@@ -298,17 +322,7 @@ const Pay = () => {
               ) : (
                 <div className="">
                   <Spin spinning={loadingSearch}>
-                    <Empty
-                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                      imageStyle={{
-                        height: 60,
-                      }}
-                      description={
-                        <span>
-                          <a>ບໍ່ທັນມີຂໍ້ມູນ</a>
-                        </span>
-                      }
-                    ></Empty>
+                    <EmptyContent Messages={"ບໍ່ທັນມີຂໍ້ມູນ"} />
                   </Spin>
                 </div>
               )}

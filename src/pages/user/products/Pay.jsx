@@ -63,12 +63,34 @@ const Pay = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-
+    
     const formData = new FormData();
     formData.append("userCode", value.userCode);
     formData.append("paymentType", value.paymentType);
     formData.append("orderItems", JSON.stringify(orderItems));
 
+    for (const [key, value] of formData.entries()) {
+      // console.log(`${key}: ${value}`);
+      if (value === "undefined") {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "ປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+        });
+        setLoading(false);
+        return;
+      }
+    }
     Swal.fire({
       title: "ພິມໃບບິນ",
       text: "ທ່ານຕ້ອງການພິມໃບບິນບໍ່ ?",
@@ -84,7 +106,7 @@ const Pay = () => {
         CreateOrder(users.token, formData)
           .then((res) => {
             setLoading(false);
-            let Id = res.data.data._id
+            let Id = res.data.data._id;
             // return
             const Toast = Swal.mixin({
               toast: true,
@@ -110,7 +132,7 @@ const Pay = () => {
               type: "EMPTY_ORDER",
               payload: [],
             });
-            navigate(`/listProducts/Bill/${Id}`);
+            navigate(`/listProducts/saleProducts/users/bill/${Id}`);
           })
           .catch((err) => {
             const Toast = Swal.mixin({
@@ -190,7 +212,9 @@ const Pay = () => {
           <div
             className="btn-back"
             onClick={() =>
-              navigate("/listProducts/saleProducts", { state: { key: 2 } })
+              navigate("/listProducts/saleProducts/users", {
+                state: { key: 2 },
+              })
             }
           >
             <ArrowLeftOutlined className="icon-back" /> ຍ້ອນກັບ
@@ -210,6 +234,8 @@ const Pay = () => {
                     name="userCode"
                     className="form-input-pay"
                     onChange={handleChange}
+                    onKeyUp={handleClickSearch}
+                    value={value.userCode}
                   />
                   <UserOutlined className="icons user1" />
                   <SearchOutlined
@@ -278,7 +304,14 @@ const Pay = () => {
                     <button className="btns-confirm" type="submit">
                       ຢືນຢັນ
                     </button>
-                    <button className="btns-cancel" type="reset">
+                    <button
+                      className="btns-cancel"
+                      type="reset"
+                      onClick={() => {
+                        setValueSearch("");
+                        setValue("");
+                      }}
+                    >
                       ຍົກເລິກ
                     </button>
                   </div>
@@ -286,17 +319,17 @@ const Pay = () => {
               ) : (
                 <div className="">
                   <Spin spinning={loadingSearch}>
-                  <Empty
-                    image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                    imageStyle={{
-                      height: 60,
-                    }}
-                    description={
-                      <span>
-                        <a>ບໍ່ທັນມີຂໍ້ມູນ</a>
-                      </span>
-                    }
-                  ></Empty>
+                    <Empty
+                      image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                      imageStyle={{
+                        height: 60,
+                      }}
+                      description={
+                        <span>
+                          <a>ບໍ່ທັນມີຂໍ້ມູນ</a>
+                        </span>
+                      }
+                    ></Empty>
                   </Spin>
                 </div>
               )}

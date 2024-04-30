@@ -122,7 +122,7 @@ const CancelOrders = () => {
       selector: (row) => row._id,
       cell: row => (
         <div className="status-status">
-          <Link to={`/HomeOrders/infoCancel/${row._id}`} style={{ textDecoration: 'none' }}>
+          <Link to={`/HomeOrders/users/infoCancel/${row._id}`} style={{ textDecoration: 'none' }}>
             <p style={{ color: '#00A4CD', fontWeight: "bold" }}>ລາຍລະອຽດ</p>
           </Link>
         </div>

@@ -7,6 +7,7 @@ import { Empty, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
+import EmptyContent from "../../../components/EmptyContent";
 
 // customize style cell of table
 const customStyles = {
@@ -399,19 +400,7 @@ const HistoryTransfer = () => {
           </div>
 
           {emptyData ? (
-            <div className="empty-card">
-              <Empty
-                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                imageStyle={{
-                  height: 60,
-                }}
-                description={
-                  <span>
-                    <a>{emptyData}</a>
-                  </span>
-                }
-              ></Empty>
-            </div>
+            <EmptyContent Messages={emptyData} />
           ) : dataImport.length ? (
             <DataTable
               columns={columns}

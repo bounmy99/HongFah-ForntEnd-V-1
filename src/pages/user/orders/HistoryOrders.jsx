@@ -157,7 +157,7 @@ const HistoryOrders = ({btnExport}) => {
             placement="topRight"
           >
             <Link
-              to={`/HomeOrders/infoHistory/${row.id}`}
+              to={`/HomeOrders/users/infoHistory/${row.id}`}
               style={{ textDecoration: "none" }}
             >
               <EyeOutlined

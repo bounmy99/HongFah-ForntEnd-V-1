@@ -9,7 +9,14 @@ export const CreateProduct = async (token,product) =>{
     });
 } 
 
-export const GetAllProduct = async (token,productType,maxPrice,search) => {
+export const GetAllProduct = async (token) => {
+        return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/product/getall`,{
+            headers : {
+                'Authorization' : `Bearer ${token}`
+            }
+        });
+}
+export const GetAllProductSearch = async (token,productType,maxPrice,search) => {
         return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/product/getall?productType=${productType}&maxPrice=${maxPrice}&search=${search}`,{
             headers : {
                 'Authorization' : `Bearer ${token}`

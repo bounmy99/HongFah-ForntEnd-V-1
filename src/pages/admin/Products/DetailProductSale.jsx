@@ -108,7 +108,10 @@ const DetailProductSale = () => {
             <div
               className="btn-back"
               onClick={() =>
+                users.role === "super" ? 
                 navigate("/listProducts/saleProducts", { state: { key: 3 } })
+                :
+                navigate("/listProducts/saleProducts/users", { state: { key: 3 } })
               }
             >
               <ArrowLeftOutlined className="icon-back" /> ຍ້ອນກັບ

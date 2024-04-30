@@ -12,6 +12,7 @@ import {
   DeleteUsers,
 } from "../../../functions/Users";
 import noImage from "../../../assets/image/no-image.png";
+import EmptyContent from "../../../components/EmptyContent";
 const ListVerify = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -437,20 +438,7 @@ const ListVerify = () => {
   return (
     <div className="card-main">
       {loading ? (
-        <div className="empty-card">
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{
-              height: 60,
-            }}
-            description={
-              <span>
-                <a>ກຳລັງໂຫຼດ....</a>
-                <Spin />
-              </span>
-            }
-          ></Empty>
-        </div>
+        <EmptyContent Messages={"ກຳລັງໂຫຼດ...."} />
       ) : (
         <>
           <Spin spinning={loadingSearch}>

@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
+import EmptyContent from "./EmptyContent";
 const TableOrderUser = ({
   Status,
   columns,
@@ -229,19 +230,7 @@ const TableOrderUser = ({
           </div>
         </div>
         {orderEmpty || successOrdersEmpty || cancelOrderEmpty ? (
-          <div className="empty-card">
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              imageStyle={{
-                height: 60,
-              }}
-              description={
-                <span>
-                  <a>{"ບໍ່ມີຂໍ້ມູນ"}</a>
-                </span>
-              }
-            ></Empty>
-          </div>
+          <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
         ) : loading ? (
           <Loadding paragraph={10} />
         ) : (

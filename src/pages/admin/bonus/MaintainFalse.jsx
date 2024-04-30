@@ -7,6 +7,7 @@ import { GetAllMaintain } from "../../../functions/Bonus";
 import Swal from "sweetalert2"
 // format price
 import {formatPrice} from "../../../functions/FormatPrices"
+import EmptyContent from "../../../components/EmptyContent";
 // customize style cell of table
 const customStyles = {
   rows: {
@@ -212,19 +213,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
         </div>
       ) : loading ? (
         <>
-          <div className="empty-card">
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              imageStyle={{
-                height: 60,
-              }}
-              description={
-                <span>
-                  <a>loading.....</a> <Spin />
-                </span>
-              }
-            ></Empty>
-          </div>
+          <EmptyContent Messages={"loading....."} />
         </>
       ) : (
         <DataTable

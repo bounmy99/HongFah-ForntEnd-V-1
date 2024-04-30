@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { EyeOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
+import EmptyContent from "../../../components/EmptyContent";
 
 const HistoryProduct = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -227,19 +228,7 @@ const HistoryProduct = () => {
   return (
     <>
       {successOrdersEmpty ? (
-        <div className="empty-card">
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{
-              height: 60,
-            }}
-            description={
-              <span>
-                <a>{successOrdersEmpty}</a>
-              </span>
-            }
-          ></Empty>
-        </div>
+        <EmptyContent Messages={successOrdersEmpty} />
       ) : (
         <div>
           {loading ? (

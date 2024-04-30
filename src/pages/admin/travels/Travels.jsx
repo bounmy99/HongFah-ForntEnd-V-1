@@ -17,6 +17,7 @@ import HistoryTrip from "./HistoryTrip";
 import IsSuccessTrip from "./IsSuccessTrip";
 import UploadImage from "../../../components/UploadImage";
 import PaginationComponent from "../../../components/PaginationComponent";
+import EmptyContent from "../../../components/EmptyContent";
 const Travels = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -434,19 +435,7 @@ const Travels = () => {
           <h5>ຈັດການທິບທ່ອງທຽ່ວ</h5>
         </div>
         {tripEmpty ? (
-          <div className="empty-card">
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              imageStyle={{
-                height: 60,
-              }}
-              description={
-                <span>
-                  <a>{tripEmpty}</a>
-                </span>
-              }
-            ></Empty>
-          </div>
+          <EmptyContent Messages={tripEmpty} />
         ) : (
           <>
             {loading ? (

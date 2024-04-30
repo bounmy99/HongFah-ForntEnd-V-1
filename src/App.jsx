@@ -52,8 +52,13 @@ import ListUsers from "./pages/admin/users/ListUsers";
 import UsersDetail from "./pages/admin/users/UsersDetail";
 
 // ====================== user access ================
-import HomeUser from "./pages/user/products/SaleProduct";
 import Bill from "./pages/admin/Products/Bill";
+import HomeUser from "./pages/user/products/SaleProduct";
+import HomeOrderUsers from './pages/user/orders/HomeOrders'
+import InfoOrdersUsers from "./pages/user/orders/InfoOrders";
+import InfoCancelUsers from "./pages/user/orders/InfoCancel";
+import InfoHistoryUsers from "./pages/user/orders/InfoHistory";
+import PayUsers from "./pages/user/products/Pay"
 
 function App() {
   const { users } = useSelector((state) => ({ ...state }));
@@ -93,9 +98,9 @@ function App() {
                   <Route
                     path="/dashboard"
                     element={
-                      <RouteProtect>
+                     
                         <Dashboard />
-                      </RouteProtect>
+                     
                     }
                   />
                   <Route
@@ -141,9 +146,9 @@ function App() {
                   <Route
                     path="/listProducts/DetailProductSale/:id"
                     element={
-                      <RouteProtect>
+                      // <RouteProtect>
                         <DetailProductSale />
-                      </RouteProtect>
+                      // </RouteProtect>
                     }
                   />
                   <Route
@@ -151,7 +156,7 @@ function App() {
                     element={
                       <RouteProtect>
                         <Bill />
-                      </RouteProtect>
+                       </RouteProtect>
                     }
                   />
                   <Route
@@ -160,13 +165,6 @@ function App() {
                       <RouteProtect>
                         <AddProduct />
                       </RouteProtect>
-                    }
-                  />
-
-                  <Route
-                    path="listProducts/saleProducts/users"
-                    element={
-                        <HomeUser />
                     }
                   />
 
@@ -202,6 +200,53 @@ function App() {
                       </RouteProtect>
                     }
                   />
+{/* =================== users access start ======================= */}
+                  <Route
+                    path="listProducts/saleProducts/users"
+                    element={<HomeUser />}
+                  />
+                  <Route
+                    path="listProducts/saleProducts/users/pay"
+                    element={<PayUsers />}
+                  />
+                  <Route
+                    path="listProducts/saleProducts/users/bill/:id"
+                    element={ <Bill />}
+                  />
+
+                  <Route
+                    path="/homeOrders/users"
+                    element={
+                    
+                        <HomeOrderUsers />
+                     
+                    }
+                  />
+                  <Route
+                    path="/HomeOrders/users/infoOrders/:id"
+                    element={
+                      
+                        <InfoOrdersUsers />
+                     
+                    }
+                  />
+                  <Route
+                    path="/HomeOrders/users/infoCancel/:id"
+                    element={
+                      
+                        <InfoCancelUsers />
+                      
+                    }
+                  />
+                  <Route
+                    path="/HomeOrders/users/infoHistory/:id"
+                    element={
+                     
+                        <InfoHistoryUsers />
+                     
+                    }
+                  />
+{/* ======================= users access end ========================== */}
 
                   <Route
                     path="/lineWork"

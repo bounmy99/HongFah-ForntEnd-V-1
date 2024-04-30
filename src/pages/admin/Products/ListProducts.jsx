@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Empty, Image } from "antd";
 import icons from "../../../assets/image/icons-add.png";
-import { GetAllProduct } from "../../../functions/Products";
+import { GetAllProduct,GetAllProductSearch } from "../../../functions/Products";
 import { GetAllProductType } from "../../../functions/ProductType";
 import LoadingCard from "../../../components/LoadingCard";
 import InputSearch from "../../../components/InputSearch";
@@ -47,6 +47,8 @@ const ListProducts = () => {
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
   const currentPages = product.slice(indexOfFirstPages, indexOfLastPages);
+
+  // console.log("currentPages",currentPages)
   // ================ end pagination antd ===========
 
   useEffect(() => {
@@ -55,11 +57,16 @@ const ListProducts = () => {
     setPages(1);
   }, []);
 
+
+
+
+
   // load all products
   const LoadData = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
       .then((res) => {
+        // console.log("Products Load first", res.data.data)
         setLoading(false);
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -155,9 +162,9 @@ const ListProducts = () => {
   // search with Produc price , product Type, Product name
   useEffect(() => {
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search)
-      .then((res) => {
+    (productType || maxPrice || search ? GetAllProductSearch(users.token, productType, maxPrice, search) : GetAllProduct(users.token)).then((res) => {
         setProduct(res.data.data);
+        // console.log("Products search", res.data.data)
         setCount(res.data.count);
         setLoading(false);
       })
@@ -192,7 +199,7 @@ const ListProducts = () => {
 
   const handleSearch = () => {
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search)
+    GetAllProductSearch(users.token, productType, maxPrice, search)
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -341,7 +348,6 @@ const ListProducts = () => {
                 <div className="add-btn-empty">
                   <Link to={"/listProducts/AddProduct"}>
                     <button type="button">ເພີ່ມສິນຄ້າໃໝ່</button>
-                    <img src={icons} alt="" />
                   </Link>
                 </div>
               </Empty>

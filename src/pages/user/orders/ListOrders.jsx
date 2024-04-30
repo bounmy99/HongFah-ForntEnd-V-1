@@ -52,7 +52,7 @@ const ListOrders = () => {
       selector: (row) => row.status,
       cell: row => (
         <div className="status-order">
-          <Link to={`/HomeOrders/InfoOrders/${row._id}`} style={{ textDecoration: 'none' }}>
+          <Link to={`/HomeOrders/users/InfoOrders/${row._id}`} style={{ textDecoration: 'none' }}>
             <p className="success">{`ອະນຸມັດ`}</p>
             <p className="unsuccess">ປະຕິເສດ</p>
           </Link>

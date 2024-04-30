@@ -13,6 +13,7 @@ import Leader from "../../../assets/image/position/Leader.jpg"
 import Start from "../../../assets/image/position/Start.jpg"
 import { GetLineWorkTable,GetRootLineWork } from '../../../functions/LineWork';
 import Loading from '../../../components/Loadding';
+import EmptyContent from '../../../components/EmptyContent';
 
 // customize style cell of table
 const customStyles = {
@@ -382,20 +383,7 @@ const ListLineWork = () => {
 
           {
             lineworkEmpty ?
-              <div className="empty-card">
-                <Empty
-                  image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                  imageStyle={{
-                    height: 60,
-                  }}
-                  description={
-                    <span>
-                      <a>{lineworkEmpty}</a>
-                    </span>
-                  }
-                >
-                </Empty>
-              </div>
+              <EmptyContent Messages={lineworkEmpty} />
               :
               <>
                 {loading ?
@@ -483,12 +471,8 @@ const ListLineWork = () => {
                 }
               </>
           }
-
-
         </div >
       </div >
-
-
     </>
 
   )

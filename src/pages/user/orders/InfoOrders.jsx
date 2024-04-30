@@ -119,7 +119,7 @@ const InfoOrders = () => {
                             icon: "success",
                             title: "ການປະຕິເສັດສຳເລັດແລ້ວ"
                         });
-                        navigate("/HomeOrders", { state: { key: 2 } });
+                        navigate("/HomeOrders/users", { state: { key: 2 } });
                     }
 
                 }).catch((err) => {
@@ -196,7 +196,7 @@ const InfoOrders = () => {
                             icon: "error",
                             title: err.response.data.message
                         });
-                        navigate("/HomeOrders", { state: { key: 1 } });
+                        navigate("/HomeOrders/users", { state: { key: 1 } });
                     }
                 });
             }
@@ -209,7 +209,7 @@ const InfoOrders = () => {
                 <div className="card-header">
                     <div className="text-tilte">
                         <button onClick={()=>{
-                            navigate("/HomeOrders", { state: { key: 1 } });
+                            navigate("/HomeOrders/users", { state: { key: 1 } });
                         }} className="text-link">
                             <i className='bx bx-chevron-left'></i>
                             ກັບໄປໜ້າກ່ອນ

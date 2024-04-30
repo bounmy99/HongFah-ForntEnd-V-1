@@ -16,17 +16,17 @@ function LoadRedirect() {
   }, [count]);
 
   const alerts = () => {
-     if(count === 0){
-    Swal.fire({
-      position: "center",
-      icon: "warning",
-      title: `ທ່ານບໍ່ມີສິດເຂົ້າໜ້ານີ້ ກັບໄປໜ້າ dashboard ໃນ ${count}`,
-      showCancelButton: false,
-      showConfirmButton: false,
-      timer: 3500,
-    });
+    //  if(count === 0){
+    // Swal.fire({
+    //   position: "center",
+    //   icon: "warning",
+    //   title: `ທ່ານບໍ່ມີສິດເຂົ້າໜ້ານີ້ ກັບໄປໜ້າ dashboard ໃນ ${count}`,
+    //   showCancelButton: false,
+    //   showConfirmButton: false,
+    //   timer: 3500,
+    // });
 
-    }
+    // }
   };
   return <div>{alerts()}</div>;
 }

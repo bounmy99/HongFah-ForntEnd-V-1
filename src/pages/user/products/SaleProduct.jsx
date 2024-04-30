@@ -12,6 +12,7 @@ import CartProduct from "./CartProduct";
 import CardProduct from "../../../components/CardProduct";
 import PaginationComponent from "../../../components/PaginationComponent";
 import { formatPrice } from "../../../functions/FormatPrices";
+import EmptyContent from "../../../components/EmptyContent";
 const initialValue = {
   productType: "",
   maxPrice: "",
@@ -312,20 +313,7 @@ const SaleProduct = () => {
         </div>
       </div>
       {productsEmpty ? (
-        <div className="empty-card">
-          <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-            imageStyle={{
-              height: 60,
-            }}
-            description={
-              <span>
-                <a>{productsEmpty}</a>
-              </span>
-            }
-          >
-          </Empty>
-        </div>
+        <EmptyContent Messages={productsEmpty} />
       ) : loading ? (
         <div className="content">
           <LoadingCard count={27} styles={styles} />

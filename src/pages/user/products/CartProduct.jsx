@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CartTable from "../../../components/CartTable";
 import PaginationComponent from "../../../components/PaginationComponent";
 import { formatPrice } from "../../../functions/FormatPrices";
+import EmptyContent from "../../../components/EmptyContent";
 const CartProduct = () => {
   const { carts } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -95,17 +96,7 @@ const CartProduct = () => {
             </>
           ) : (
             <div className="empty-card">
-              <Empty
-                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                imageStyle={{
-                  height: 60,
-                }}
-                description={
-                  <span>
-                    <a>ບໍ່ທັນມີລາຍການ</a>
-                  </span>
-                }
-              ></Empty>
+              <EmptyContent Messages={"ບໍ່ທັນມີລາຍການ"} />
             </div>
           )}
         </div>
@@ -134,7 +125,7 @@ const CartProduct = () => {
               </div>
               <div className="pay">
                 <button
-                  onClick={() => navigate("/listProducts/saleProducts/pay")}
+                  onClick={() => navigate("/listProducts/saleProducts/users/pay")}
                   className="btn-pay"
                 >
                   ຊຳລະ

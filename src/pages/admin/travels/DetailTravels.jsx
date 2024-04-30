@@ -16,6 +16,7 @@ import {
   GetMemberTrip,
 } from "../../../functions/Trip";
 import ImageTravel from "../../../assets/image/no-image.png";
+import EmptyContent from "../../../components/EmptyContent";
 
 const DetailTravels = () => {
   const { id } = useParams();
@@ -503,19 +504,7 @@ const DetailTravels = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="empty-card">
-                      <Empty
-                        image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                        imageStyle={{
-                          height: 100,
-                        }}
-                        description={
-                          <span>
-                            <a>ບໍ່ທັນມີລາຍການສະມາຊິກ</a>
-                          </span>
-                        }
-                      ></Empty>
-                    </div>
+                    <EmptyContent Messages={"ບໍ່ທັນມີລາຍການສະມາຊິກ"} />
                   )}
                 </div>
                 <div className="datail-conditional">

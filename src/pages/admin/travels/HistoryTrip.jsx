@@ -9,6 +9,7 @@ import ImageTravel from "../../../assets/image/no-image.png";
 import LoadingCard from "../../../components/LoadingCard";
 import { GetAllTripIsSuccess } from "../../../functions/Trip";
 import PaginationComponent from "../../../components/PaginationComponent";
+import EmptyContent from "../../../components/EmptyContent";
 
 const HistoryTrip = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -206,19 +207,7 @@ const HistoryTrip = () => {
         </div>
         <div class="trip-container">
           {tripEmpty ? (
-            <div className="empty-card">
-              <Empty
-                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                imageStyle={{
-                  height: 60,
-                }}
-                description={
-                  <span>
-                    <a>{tripEmpty}</a>
-                  </span>
-                }
-              ></Empty>
-            </div>
+            <EmptyContent Messages={tripEmpty} />
           ) : (
             <>
               {loading ? (

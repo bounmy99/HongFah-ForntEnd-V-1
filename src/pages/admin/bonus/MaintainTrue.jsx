@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { GetAllBonus } from "../../../functions/Bonus";
 import { formatPrice } from "../../../functions/FormatPrices";
 import Swal from "sweetalert2"
+import EmptyContent from "../../../components/EmptyContent";
 
 
 // customize style cell of table
@@ -212,19 +213,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
         </div>
       ) : loading ? (
         <>
-          <div className="empty-card">
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              imageStyle={{
-                height: 60,
-              }}
-              description={
-                <span>
-                  <a>loading.....</a> <Spin/>
-                </span>
-              }
-            ></Empty>
-          </div>
+          <EmptyContent Messages={"loading....."} />
         </>
       ) : (
         <DataTable

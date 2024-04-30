@@ -170,7 +170,7 @@ const SideBar = () => {
               </li>
 
               <li>
-                <NavLink to={`/homeOrders`}>
+                <NavLink to={`/homeOrders/users`}>
                   <i className="bx bxs-cart"></i>
                   <span className="link-name">ຈັດການອໍເດີ້</span>
                 </NavLink>
