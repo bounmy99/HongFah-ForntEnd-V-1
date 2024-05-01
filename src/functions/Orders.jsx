@@ -41,7 +41,7 @@ export const ApprovedOrders = async (token, id) => {
 }
 export const RejectOrders = async (token, id) => {
 
-    return await axios.put(`${import.meta.env.VITE_HONGFHA_API}/order/approved/${id}`, {}, {
+    return await axios.put(`${import.meta.env.VITE_HONGFHA_API}/order/reject/${id}`, {}, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

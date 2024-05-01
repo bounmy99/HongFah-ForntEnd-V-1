@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TableOrderAdmin from "../../../components/TableOrderAdmin";
-import { Empty, Spin, Image, Tooltip } from "antd";
-import { GetAllOrderAdmin,GetAllOrderAdminExport } from "../../../functions/OrdersAdmin";
+import { Tooltip } from "antd";
+import { GetAllOrderAdminExport } from "../../../functions/OrdersAdmin";
 import { useSelector, useDispatch } from "react-redux";
 import { EyeOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
+import moment from "moment";
 
 const HistoryProduct = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -16,8 +17,6 @@ const HistoryProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-
   // customize style cell of table
   const customStyles = {
     rows: {
@@ -47,34 +46,20 @@ const HistoryProduct = () => {
   // colums header of data
   const columns = [
     {
-      name: "ລະຫັດແອັດມິນ",
-      selector: (row) => row.adminuserCode,
+      name: "ລະຫັດຜູ້ຂາຍ",
+      selector: (row) => row.adminuserCode ? row.adminuserCode : "ບໍ່ມີ",
       sortable: true,
-      width: "100px",
+      width: "120px",
     },
     {
-      name: "ໍຊື່ສິນຄ້າ",
-      selector: (row) => row.productname,
+      name: "ຜູ້ຂາຍ",
       sortable: true,
-      width: "130px",
-    },
-    {
-      name: "ຈຳນວນ",
-      selector: (row) => row.productqty,
-      sortable: true,
-      width: "100px",
-    },
-    {
-      name: "ລາຄາ",
-      sortable: true,
-      selector: (row) => formatPrice(row.productprice),
-      width: "118px",
-    },
-    {
-      name: "ລາຄາລວມ",
-      sortable: true,
-      selector: (row) => formatPrice(row.totalPrice),
-      width: "118px",
+      cell: (row) => (
+        <div className="status-score-history">
+          {`${row.adminfirstName ? row.adminfirstName : "ບໍ່ມີ"}`}
+        </div>
+      ),
+      width: "162px",
     },
     {
       name: "ລະຫັດລູກຄ້າ",
@@ -82,7 +67,7 @@ const HistoryProduct = () => {
       cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{`${row.customeruserCode}`}</p>
+            <p>{`${row.customeruserCode ? row.customeruserCode : "ບໍ່ມີ"}`}</p>
           </div>
         </div>
       ),
@@ -94,76 +79,98 @@ const HistoryProduct = () => {
       cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{`${row.customerfirstName}`}</p>
+            <p>{`${row.customerfirstName ? row.customerfirstName : "ບໍ່ມີ"}`}</p>
           </div>
         </div>
       ),
       width: "190px",
     },
     {
-      name: "ວັນທີສັ່ງຊື້",
+      name: "ໍຊື່ສິນຄ້າ",
+      selector: (row) => row.productname ? row.productname : "ບໍ່ມີ",
       sortable: true,
-      selector: (row) => row.createdAt,
-      cell: (row) => <p>{new Date(row.createdAt).toLocaleDateString()}</p>,
+      width: "130px",
+    },
+    {
+      name: "ລາຄາ",
+      sortable: true,
+      selector: (row) => formatPrice(row.productprice) ? formatPrice(row.productprice) : "ບໍ່ມີ",
       width: "118px",
     },
+   
+    {
+      name: "ຄະແນນສິນຄ້າ",
+      selector: (row) => row.productpoint ? row.productpoint : "ບໍ່ມີ",
+      sortable: true,
+      width: "100px",
+    },
+    {
+      name: "ຈຳນວນ",
+      selector: (row) => row.productqty ? row.productqty : "ບໍ່ມີ",
+      sortable: true,
+      width: "100px",
+    },
+    {
+      name: "ຈຳນວນລວມ",
+      selector: (row) => row.totalQty ? row.totalQty : "ບໍ່ມີ",
+      sortable: true,
+      width: "110px",
+    },
+   
+    {
+      name: "ລາຄາລວມ",
+      sortable: true,
+      selector: (row) => formatPrice(row.totalPrice) ? formatPrice(row.totalPrice) : "ບໍ່ມີ",
+      width: "118px",
+    },
+    {
+      name: "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
+      sortable: true,
+      selector: (row) => formatPrice(row.totalCashback) ? formatPrice(row.totalCashback) : "ບໍ່ມີ",
+      width: "150px",
+    },
+    {
+      name: "ຄະແນນລວມທັງໝົດ",
+      sortable: true,
+      cell: (row) => (
+        <div className="status-score-history">
+          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
+            {row.totalPoint ? row.totalPoint : "ບໍ່ມີ"}
+          </p>
+        </div>
+      ),
+      width: "162px",
+    },
+
     {
       name: "ປະເພດການຊຳລະ",
       sortable: true,
       cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{row.paymentType}</p>
+            <p>{row.paymentType ? row.paymentType : "ບໍ່ມີ"}</p>
           </div>
         </div>
       ),
       width: "162px",
     },
-    {
-      name: "ຄະແນນ",
-      sortable: true,
-      selector: (row) => row.productpoint,
-      cell: (row) => (
-        <div className="status-score-history">
-          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
-            {row.productpoint}
-          </p>
-        </div>
-      ),
-      width: "162px",
-    },
-    {
-      name: "ຄະແນນລວມ",
-      sortable: true,
-      selector: (row) => row.totalPoint,
-      cell: (row) => (
-        <div className="status-score-history">
-          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
-            {row.totalPoint}
-          </p>
-        </div>
-      ),
-      width: "162px",
-    },
-    {
-      name: "ຜູ້ຂາຍ",
-      sortable: true,
-      cell: (row) => (
-        <div className="status-score-history">
-          {`${row.adminfirstName}`}
-        </div>
-      ),
-      width: "162px",
-    },
+
     {
       name: "ສະຖານະ",
       sortable: true,
       cell: (row) => (
         <div className="status-score-history">
-          {`${row.status}`}
+             {`${row.status ? row.status  : <p style={{ color: "#fc1219", fontWeight: "bold", fontSize: 15 }}>ບໍ່ມີ</p> }`}
         </div>
       ),
       width: "162px",
+    },
+    {
+      name: "ວັນທີສັ່ງຊື້",
+      sortable: true,
+      selector: (row) => row.createdAt,
+      cell: (row) => <p>{moment(row.createdAt).format("DD-MM-YYYY")}</p>,
+      width: "118px",
     },
     {
       name: "ເພີ່ມເຕີມ",
@@ -232,24 +239,15 @@ const HistoryProduct = () => {
       ) : (
         <div>
           {loading ? (
-            <div className="empty-card">
-              <Empty
-                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                imageStyle={{
-                  height: 60,
-                }}
-                description={
-                  <span>
-                    <a>loading.....</a> <Spin />
-                  </span>
-                }
-              ></Empty>
-            </div>
+            <EmptyContent Messages={"ກຳລັງໂຫຼດ..."} />
           ) : (
             <TableOrderAdmin
               columns={columns}
               customStyles={customStyles}
               data={successOrders}
+              setSuccessOrders={setSuccessOrders}
+              setSuccessOrdersEmpty={setSuccessOrdersEmpty}
+              Status={"success"}
             />
 
           )}

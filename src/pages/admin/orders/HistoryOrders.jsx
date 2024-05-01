@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import TableOrderUser from '../../../components/TableOrderUser';
-import { GetAllOrdersExport } from '../../../functions/Orders';
-import { useSelector, useDispatch } from 'react-redux';
-import { formatPrice } from "../../../functions/FormatPrices"
-import moment from "moment"
-import { Tooltip } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
-const HistoryOrders = ({btnExport}) => {
-  const { users } = useSelector((state) => ({ ...state }))
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import TableOrderUser from "../../../components/TableOrderUser";
+import { GetAllOrdersExport } from "../../../functions/Orders";
+import { useSelector, useDispatch } from "react-redux";
+import { formatPrice } from "../../../functions/FormatPrices";
+import moment from "moment";
+import { Tooltip } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+const HistoryOrders = ({ btnExport }) => {
+  const { users } = useSelector((state) => ({ ...state }));
   const [successOrders, setSuccessOrders] = useState([]);
   const [successOrdersEmpty, setSuccessOrdersEmpty] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-// customize style cell of table
-   const customStyles = {
+  // customize style cell of table
+  const customStyles = {
     rows: {
       style: {
-        minHeight: '72px', // override the row height
+        minHeight: "72px", // override the row height
       },
     },
     headCells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for head cells
-        paddingRight: '8px',
+        paddingLeft: "8px", // override the cell padding for head cells
+        paddingRight: "8px",
         fontSize: "15px",
         justifyContent: "center",
         fontWeight: "bold",
@@ -34,38 +34,14 @@ const HistoryOrders = ({btnExport}) => {
     },
     cells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
         justifyContent: "center",
       },
     },
   };
   // columns header of table
   const columns = [
-    {
-      name: "ໍຊື່ສິນຄ້າ",
-      selector: (row) => row.productname,
-      sortable: true,
-      width: "130px",
-    },
-    {
-      name: "ຈຳນວນ",
-      selector: (row) => row.productqty,
-      sortable: true,
-      width: "100px",
-    },
-    {
-      name: "ລາຄາ",
-      sortable: true,
-      selector: (row) => formatPrice(row.productprice),
-      width: "118px",
-    },
-    {
-      name: "ລາຄາລວມ",
-      sortable: true,
-      selector: (row) => formatPrice(row.totalPrice),
-      width: "118px",
-    },
     {
       name: "ລະຫັດລູກຄ້າ",
       sortable: true,
@@ -91,6 +67,57 @@ const HistoryOrders = ({btnExport}) => {
       width: "190px",
     },
     {
+      name: "ໍຊື່ສິນຄ້າ",
+      selector: (row) => row.productname,
+      sortable: true,
+      width: "130px",
+    },
+    {
+      name: "ລາຄາ",
+      sortable: true,
+      selector: (row) => formatPrice(row.productprice),
+      width: "118px",
+    },
+    {
+      name: "ເງິນທີ່ໄດ້ຮັບຈາກສິນຄ້າ",
+      sortable: true,
+      selector: (row) => formatPrice(row.productcashback),
+      width: "150px",
+    },
+    {
+      name: "ຄະແນນສິນຄ້າ",
+      sortable: true,
+      selector: (row) => row.productpoint,
+      cell: (row) => (
+        <div className="status-score-history">
+          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
+            {row.productpoint}
+          </p>
+        </div>
+      ),
+      width: "162px",
+    },
+    {
+      name: "ຈຳນວນ",
+      selector: (row) => row.productqty,
+      sortable: true,
+      width: "100px",
+    },
+    
+    {
+      name: "ລາຄາລວມ",
+      sortable: true,
+      selector: (row) => formatPrice(row.totalPrice),
+      width: "118px",
+    },
+    {
+      name: "ເງິນທີ່ໄດ້ຮັບໝົດ",
+      sortable: true,
+      selector: (row) => formatPrice(row.totalCashback),
+      width: "150px",
+    },
+    
+    {
       name: "ວັນທີສັ່ງຊື້",
       sortable: true,
       selector: (row) => row.createdAt,
@@ -109,19 +136,7 @@ const HistoryOrders = ({btnExport}) => {
       ),
       width: "162px",
     },
-    {
-      name: "ຄະແນນ",
-      sortable: true,
-      selector: (row) => row.productpoint,
-      cell: (row) => (
-        <div className="status-score-history">
-          <p style={{ color: "#00B488", fontWeight: "bold", fontSize: 15 }}>
-            {row.productpoint}
-          </p>
-        </div>
-      ),
-      width: "162px",
-    },
+    
     {
       name: "ຄະແນນລວມ",
       sortable: true,
@@ -139,9 +154,7 @@ const HistoryOrders = ({btnExport}) => {
       name: "ສະຖານະ",
       sortable: true,
       cell: (row) => (
-        <div className="status-score-history">
-          {`${row.status}`}
-        </div>
+        <div className="status-score-history">{`${row.status}`}</div>
       ),
       width: "162px",
     },
@@ -169,47 +182,56 @@ const HistoryOrders = ({btnExport}) => {
       width: "162px",
     },
   ];
-// load all success orders
+  // load all success orders
   useEffect(() => {
-    GetAllOrdersExport(users.token,"","","", "success").then(res => {
-      setSuccessOrders(res.data.data);
-    }).catch(err => {
-      setSuccessOrdersEmpty(err.response.data.message);
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: err.response.data.message,
-      });
-      
-      if (err.response.data.message === "unauthorized") {
-        dispatch({
-          type: "USER_LOGOUT",
-          payload: null,
+    GetAllOrdersExport(users.token, "", "", "", "success")
+      .then((res) => {
+        setSuccessOrders(res.data.data);
+      })
+      .catch((err) => {
+        setSuccessOrdersEmpty(err.response.data.message);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
         });
-        navigate("/");
-      }
-    })
-  }, []);
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
 
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  }, []);
 
   return (
     <>
-          <div>
-            <TableOrderUser btnExport={btnExport} successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
-          </div>
+      <div>
+        <TableOrderUser
+          btnExport={btnExport}
+          successOrdersEmpty={successOrdersEmpty}
+          Status={"success"}
+          setSuccessOrders={setSuccessOrders}
+          setSuccessOrdersEmpty={setSuccessOrdersEmpty}
+          columns={columns}
+          customStyles={customStyles}
+          data={successOrders}
+        />
+      </div>
     </>
+  );
+};
 
-  )
-}
-
-export default HistoryOrders
+export default HistoryOrders;

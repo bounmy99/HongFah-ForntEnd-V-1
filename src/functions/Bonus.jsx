@@ -7,8 +7,8 @@ export const GetAllBonus = async(token,isMaintainSales,toexport,isApproved,searc
         }
     })
 }
-export const GetAllSuccess = async(token,Improved,search)=>{
-    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isApproved=${Improved}&search=${search}`,{
+export const GetAllSuccess = async(token,Improved,search,toexport)=>{
+    return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/bonus/getbonuslist?isApproved=${Improved}&search=${search}&toexport=${toexport}`,{
         headers :{
             'Authorization' : `Bearer ${token}`
         }

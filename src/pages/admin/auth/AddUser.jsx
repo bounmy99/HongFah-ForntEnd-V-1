@@ -231,7 +231,7 @@ const AddUser = () => {
                 type="text"
                 name="phoneNumber"
                 className="form-controls-md"
-                placeholder="020 xxxx xxxxx"
+                placeholder="9xxx xxxx"
                 onChange={handleChange}
               />
             </div>
@@ -315,7 +315,7 @@ const AddUser = () => {
                   type="text"
                   name="phoneNumber"
                   className="form-controls-md"
-                  placeholder="020 xxxx xxxx"
+                  placeholder="9xxx xxxx"
                   onChange={handleChange}
                 />
               </div>

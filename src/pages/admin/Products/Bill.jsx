@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { GetOneOrderAdmin } from "../../../functions/OrdersAdmin";
 import { Spin, Table, Image } from "antd";
 import NoImage from "../../../assets/image/no-image.png";
+import ImageLogo from "../../../assets/logo/Logo1.png"
 import { ArrowLeftOutlined, PrinterOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
@@ -15,8 +16,7 @@ const Bill = () => {
   const [detail, setDetail] = useState([]);
   const [loading, setLoading] = useState(false);
   const [products, setProduct] = useState([]);
-  const [page, setPage] = useState(1);
-  const [pageSiize, setPageSiize] = useState();
+
 
   const contentToPrint = useRef(null);
   const handlePrint = useReactToPrint({
@@ -24,6 +24,7 @@ const Bill = () => {
     onBeforePrint: () => console.log("before printing..."),
     onAfterPrint: () => users.role === "super" ? navigate("/listProducts/saleProducts", { state: { key: 3 } }) : navigate("/listProducts/saleProducts/users", { state: { key: 3 } }),
     removeAfterPrint: true,
+    onPrintError:(error)=> console.log("Print Error...?",error)
   });
 
   // columns header of data
@@ -126,14 +127,10 @@ const Bill = () => {
 
         <Spin spinning={loading}>
           <div className="detail-cart-sale" ref={contentToPrint}>
-            {/* <div
-              className="btn-back"
-              onClick={() =>
-                navigate("/listProducts/saleProducts", { state: { key: 3 } })
-              }
-            >
-              <ArrowLeftOutlined className="icon-back" /> ຍ້ອນກັບ
-            </div> */}
+           <div className="logo-images">
+            <img src={ImageLogo} alt="" />
+            <h3 >ບໍລິສັດ ຫົງຟັາ ຈຳກັດ</h3>
+           </div>
             <div className="detail-cart-top">
               <div className="detail-cart-top-left">
                 <p>

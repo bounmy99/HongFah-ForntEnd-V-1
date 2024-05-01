@@ -128,9 +128,7 @@ const TableOrderUser = ({
         "ຄະແນນທັງໝົດ",
         "ປະເພດການຈ່າຍ",
         "ສະຖານະ",
-        "isActive",
         "ວັນທີສັ່ງ",
-        "updatedAt"
       ],
     ];
     const wb = utils.book_new();
@@ -138,7 +136,7 @@ const TableOrderUser = ({
     utils.sheet_add_aoa(ws, heading);
     utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
     utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
-    writeFileXLSX(wb, "History.xlsx");
+    writeFileXLSX(wb, "HistoryProducts.xlsx");
     setToggleCleared(true);
   };
 

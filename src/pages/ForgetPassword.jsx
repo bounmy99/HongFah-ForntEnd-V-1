@@ -102,7 +102,7 @@ const ForgetPassword = () => {
             </div>
             <label htmlFor="">ເບີໂທ</label>
             <div className="input-group">
-              <input type="text" name="phoneNumber" className="form-control" onChange={handleChange} placeholder="ກະລຸນາປ້ອນເບີໂທຂອງທ່ານ" />
+              <input type="text" name="phoneNumber" className="form-control" onChange={handleChange} placeholder="9xxx xxxx" />
               <div className="icon">
                 <i className='bx bx-user' ></i>
               </div>

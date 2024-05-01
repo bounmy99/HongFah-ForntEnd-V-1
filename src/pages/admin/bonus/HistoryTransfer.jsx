@@ -39,12 +39,12 @@ const customStyles = {
 // columns header of table
 const columns = [
   {
-    name: "ໂປຣຟາຍ",
-    selector: (row) => row.profile,
+    name: "ຊື່ຜູ້ໃຊ້",
     cell: (row) => (
-      <div className="user-image">
-        <div className="image">
-          <img src={row.profile} alt={row.firstName} width={50} height={50} />
+      <div className="name-product">
+        <div className="user">
+          <h5>{`${row.firstName ? row.firstName : "ບໍ່ມີ"} ${row.lastName ? row.lastName : "ບໍ່ມີ"}`}</h5>
+          <p>{row.userCode ? row.userCode : "ບໍ່ມີ"}</p>
         </div>
       </div>
     ),
@@ -52,13 +52,35 @@ const columns = [
     width: "150px",
   },
   {
-    name: "ຊື່ຜູ້ໃຊ້",
-    selector: (row) => row.firstName,
+    name: "ຊື່ທະນາຄານ",
     cell: (row) => (
       <div className="name-product">
         <div className="user">
-          <h5>{`${row.firstName} ${row.lastName}`}</h5>
-          <p>{row.userCode}</p>
+          <h5>{`${row?.bankName ? row.bankName?.substring(0,15) : "ບໍ່ມີ"}`}</h5>
+        </div>
+      </div>
+    ),
+    sortable: true,
+    width: "150px",
+  },
+  {
+    name: "ຊື່ບັນຊີ",
+    cell: (row) => (
+      <div className="name-product">
+        <div className="user">
+          <h5>{`${row?.accountName ? row.accountName?.substring(0,15) : "ບໍ່ມີ"}`}</h5>
+        </div>
+      </div>
+    ),
+    sortable: true,
+    width: "150px",
+  },
+  {
+    name: "ເລກບັນຊີ",
+    cell: (row) => (
+      <div className="name-product">
+        <div className="user">
+          <h5>{`${row?.accountNo ? row.accountNo?.substring(0,15) : "ບໍ່ມີ"} `}</h5>
         </div>
       </div>
     ),
@@ -70,7 +92,7 @@ const columns = [
     selector: (row) => row.positionName,
     cell: (row) => (
       <div className="position">
-        <p className="name-posit">{row.positionName}</p>
+        <p className="name-posit">{row.positionName ? row.positionName : "ຍັງບໍ່ມີ" }</p>
       </div>
     ),
     sortable: true,
@@ -78,14 +100,13 @@ const columns = [
   },
   {
     name: "ສະມາຊິກທິມ",
-    selector: (row) => row.children_count,
+    selector: (row) => row.children_count ? row.children_count : "ບໍ່ມີ",
     sortable: true,
     width: "110px",
   },
   {
     name: "ສະຖານະ",
     sortable: true,
-    selector: (row) => row.isMaintainSales,
     cell: (row) => (
       <div className="score">
         {row.isMaintainSales === true ? <p>ຮັກສາຍອດ</p> : <p>ບໍ່ຮັກສາຍອດ</p>}
@@ -96,15 +117,43 @@ const columns = [
   {
     name: "ຄະແນນ",
     sortable: true,
-    selector: (row) => row.PV,
-    cell: (row) => <p>{row.PV} point</p>,
+    cell: (row) => <p>{row.PV ? row.PV : "ບໍ່ມີ"} ຄະແນນ</p>,
     width: "180px",
   },
   {
-    name: "Cashback",
+    name: "ຄະແນນທີມ",
     sortable: true,
-    selector: (row) => row.cashback,
-    cell: (row) => <p>{formatPrice(row.cashback)} ₭</p>,
+    cell: (row) => <p>{row.teamePV ? row.teamePV : "ບໍ່ມີ"} ຄະແນນ</p>,
+    width: "180px",
+  },
+  {
+    name: "ຄະແນນໂບນັດ",
+    sortable: true,
+    cell: (row) => <p>{row.bonusPV ?  row.bonusPV : "ບໍ່ມີ"} ຄະແນນ</p>,
+    width: "180px",
+  },
+  {
+    name: "ຄະແນນໂບນັດທີມ",
+    sortable: true,
+    cell: (row) => <p>{row.bonusTeamePV ? row.bonusTeamePV : "ບໍ່ມີ"} ຄະແນນ</p>,
+    width: "180px",
+  },
+  {
+    name: "ລວມໂບນັດ",
+    sortable: true,
+    cell: (row) => <p>{row.totalBonus ? row.totalBonus : "ບໍ່ມີ"} ຄະແນນ</p>,
+    width: "180px",
+  },
+  {
+    name: "ຄ່າແນະນຳ",
+    sortable: true,
+    cell: (row) => <p>{row.recommended ? row.recommended  : "ບໍ່ມີ"} ຄະແນນ</p>,
+    width: "180px",
+  },
+  {
+    name: "ໄດ້ຮັບເງິນຄືນ",
+    sortable: true,
+    cell: (row) => <p>{formatPrice(row.cashback ) ? formatPrice(row.cashback )  : "ບໍ່ມີ"} ₭</p>,
     width: "180px",
   },
 ];
@@ -166,7 +215,7 @@ const HistoryTransfer = () => {
   // search
   useEffect(() => {
     setLoading(true);
-    GetAllSuccess(users.token, "true", valueInput)
+    GetAllSuccess(users.token, "true", valueInput, "true")
       .then((res) => {
         setLoading(false);
         setMainTain(res.data.data);
@@ -246,28 +295,22 @@ const HistoryTransfer = () => {
     }
     const heading = [
       [
-        "user_id",
-        "ລະຫັດພະນັກງານ",
-        "profile",
+        "ລະຫັດຜູ້ໃຊ້",
+        "ຊື່ທະນາຄານ",
+        "ຊື່ບັນຊີ",
+        "ເລກບັນຊີ",
         "ຊື່",
         "ນາມສະກຸນ",
-        "ຕຳແໜ່ງ",
-        "_id",
-        "lineWork_id",
+        "ຕຳແນ່ງ",
+        "ລະຫັດໄອດີ",
         "ລູກທີມ",
-        "isMaintainSales",
-        "ຄະແນນ",
-        "ຄະແນນທີມ",
+        "ຄະແນນ PV",
+        "ຄະແນນທີມ PV",
+        "ໄດ້ຮັບເງິນຄືນ",
+        "ໂບນັດ PV",
         "ຄ່າແນະນຳ",
-        "ໂບນັດລວມ",
-        "isActive",
-        "isApproved",
-        "ວັນທີສ້າງ",
-        "updatedAt",
-        "_v",
-        "ໂບນັດຄະແນນ",
-        "ໂບນັດຄະແນນທີມ",
-        "ເງິນທີ່ໄດ້ຮັບ",
+        "ໂບນັດທີມ PV",
+        "ລວມໂບນັດ",
       ],
     ];
     const wb = utils.book_new();

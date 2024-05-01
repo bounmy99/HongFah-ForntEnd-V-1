@@ -39,10 +39,10 @@ const Headers = () => {
               alt={`image`}
             />
           </div>
-          <p>Username : {users.username}</p>
-          <p>Email : {users.email}</p>
-          <p>PhoneNumber : {users.phoneNumber}</p>
-          <p>UserCode : {users.userCode}</p>
+          <p>Username : {users.username ? users.username : "ບໍ່ມີ"}</p>
+          <p>Email : {users.email ? users.email : "ບໍ່ມີ"}</p>
+          <p>PhoneNumber : {users.phoneNumber ? users.phoneNumber : "ບໍ່ມີ"}</p>
+          <p>UserCode : {users.userCode ? users.userCode : "ບໍ່ມີ"}</p>
         </>
       ),
     });

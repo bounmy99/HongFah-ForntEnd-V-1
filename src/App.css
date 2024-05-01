@@ -2418,7 +2418,20 @@ body {
   height: 34rem;
   padding: 15px;
   border-radius: 8px;
-
+  .logo-images{
+    display : flex;
+    align-items: center;
+    flex-direction: column;
+    img{
+      width: 100px;
+      height: 100px;
+      margin-bottom: 10px;
+    }
+    h3{
+      color : var(--main-color);
+      font-style: 18px;
+    }
+  }
   .btn-back {
     color: #29292988;
     cursor: pointer;

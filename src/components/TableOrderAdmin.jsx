@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
+import { OnKeyDown } from "../functions/OnkeyDown";
 const TableOrderAdmin = ({
   Status,
   columns,
@@ -37,8 +38,12 @@ const TableOrderAdmin = ({
     setValueInput(e.target.value);
   };
 
+
   const handleSearch = () => {
-    GetAllOrders(users.token, startDate, endDate, valueInput, Status)
+    (startDate || endDate || valueInput || Status
+      ? GetAllOrders(users.token, startDate, endDate, valueInput, Status)
+      : GetAllOrders(users.token, "true")
+    )
       .then((res) => {
         if (setOrders) {
           setOrders(res.data.data);
@@ -86,9 +91,8 @@ const TableOrderAdmin = ({
       });
   };
 
-
   const handleExport = () => {
-    console.log("dataExport",dataExport)
+    console.log("dataExport", dataExport);
     // return
     if (!dataExport) {
       const Toast = Swal.mixin({
@@ -113,6 +117,8 @@ const TableOrderAdmin = ({
       [
         "ລະຫັດໄອດີ",
         "ລະຫັດລູກຄ້າ",
+        "ຊື່ຜູ້ຂາຍ",
+        "ລະຫັດລູກຄ້າ",
         "ຊື່ລູກຄ້າ",
         "ຊື່ສິນຄ້າ",
         "ລາຄາສິນຄ້າ",
@@ -125,9 +131,7 @@ const TableOrderAdmin = ({
         "ຄະແນນທັງໝົດ",
         "ປະເພດການຈ່າຍ",
         "ສະຖານະ",
-        "isActive",
-        "ວັນທີສັ່ງ",
-        "updatedAt"
+        "ວັນທີສັ່ງ"
       ],
     ];
     const wb = utils.book_new();
@@ -135,9 +139,13 @@ const TableOrderAdmin = ({
     utils.sheet_add_aoa(ws, heading);
     utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
     utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
-    writeFileXLSX(wb, "History.xlsx");
+    writeFileXLSX(wb, "HistoryProducts.xlsx");
     setToggleCleared(true);
   };
+
+    // ================= Function OnKeyKown ======================
+    OnKeyDown(handleSearch,"Enter")
+
 
   return (
     <>
@@ -247,7 +255,7 @@ const TableOrderAdmin = ({
               data={data}
               pagination
               selectableRows
-              onSelectedRowsChange={({selectedRows}) => {
+              onSelectedRowsChange={({ selectedRows }) => {
                 setDataExport(selectedRows);
               }}
               clearSelectedRows={toggleCleared}

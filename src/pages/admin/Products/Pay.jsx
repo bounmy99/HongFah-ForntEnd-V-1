@@ -10,12 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Spin, Empty } from "antd";
 import Swal from "sweetalert2";
-import { useReactToPrint } from "react-to-print";
 
 import { GetUserCode } from "../../../functions/GetUserWithUsercode";
 import { CreateOrder } from "../../../functions/OrdersAdmin";
-import Invoice from "../../../components/invoice/Invoice";
 import EmptyContent from "../../../components/EmptyContent";
+import { OnKeyDown } from "../../../functions/OnkeyDown";
 
 const Pay = () => {
   const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
@@ -26,13 +25,13 @@ const Pay = () => {
   const [valueSearch, setValueSearch] = useState("");
   const [value, setValue] = useState([]);
 
+  
 
-
-  const orders = [];
   // set value search
   const handleChange = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
+
   // search customer
   const handleClickSearch = () => {
     setLoadingSearch(true);
@@ -94,7 +93,7 @@ const Pay = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: "ປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+          title: "ກະລຸນາເລຶອກປະເພດຊຳລະ",
         });
         setLoading(false);
         return;
@@ -116,7 +115,7 @@ const Pay = () => {
         CreateOrder(users.token, formData)
           .then((res) => {
             setLoading(false);
-            let Id = res.data.data._id
+            let Id = res.data.data._id;
             // return
             const Toast = Swal.mixin({
               toast: true,
@@ -163,7 +162,7 @@ const Pay = () => {
             setLoading(false);
           });
       } else {
-        setLoading(false);
+        setLoading(true);
         CreateOrder(users.token, formData)
           .then((res) => {
             setLoading(false);
@@ -214,6 +213,10 @@ const Pay = () => {
       }
     });
   };
+  
+  
+// ==============  Use OnKeyDown =================
+  OnKeyDown(handleClickSearch,"Enter");
 
   return (
     <Spin spinning={loading}>
@@ -231,8 +234,26 @@ const Pay = () => {
             <h3 className="title">ໃສ່ລະຫັດສະມາຊິກ</h3>
           </div>
           <div className="pay-form">
+            <div className="form-group">
+              <div>
+                <label htmlFor="">ລະຫັດສະມາຊິກ</label>
+              </div>
+              <div>
+                <input
+                  type="search"
+                  name="userCode"
+                  className="form-input-pay"
+                  onChange={handleChange}
+                />
+                <UserOutlined className="icons user1" />
+                <SearchOutlined
+                  className="icons search"
+                  onClick={handleClickSearch}
+                />
+              </div>
+            </div>
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <div>
                   <label htmlFor="">ລະຫັດສະມາຊິກ</label>
                 </div>
@@ -242,7 +263,6 @@ const Pay = () => {
                     name="userCode"
                     className="form-input-pay"
                     onChange={handleChange}
-                    onKeyUp={handleClickSearch}
                   />
                   <UserOutlined className="icons user1" />
                   <SearchOutlined
@@ -250,7 +270,7 @@ const Pay = () => {
                     onClick={handleClickSearch}
                   />
                 </div>
-              </div>
+              </div> */}
               {valueSearch ? (
                 <>
                   <div className="form-group">
@@ -327,7 +347,6 @@ const Pay = () => {
                 </div>
               )}
             </form>
-            
           </div>
         </div>
       </>

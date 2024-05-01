@@ -12,6 +12,7 @@ import { GetUserCode } from "../../../functions/GetUserWithUsercode";
 import { Spin, Empty } from "antd";
 import Swal from "sweetalert2";
 import { CreateOrder } from "../../../functions/OrdersAdmin";
+import { OnKeyDown } from "../../../functions/OnkeyDown";
 const Pay = () => {
   const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -85,7 +86,7 @@ const Pay = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: "ປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+          title: "ກະລຸນາເລຶອກປະເພດຊຳລະ",
         });
         setLoading(false);
         return;
@@ -153,7 +154,7 @@ const Pay = () => {
             setLoading(false);
           });
       } else {
-        setLoading(false);
+        setLoading(true);
         CreateOrder(users.token, formData)
           .then((res) => {
             setLoading(false);
@@ -205,6 +206,9 @@ const Pay = () => {
     });
   };
 
+  // ============== Use Onkey Down =========================
+  OnKeyDown(handleClickSearch,"Enter")
+
   return (
     <Spin spinning={loading}>
       <>
@@ -234,7 +238,6 @@ const Pay = () => {
                     name="userCode"
                     className="form-input-pay"
                     onChange={handleChange}
-                    onKeyUp={handleClickSearch}
                     value={value.userCode}
                   />
                   <UserOutlined className="icons user1" />

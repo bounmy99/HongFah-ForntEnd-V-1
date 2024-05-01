@@ -139,7 +139,7 @@ const InfoOrders = () => {
                             icon: "error",
                             title: err.response.data.message
                         });
-                        navigate("/HomeOrders", { state: { key: 1 } });
+                        navigate("/homeOrders/users", { state: { key: 1 } });
                     }
                 })
             }
@@ -177,7 +177,7 @@ const InfoOrders = () => {
                             icon: "success",
                             title: "ຢືນຢັນການອະນຸມັດສຳເລັດ"
                         });
-                        navigate("/HomeOrders", { state: { key: 3 } });
+                        navigate("/homeOrders/users", { state: { key: 3 } });
                     }
                 }).catch((err) => {
                     if (err.response.data.message) {
