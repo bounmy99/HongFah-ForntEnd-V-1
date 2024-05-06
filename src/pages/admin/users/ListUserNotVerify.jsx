@@ -45,10 +45,6 @@ const ListUserNotVerify = () => {
       .then((res) => {
         setUserNotVerify(res.data.data);
         setLoading(false);
-        dispatch({
-          type : "NEW_USER",
-          payload : res.data.data
-        })
       })
       .catch((err) => {
         setUserEmpty(err.response.data.message);

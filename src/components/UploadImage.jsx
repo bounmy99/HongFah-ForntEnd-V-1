@@ -15,6 +15,9 @@ const UploadImage = ({ fileList, handleChange }) => {
   const { users } = useSelector((state) => ({ ...state }));
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [fileItem, setFileItem] = useState([]);
+
+  // console.log("fileItem",fileItem)
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -52,6 +55,13 @@ const UploadImage = ({ fileList, handleChange }) => {
         onChange={handleChange}
         accept=".png, .jpg, .jpeg"
         beforeUpload={(files) => {
+          if (files) {
+            let allFile = fileItem;
+            fileList.forEach((item) => {
+              allFile.push(item);
+            });
+            setFileItem({ ...fileItem, allFile });
+          }
           return false;
         }}
         name={`images`}

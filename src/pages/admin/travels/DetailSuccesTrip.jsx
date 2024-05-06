@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DataTable from "react-data-table-component";
-import { Carousel, Empty,Image } from "antd";
+import { Carousel, Empty, Image } from "antd";
 import moment from "moment";
 import { GetOneTrip } from "../../../functions/Trip";
 
@@ -13,8 +13,12 @@ const DetailSuccesTrip = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const [detail, setDetail] = useState([]);
   const [member, setMember] = useState([]);
-  
-// function load data
+  const [preview, setPreview] = useState([]);
+
+  console.log("preview", preview);
+  console.log("detail", detail);
+
+  // function load data
   useEffect(() => {
     GetOneTrip(users.token, id)
       .then((res) => {
@@ -37,7 +41,7 @@ const DetailSuccesTrip = () => {
           icon: "warning",
           title: err.response.data.message,
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -115,6 +119,24 @@ const DetailSuccesTrip = () => {
   return (
     <>
       <div className="card-main">
+        {preview.length > 0 ? (
+          <Image.PreviewGroup
+            preview={{
+              onChange: (current, prev) =>
+                console.log(`current index: ${current}, prev index: ${prev}`),
+              visible: preview.length,
+              onVisibleChange: (value) => {
+                if (!value) {
+                  setPreview([]);
+                }
+              },
+            }}
+          >
+            {preview.map((image, i) => (
+              <Image src={image} key={i} />
+            ))}
+          </Image.PreviewGroup>
+        ) : null}
         <div className="card-detail-header">
           <div className="text-tilte">
             <button
@@ -141,14 +163,25 @@ const DetailSuccesTrip = () => {
               <div className="trip-member-info">
                 {detail.images && detail.images.length ? (
                   <div>
-                    <Carousel autoplay>
+                    <Image
+                      src={detail.images[0]}
+                      alt=""
+                      preview={{ visible: false }}
+                      onClick={() => setPreview(detail.images)}
+                      className="image-show"
+                    />
+                    {/* <Carousel autoplay
+                    >
                       {detail.images &&
                         detail.images.map((item) => (
                           <div className="trip-image-slide">
-                            <Image src={item} alt=""  className="image-show" />
+                            <Image src={item} alt=""
+                            preview={{visible:false}}
+                            onClick={()=>setPreview(detail.images)}
+                            className="image-show" />
                           </div>
                         ))}
-                    </Carousel>
+                    </Carousel> */}
                   </div>
                 ) : (
                   <div className="">

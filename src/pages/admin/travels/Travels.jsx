@@ -39,6 +39,10 @@ const Travels = () => {
   const [pageSize, setPageSize] = useState(4);
   const [pages, setPages] = useState(1);
 
+
+
+  // console.log("fileList",fileList)
+
   // function first load when open page
   useEffect(() => {
     LoadData();

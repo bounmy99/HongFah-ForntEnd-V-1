@@ -1,7 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import "./App.css";
+
+import { GetAllNoti } from "./functions/AdminNoti";
+
 // ==================== protectRoutes =====================
 import RouteProtect from "./protectRoute/RouteProtect";
 //==================== Layout ======================
@@ -54,14 +58,14 @@ import UsersDetail from "./pages/admin/users/UsersDetail";
 // ====================== user access ================
 import Bill from "./pages/admin/Products/Bill";
 import HomeUser from "./pages/user/products/SaleProduct";
-import HomeOrderUsers from './pages/user/orders/HomeOrders'
+import HomeOrderUsers from "./pages/user/orders/HomeOrders";
 import InfoOrdersUsers from "./pages/user/orders/InfoOrders";
 import InfoCancelUsers from "./pages/user/orders/InfoCancel";
 import InfoHistoryUsers from "./pages/user/orders/InfoHistory";
-import PayUsers from "./pages/user/products/Pay"
+import PayUsers from "./pages/user/products/Pay";
 
 function App() {
-  const { users } = useSelector((state) => ({ ...state }));
+  const { users, } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let getData = JSON.parse(localStorage.getItem("data"));
@@ -71,6 +75,7 @@ function App() {
       dispatch({
         type: "USER_LOGIN",
         payload: {
+          id: getData._id,
           token: getData.token,
           resfresToken: getData.refresToken,
           email: getData.email,
@@ -95,14 +100,7 @@ function App() {
             <div className="dash-content">
               <div className="container">
                 <Routes>
-                  <Route
-                    path="/dashboard"
-                    element={
-                     
-                        <Dashboard />
-                     
-                    }
-                  />
+                  <Route path="/dashboard" element={<Dashboard />} />
                   <Route
                     path="/listProducts"
                     element={
@@ -147,7 +145,7 @@ function App() {
                     path="/listProducts/DetailProductSale/:id"
                     element={
                       // <RouteProtect>
-                        <DetailProductSale />
+                      <DetailProductSale />
                       // </RouteProtect>
                     }
                   />
@@ -156,7 +154,7 @@ function App() {
                     element={
                       <RouteProtect>
                         <Bill />
-                       </RouteProtect>
+                      </RouteProtect>
                     }
                   />
                   <Route
@@ -200,7 +198,7 @@ function App() {
                       </RouteProtect>
                     }
                   />
-{/* =================== users access start ======================= */}
+                  {/* =================== users access start ======================= */}
                   <Route
                     path="listProducts/saleProducts/users"
                     element={<HomeUser />}
@@ -211,42 +209,26 @@ function App() {
                   />
                   <Route
                     path="listProducts/saleProducts/users/bill/:id"
-                    element={ <Bill />}
+                    element={<Bill />}
                   />
 
                   <Route
                     path="/homeOrders/users"
-                    element={
-                    
-                        <HomeOrderUsers />
-                     
-                    }
+                    element={<HomeOrderUsers />}
                   />
                   <Route
                     path="/HomeOrders/users/infoOrders/:id"
-                    element={
-                      
-                        <InfoOrdersUsers />
-                     
-                    }
+                    element={<InfoOrdersUsers />}
                   />
                   <Route
                     path="/HomeOrders/users/infoCancel/:id"
-                    element={
-                      
-                        <InfoCancelUsers />
-                      
-                    }
+                    element={<InfoCancelUsers />}
                   />
                   <Route
                     path="/HomeOrders/users/infoHistory/:id"
-                    element={
-                     
-                        <InfoHistoryUsers />
-                     
-                    }
+                    element={<InfoHistoryUsers />}
                   />
-{/* ======================= users access end ========================== */}
+                  {/* ======================= users access end ========================== */}
 
                   <Route
                     path="/lineWork"

@@ -1,33 +1,193 @@
-import React, { useState } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip, notification } from "antd";
+import { Badge, Drawer } from "antd";
+import { io } from "socket.io-client";
+import addNotification from "react-push-notification";
+import moment from "moment";
+import {
+  CloseOutlined,
+  DollarOutlined,
+  ProfileOutlined,
+  UserAddOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import Swal from "sweetalert2";
+
+// ======================= images =======================
+import images from "../assets/logo/Logo1.png";
 import UserImage from "../assets/image/profile-1.jpg";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { Badge } from "antd";
+import imageWarning from "../assets/image/warning.png";
+import EmptyContent from "../components/EmptyContent";
+import { formatPrice }from "../functions/FormatPrices"
+import { ReadedNoti, GetOneNoti, GetAllNoti } from "../functions/AdminNoti";
+
 const Headers = () => {
   const { users, Notification } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openNoti, setOpenNoti] = useState(false);
+  const [dataNotiOne, setDataNotiOneOne] = useState([]);
+  const [notifications, setNotifications] = useState(null);
+  const [notificationsData, setNotificationsData] = useState(null);
+
+
+  const CallNotification = () =>{
+    GetAllNoti(users?.token)
+      .then((res) => {
+        setNotificationsData(res.data.data);
+        dispatch({
+          type: "NEW_USER",
+          payload: res.data.data,
+        });
+      })
+      .catch((err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  }
+
+
+  // ====================== connect to socket io start =========================
+  const config = {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    },
+  };
+  const socket = io(
+    `wss://hongfah-server.onrender.com?user_id=${users.id}`,
+    config
+  );
+  socket.emit("join_room_admin");
+
+  socket.on("notification", (data) => {
+       setNotifications({...notifications, data});
+    });
+
+  // ============ connect socket io end =============
+
+  useEffect(() => {
+    if (Notification) {
+      const item = Notification.map((noti) => noti.type);
+      addNotification({
+        title: "ການແຈ້ງເຕືອນ",
+        message: item,
+        theme: "darkblue",
+        duration: 3000,
+        position: "top-middle",
+        icon: images,
+        colorTop: "green",
+        colorBottom: "darkgreen",
+        onClick: () => console.log("eeee"),
+        native: true,
+      });
+    }
+    CallNotification();
+  }, [notifications]);
+
+  const [open, setOpen] = useState(false);
+  const showDrawer = (id) => {
+    setOpen(true);
+    setOpenNoti(false);
+    GetOneNoti(users.token, id)
+      .then((res) => {
+        setDataNotiOneOne(res.data.data);
+        CallNotification();
+      })
+      .catch((err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+    ReadedNoti(users.token, { notiID: id }).then((res) => {
+      CallNotification();
+    });
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const [toggle, setToggle] = useState("");
 
-  const openNotification = (placement) => {
-    notification.open({
-      message: "ເເຈ້ງເຕືອນ",
-      description:
-      <>
-      <p>"ມີຈຳນວນຜູ້ໃຊ້ໃໝ່ທີ່ລໍຖ້າການຢືນຢັນ", <span style={{cursor : "pointer", color : "#00a5e8"}} onClick={()=>{
-        navigate("/users",{state : {key : 2}})
-      }}>ເບິ່ງລາຍລະອຽດ</span></p>
-      </>,
-      placement,
-    });
-    dispatch({
-      type : "READ_USER",
-      payload : []
-    })
+  const ToggleNoti = () => {
+    setOpenNoti((openNoti) => !openNoti);
   };
+  const Toggles = openNoti ? "open" : "";
+
+  const BonusDirection = (notiID) => {
+    navigate("/Bonus", { state: { key: 1 } });
+    ReadedNoti(users.token, { notiID: notiID }).then((res) => {
+      CallNotification();
+    });
+  };
+  const UserDirection = (notiID) => {
+    navigate("/users", { state: { key: 2 } });
+    ReadedNoti(users.token, { notiID: notiID }).then((res) => {
+      CallNotification();
+    });
+  };
+  const OrdersDirection = (notiID) => {
+    navigate("/homeOrders", { state: { key: 1 } });
+    ReadedNoti(users.token, { notiID: notiID }).then((res) => {
+      CallNotification();
+    });
+  };
+
+  const DirectionPages = (type, notiID) => {
+    type === "paidBonus" && BonusDirection(notiID);
+    type === "newUserSub" && UserDirection(notiID);
+    type === "newOrder" && OrdersDirection(notiID);
+    // dispatch({
+    //   type: "READ_USER",
+    //   payload: [],
+    // });
+    setOpenNoti(false);
+  };
+
   const openInforUser = () => {
     notification.open({
       message: "ຂໍ້ມູນທົ່ວໄປ",
@@ -71,8 +231,6 @@ const Headers = () => {
         payload: false,
       });
 
-  
-
   return (
     <div>
       <div className="top">
@@ -104,13 +262,19 @@ const Headers = () => {
         <div className="nav-right">
           {Notification?.length ? (
             <Badge count={Notification?.length} size="small" className="bages">
-              <div className="bell-notification" onClick={()=>openNotification('top')}>
+              <div
+                className="bell-notification"
+                // onClick={() => {
+                //   openNotification("top")
+                // }}
+                onClick={ToggleNoti}
+              >
                 <i className="bx bxs-bell"></i>
               </div>
             </Badge>
           ) : (
             <Badge count={""} size="small" className="bages">
-              <div className="bell-notification">
+              <div className="bell-notification" onClick={ToggleNoti}>
                 <i className="bx bxs-bell"></i>
               </div>
             </Badge>
@@ -136,6 +300,287 @@ const Headers = () => {
           </Tooltip>
         </div>
       </div>
+
+      {/* ================================ Modal ============================= */}
+      <div className={`modal-notification ${Toggles}`}>
+        <div className="modal-notification-card genealogy-scroll">
+          <div className="card-header-noti">
+            <div className="close-button" onClick={() => setOpenNoti(false)}>
+              <CloseOutlined />
+            </div>
+            <div className="images-noti">
+              <img src={imageWarning} alt="" className="img-noti" />
+            </div>
+            <div className="text-noti">
+              <h3 className="text">ການແຈ້ງເຕືອນ</h3>
+            </div>
+          </div>
+          <div className="card-body-noti">
+            {Notification?.length ? (
+              Notification &&
+              Notification.map((noti, i) => (
+                <div className="body-noti" key={i}>
+                  <div
+                    className="name-noti"
+                    onClick={() => DirectionPages(noti.type, noti._id)}
+                  >
+                    {noti.type === "newUserSub" && (
+                      <span className="user-new-noti">
+                        <UserOutlined />
+                      </span>
+                    )}
+                    {noti.type === "newOrder" && (
+                      <span className="order-new-noti">
+                        <ProfileOutlined />
+                      </span>
+                    )}
+                    {noti.type === "paidBonus" && (
+                      <span className="paidBonus-new-noti">
+                        <DollarOutlined />
+                      </span>
+                    )}
+                    {noti.type === "newUserSub" && (
+                      <span className="user-new-noti">{noti.type}</span>
+                    )}
+                    {noti.type === "paidBonus" && (
+                      <span className="paidBonus-new-noti">{noti.type}</span>
+                    )}
+                    {noti.type === "newOrder" && (
+                      <span className="order-new-noti">{noti.type}</span>
+                    )}
+                  </div>
+                  <div
+                    className="link-noti"
+                    // onClick={() => DirectionPages(noti.type)}
+                    onClick={() => showDrawer(noti._id)}
+                  >
+                    ເບິ່ງລາຍລະອຽດ
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-noti">
+                <EmptyContent Messages={"ບໍ່ມີລາຍການແຈ້ງເຕືອນ"} />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ================================ Drawer ========================== */}
+      <Drawer title="ລາຍລະອຽດ" onClose={onClose} open={open}>
+        <div className="card-detail-noti">
+          <div className="detail-noti-title">
+            <h3></h3>
+          </div>
+          <div className="detail-noti-content">
+            <div>ຈາກ : {dataNotiOne.to ? dataNotiOne.to : "ບໍ່ມີ"}</div>
+            <div>ປະເພດ : {dataNotiOne.type ? dataNotiOne.type : "ບໍ່ມີ"}</div>
+            <div>
+              ວັນທີສ້າງ :{" "}
+              {dataNotiOne.createdAt ? moment(dataNotiOne.createdAt).format("DD-MM-YYYY") : "ບໍ່ມີ"}
+            </div>
+          </div>
+          <div className="detail-noti-title">
+            <h3>ຂໍ້ມູນຜູ້ໃຊ້</h3>
+          </div>
+          <div className="detail-noti-content">
+            <div>
+              ຮູບພາບ :{" "}
+              {dataNotiOne.user_id?.profile ? (
+                <img
+                  src={dataNotiOne.user_id?.profile}
+                  className="images-detail-noti"
+                />
+              ) : (
+                "ບໍ່ມີ"
+              )}
+            </div>
+            <div>
+              ຊື່ ແລະ ນາມສະກຸນ :{" "}
+              {`${
+                dataNotiOne.user_id?.firstName
+                  ? dataNotiOne.user_id?.firstName
+                  : "ບໍ່ມີ"
+              } ${
+                dataNotiOne.user_id?.lastName
+                  ? dataNotiOne.user_id?.lastName
+                  : "ບໍ່ມີ"
+              }`}
+            </div>
+            <div>
+              ລະຫັດຜູ້ໃຊ້ :{" "}
+              {dataNotiOne.user_id?.userCode
+                ? dataNotiOne.user_id?.userCode
+                : "ບໍ່ມີ"}
+            </div>
+          </div>
+          <div className="detail-noti-title">
+            <h3>ຂໍ້ມູນທົ່ວໄປ</h3>
+          </div>
+          {/* ======================== users ====================== */}
+          {dataNotiOne.type === "newUserSub" && (
+            <div className="detail-noti-content">
+              <div>
+                ຊື່ :{" "}
+                {dataNotiOne.content?.name
+                  ? dataNotiOne.content?.name
+                  : "ບໍ່ມີ"}
+              </div>
+              <div>
+                ເບີໂທ :{" "}
+                {`${
+                  dataNotiOne.content?.phone
+                    ? dataNotiOne.content?.phone
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ປະເພດ :{" "}
+                {dataNotiOne.content?.type
+                  ? dataNotiOne.content?.type
+                  : "ບໍ່ມີ"}
+              </div>
+            </div>
+          )}
+          {/* ======================== users ====================== */}
+          {dataNotiOne.type === "paidBonus" && (
+            <div className="detail-noti-content">
+              <div>
+                ຊື່ :{" "}
+                {dataNotiOne.content?.name
+                  ? dataNotiOne.content?.name
+                  : "ບໍ່ມີ"}
+              </div>
+              <div>
+                ເບີໂທ :{" "}
+                {`${
+                  dataNotiOne.content?.phone
+                    ? dataNotiOne.content?.phone
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ປະເພດ :{" "}
+                {dataNotiOne.content?.type
+                  ? dataNotiOne.content?.type
+                  : "ບໍ່ມີ"}
+              </div>
+            </div>
+          )}
+          {/* ========================== orders ===================== */}
+          {dataNotiOne.type === "newOrder" && (
+            <div className="detail-noti-content">
+              <div>
+                ລະຫັດອໍເດີ້ :{" "}
+                {dataNotiOne.content?.orderCode
+                  ? dataNotiOne.content?.orderCode
+                  : "ບໍ່ມີ"}
+              </div>
+              <div>
+                ປະເພດການຊຳລະ :{" "}
+                {`${
+                  dataNotiOne.content?.paymentType
+                    ? dataNotiOne.content?.paymentType
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ສະຖານະ :{" "}
+                {dataNotiOne.content?.status
+                  ? dataNotiOne.content?.status
+                  : "ບໍ່ມີ"}
+              </div>
+              <div>
+                ຈຳນວນ :{" "}
+                {`${
+                  dataNotiOne.content?.totalQty
+                    ? dataNotiOne.content?.totalQty
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ລວມຄະແນນ :{" "}
+                {dataNotiOne.content?.totalPoint
+                  ? dataNotiOne.content?.totalPoint
+                  : "ບໍ່ມີ"}
+              </div>
+              <div>
+                ລວມຄະລາຄາ :{" "}
+                {dataNotiOne.content?.totalPrice
+                  ? formatPrice(dataNotiOne.content?.totalPrice)
+                  : "ບໍ່ມີ"}
+              </div>
+              <div>
+                ໄດ້ຮັບເງິນຄືນ :{" "}
+                {`${
+                  dataNotiOne.content?.totalCashback
+                    ? formatPrice(dataNotiOne.content?.totalCashback)
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+
+              {/* ================ delivery =================== */}
+              <div>
+                ທີ່ຢູ່ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.address
+                    ? dataNotiOne.content?.delivery?.address
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ບ້ານ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.village
+                    ? dataNotiOne.content?.delivery?.village
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ເມືອງ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.district
+                    ? dataNotiOne.content?.delivery?.district
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ແຂວງ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.province
+                    ? dataNotiOne.content?.delivery?.province
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ເບີໂທ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.phoneNumber
+                    ? dataNotiOne.content?.delivery?.phoneNumber
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ບໍລິສັດຂົນສົ່ງ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.express
+                    ? dataNotiOne.content?.delivery?.express
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+              <div>
+                ປະເພດຮັບເຄື່ອງ :{" "}
+                {`${
+                  dataNotiOne.content?.delivery?.type
+                    ? dataNotiOne.content?.delivery?.type
+                    : "ບໍ່ມີ"
+                }`}
+              </div>
+            </div>
+          )}
+        </div>
+      </Drawer>
     </div>
   );
 };

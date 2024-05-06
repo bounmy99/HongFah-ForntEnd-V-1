@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+
 import {
   MoreOutlined,
   ArrowDownOutlined,
@@ -28,10 +30,12 @@ import {
   // Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import DataTable from "react-data-table-component";
+// =============== function =============
+
 import { BestSeller } from "../functions/Products";
 import { SalesPrices } from "../functions/Orders";
 import { CountUsers } from "../functions/Authentication";
+
 import TableAntd from "../components/TableAntd";
 import { Image, Tooltip } from "antd";
 import noImage from "../assets/image/no-image.png";
@@ -44,6 +48,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [counterUsers, setCounterUsers] = useState([]);
   const [bestSell, setBestSell] = useState([]);
+ 
 
   const data = [
     {
@@ -177,6 +182,7 @@ const Dashboard = () => {
     LoadCounterUser();
     LoadBestSeller();
     LoadSalesPrices();
+
   }, []);
 
   // function load counter users

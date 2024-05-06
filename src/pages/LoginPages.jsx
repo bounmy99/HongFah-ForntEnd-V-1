@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { Spin } from "antd";
+import { io } from "socket.io-client";
+
+
 // image
 import Logo from "../assets/logo/logo.png";
 import LogoHeadLeft from "../assets/logo/logo-head-left.png";
@@ -11,7 +14,6 @@ import Logo1 from "../assets/logo/Logo1.png";
 import Logo2 from "../assets/logo/Logo2.png";
 // function
 import { Login } from "../functions/Authentication";
-
 const LoginPages = () => {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const dispatch = useDispatch();
@@ -22,21 +24,6 @@ const LoginPages = () => {
     userCode: "A27614",
     password: "12345678",
   });
-
-  // function first load open page
-  // useEffect(() => {
-  //   if (RoleBaseDirection) {
-  //     return
-  //   }
-  // }, [users]);
-
-  // const RoleBaseDirection = (Role) => {
-  //     if (Role === 'admin') {
-  //       navigate('/dashboard')
-  //     } else {
-  //       navigate('/users/listProducts/saleProducts')
-  //     }
-  // }
 
   useEffect(() => {
     const keyDownHandle = (event) => {
@@ -82,6 +69,7 @@ const LoginPages = () => {
         dispatch({
           type: "USER_LOGIN",
           payload: {
+            id : res.data.data._id,
             token: res.data.data.token,
             resfresToken: res.data.data.refresToken,
             email: res.data.data.email,
@@ -108,7 +96,6 @@ const LoginPages = () => {
           icon: "success",
           title: "ເຂົ້າສູ່ລະບົບສຳເລັດ",
         });
-        // RoleBaseDirection(res.data.data.role)
         navigate("/dashboard");
         localStorage.setItem("data", JSON.stringify(res.data.data));
       })

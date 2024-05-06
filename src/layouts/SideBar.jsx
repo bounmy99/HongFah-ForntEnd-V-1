@@ -134,7 +134,7 @@ const SideBar = () => {
 
               <li>
                 <NavLink to={`/users`}>
-                  <i class="bx bxs-user"></i>
+                  <i className="bx bxs-user"></i>
                   <span className="link-name">ຂໍ້ມູນຜຸ້ໃຊ້</span>
                 </NavLink>
               </li>
