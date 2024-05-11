@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import Loadding from "./Loadding";
 import DatePicker from "react-datepicker";
-import { read, writeFileXLSX, utils } from "xlsx";
-import { Link, useNavigate } from "react-router-dom";
+import { writeFileXLSX, utils } from "xlsx";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
 import EmptyContent from "./EmptyContent";
+import ExportToExcel from "./ExportToExcel";
 const TableOrderUser = ({
   Status,
   columns,
@@ -24,7 +24,7 @@ const TableOrderUser = ({
   orderEmpty,
   successOrdersEmpty,
   cancelOrderEmpty,
-  btnExport
+  btnExport,
 }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndtDate] = useState();
@@ -89,56 +89,103 @@ const TableOrderUser = ({
       });
   };
 
+  const header = [
+    {
+      id: "ລະຫັດໄອດີ",
+    },
+    {
+      userCode: "ລະຫັດລູກຄ້າ",
+    },
+    {
+      name: "ຊື່ລູກຄ້າ",
+    },
+    {
+      productName: "ຊື່ສິນຄ້າ",
+    },
+    {
+      productPrice: "ລາຄາສິນຄ້າ",
+    },
+    {
+      productAmount: "ຈຳນວນສິນຄ້າ",
+    },
+    {
+      productPoint: "ຄະແນນສິນຄ້າ",
+    },
+    {
+      totalAmount: "ຈຳນວນລວມ",
+    },
+    {
+      totalPrice: "ລາຄາລວມ",
+    },
+    {
+      cashBack: "ເງິນທີ່ໄດ້ຮັບ",
+    },
+    {
+      totalPoints: "ຄະແນນທັງໝົດ",
+    },
+    {
+      totalCashBack: "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
+    },
+    {
+      typePayment: "ປະເພດການຈ່າຍ",
+    },
+    {
+      status: "ສະຖານະ",
+    },
+    {
+      createDate: "ວັນທີສັ່ງ",
+    },
+  ];
 
-  const handleExport = () => {
-    console.log("dataExport",dataExport)
-    // return
-    if (!dataExport) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-      });
-      return;
-    }
-    setDataExport([]);
-    const heading = [
-      [
-        "ລະຫັດໄອດີ",
-        "ລະຫັດລູກຄ້າ",
-        "ຊື່ລູກຄ້າ",
-        "ຊື່ສິນຄ້າ",
-        "ລາຄາສິນຄ້າ",
-        "ເງິນທີ່ໄດ້ຮັບ",
-        "ຄະແນນສິນຄ້າ",
-        "ຈຳນວນສິນຄ້າ",
-        "ຈຳນວນລວມ",
-        "ລາຄາລວມ",
-        "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
-        "ຄະແນນທັງໝົດ",
-        "ປະເພດການຈ່າຍ",
-        "ສະຖານະ",
-        "ວັນທີສັ່ງ",
-      ],
-    ];
-    const wb = utils.book_new();
-    const ws = utils.json_to_sheet([]);
-    utils.sheet_add_aoa(ws, heading);
-    utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
-    utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
-    writeFileXLSX(wb, "HistoryProducts.xlsx");
-    setToggleCleared(true);
-  };
+  // const handleExport = () => {
+  //   console.log("dataExport", dataExport);
+  //   // return
+  //   if (!dataExport) {
+  //     const Toast = Swal.mixin({
+  //       toast: true,
+  //       position: "top-end",
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       timerProgressBar: true,
+  //       didOpen: (toast) => {
+  //         toast.onmouseenter = Swal.stopTimer;
+  //         toast.onmouseleave = Swal.resumeTimer;
+  //       },
+  //     });
+  //     Toast.fire({
+  //       icon: "warning",
+  //       title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
+  //     });
+  //     return;
+  //   }
+  //   setDataExport([]);
+  //   const heading = [
+  //     [
+  //       "ລະຫັດໄອດີ",
+  //       "ລະຫັດລູກຄ້າ",
+  //       "ຊື່ລູກຄ້າ",
+  //       "ຊື່ສິນຄ້າ",
+  //       "ລາຄາສິນຄ້າ",
+  //       "ເງິນທີ່ໄດ້ຮັບ",
+  //       "ຄະແນນສິນຄ້າ",
+  //       "ຈຳນວນສິນຄ້າ",
+  //       "ຈຳນວນລວມ",
+  //       "ລາຄາລວມ",
+  //       "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
+  //       "ຄະແນນທັງໝົດ",
+  //       "ປະເພດການຈ່າຍ",
+  //       "ສະຖານະ",
+  //       "ວັນທີສັ່ງ",
+  //     ],
+  //   ];
+  //   const wb = utils.book_new();
+  //   const ws = utils.json_to_sheet([]);
+  //   utils.sheet_add_aoa(ws, heading);
+  //   utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
+  //   utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
+  //   writeFileXLSX(wb, "HistoryProducts.xlsx");
+  //   setToggleCleared(true);
+  // };
 
   return (
     <>
@@ -215,15 +262,23 @@ const TableOrderUser = ({
               >
                 ຄົ້ນຫາ
               </button>
-              { btnExport &&
-              <button
-                type="button"
-                className={`btns-export`}
-                onClick={handleExport}
-              >
-                Export
-              </button>
-              }
+              {btnExport && (
+                <>
+                  {/* <button
+                    type="button"
+                    className={`btns-export`}
+                    onClick={handleExport}
+                  >
+                    Export
+                  </button> */}
+                  <ExportToExcel
+                    data={dataExport}
+                    header={header}
+                    setToggleCleared={setToggleCleared}
+                    setDataExport={setDataExport}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -238,7 +293,7 @@ const TableOrderUser = ({
               data={data}
               pagination
               selectableRows
-              onSelectedRowsChange={({selectedRows}) => {
+              onSelectedRowsChange={({ selectedRows }) => {
                 setDataExport(selectedRows);
               }}
               clearSelectedRows={toggleCleared}

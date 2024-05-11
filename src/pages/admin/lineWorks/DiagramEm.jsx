@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import {
-  EyeOutlined,
-  EyeInvisibleOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
-} from "@ant-design/icons";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import imagePreview from "../../../assets/avatar/image-avatar.jpeg";
 import { GetOneLineWork, GetRootLineWork } from "../../../functions/LineWork";
 import Diagram from "../../../components/Diagram";

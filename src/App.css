@@ -1585,7 +1585,23 @@ body {
   font-size: 15px;
   font-weight: bold;
 }
+.best-seller .table-card .header .end-filter{
+  display: flex;
+  gap: 5px;
 
+}
+.btn-export-excel button.btn-export{
+  width: 7rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  padding: 7px;
+  border: none;
+  background-color: #0ce05d;
+  color: var(--panel-color);
+}
+.btn-export-excel button:hover{
+  background-color: #3cb96c;
+}
 .best-seller .table-card .header .filter {
   display: flex;
   align-items: center;

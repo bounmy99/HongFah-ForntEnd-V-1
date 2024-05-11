@@ -9,6 +9,7 @@ import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
 import { OnKeyDown } from "../functions/OnkeyDown";
+import ExportToExcelAdmin from "./ExportToExcelAdmin";
 const TableOrderAdmin = ({
   Status,
   columns,
@@ -38,6 +39,25 @@ const TableOrderAdmin = ({
     setValueInput(e.target.value);
   };
 
+  const header = [
+    { id: "ລະຫັດໄອດີ" },
+    { CodeSale: "ລະຫັດຜູ້ຂາຍ" },
+    { nameSale: "ຊື່ຜູ້ຂາຍ" },
+    { c_code: "ລະຫັດລູກຄ້າ" },
+    { c_name: "ຊື່ລູກຄ້າ" },
+    { p_name: "ຊື່ສິນຄ້າ" },
+    { p_price: "ລາຄາສິນຄ້າ" },
+    { p_cashBack: "ເງິນທີ່ໄດ້ຮັບ" },
+    { p_point: "ຄະແນນສິນຄ້າ" },
+    { p_qty: "ຈຳນວນສິນຄ້າ" },
+    { t_qty: "ຈຳນວນລວມ" },
+    { t_price: "ລາຄາລວມ" },
+    { t_cashBack: "ເງິນທີ່ໄດ້ຮັບທັງໝົດ" },
+    { t_point: "ຄະແນນທັງໝົດ" },
+    { paymentType: "ປະເພດການຈ່າຍ" },
+    { status: "ສະຖານະ" },
+    { createDate: "ວັນທີສັ່ງ" },
+  ];
 
   const handleSearch = () => {
     (startDate || endDate || valueInput || Status
@@ -91,61 +111,61 @@ const TableOrderAdmin = ({
       });
   };
 
-  const handleExport = () => {
-    console.log("dataExport", dataExport);
-    // return
-    if (!dataExport) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-      });
-      return;
-    }
-    setDataExport([]);
-    const heading = [
-      [
-        "ລະຫັດໄອດີ",
-        "ລະຫັດລູກຄ້າ",
-        "ຊື່ຜູ້ຂາຍ",
-        "ລະຫັດລູກຄ້າ",
-        "ຊື່ລູກຄ້າ",
-        "ຊື່ສິນຄ້າ",
-        "ລາຄາສິນຄ້າ",
-        "ເງິນທີ່ໄດ້ຮັບ",
-        "ຄະແນນສິນຄ້າ",
-        "ຈຳນວນສິນຄ້າ",
-        "ຈຳນວນລວມ",
-        "ລາຄາລວມ",
-        "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
-        "ຄະແນນທັງໝົດ",
-        "ປະເພດການຈ່າຍ",
-        "ສະຖານະ",
-        "ວັນທີສັ່ງ"
-      ],
-    ];
-    const wb = utils.book_new();
-    const ws = utils.json_to_sheet([]);
-    utils.sheet_add_aoa(ws, heading);
-    utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
-    utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
-    writeFileXLSX(wb, "HistoryProducts.xlsx");
-    setToggleCleared(true);
-  };
+  // const handleExport = () => {
+  //   console.log("dataExport", dataExport);
+  //   // return
+  //   if (!dataExport) {
+  //     const Toast = Swal.mixin({
+  //       toast: true,
+  //       position: "top-end",
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       timerProgressBar: true,
+  //       didOpen: (toast) => {
+  //         toast.onmouseenter = Swal.stopTimer;
+  //         toast.onmouseleave = Swal.resumeTimer;
+  //       },
+  //     });
+  //     Toast.fire({
+  //       icon: "warning",
+  //       title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
+  //     });
+  //     return;
+  //   }
+  //   setDataExport([]);
+  //   const heading = [
+  //     [
+  //       "ລະຫັດໄອດີ",
+  //       "ລະຫັດລູກຄ້າ",
+  //       "ຊື່ຜູ້ຂາຍ",
+  //       "ລະຫັດລູກຄ້າ",
+  //       "ຊື່ລູກຄ້າ",
+  //       "ຊື່ສິນຄ້າ",
+  //       "ລາຄາສິນຄ້າ",
+  //       "ເງິນທີ່ໄດ້ຮັບ",
+  //       "ຄະແນນສິນຄ້າ",
+  //       "ຈຳນວນສິນຄ້າ",
+  //       "ຈຳນວນລວມ",
+  //       "ລາຄາລວມ",
+  //       "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
+  //       "ຄະແນນທັງໝົດ",
+  //       "ປະເພດການຈ່າຍ",
+  //       "ສະຖານະ",
+  //       "ວັນທີສັ່ງ",
+  //     ],
+  //   ];
+  //   const wb = utils.book_new();
+  //   const ws = utils.json_to_sheet([]);
+  //   utils.sheet_add_aoa(ws, heading);
+  //   utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
+  //   utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
+  //   writeFileXLSX(wb, "HistoryProducts.xlsx");
+  //   setToggleCleared(true);
+  // };
 
-    // ================= Function OnKeyKown ======================
-    OnKeyDown(handleSearch,"Enter")
-
+  // ================= Function OnKeyKown ======================
+  
+  OnKeyDown(handleSearch, "Enter");
 
   return (
     <>
@@ -222,13 +242,19 @@ const TableOrderAdmin = ({
               >
                 ຄົ້ນຫາ
               </button>
-              <button
+              {/* <button
                 type="button"
                 className={`btns-export`}
                 onClick={handleExport}
               >
                 Export
-              </button>
+              </button> */}
+              <ExportToExcelAdmin
+                data={dataExport}
+                header={header}
+                setDataExport={setDataExport}
+                setToggleCleared={setToggleCleared}
+              />
             </div>
           </div>
         </div>

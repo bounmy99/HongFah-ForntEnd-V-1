@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
+import ExportToExcelBonus from "../../../components/ExportToExcelBonus";
 
 // customize style cell of table
 const customStyles = {
@@ -43,7 +44,9 @@ const columns = [
     cell: (row) => (
       <div className="name-product">
         <div className="user">
-          <h5>{`${row.firstName ? row.firstName : "ບໍ່ມີ"} ${row.lastName ? row.lastName : "ບໍ່ມີ"}`}</h5>
+          <h5>{`${row.firstName ? row.firstName : "ບໍ່ມີ"} ${
+            row.lastName ? row.lastName : "ບໍ່ມີ"
+          }`}</h5>
           <p>{row.userCode ? row.userCode : "ບໍ່ມີ"}</p>
         </div>
       </div>
@@ -56,7 +59,9 @@ const columns = [
     cell: (row) => (
       <div className="name-product">
         <div className="user">
-          <h5>{`${row?.bankName ? row.bankName?.substring(0,15) : "ບໍ່ມີ"}`}</h5>
+          <h5>{`${
+            row?.bankName ? row.bankName?.substring(0, 15) : "ບໍ່ມີ"
+          }`}</h5>
         </div>
       </div>
     ),
@@ -68,7 +73,9 @@ const columns = [
     cell: (row) => (
       <div className="name-product">
         <div className="user">
-          <h5>{`${row?.accountName ? row.accountName?.substring(0,15) : "ບໍ່ມີ"}`}</h5>
+          <h5>{`${
+            row?.accountName ? row.accountName?.substring(0, 15) : "ບໍ່ມີ"
+          }`}</h5>
         </div>
       </div>
     ),
@@ -80,7 +87,9 @@ const columns = [
     cell: (row) => (
       <div className="name-product">
         <div className="user">
-          <h5>{`${row?.accountNo ? row.accountNo?.substring(0,15) : "ບໍ່ມີ"} `}</h5>
+          <h5>{`${
+            row?.accountNo ? row.accountNo?.substring(0, 15) : "ບໍ່ມີ"
+          } `}</h5>
         </div>
       </div>
     ),
@@ -92,7 +101,9 @@ const columns = [
     selector: (row) => row.positionName,
     cell: (row) => (
       <div className="position">
-        <p className="name-posit">{row.positionName ? row.positionName : "ຍັງບໍ່ມີ" }</p>
+        <p className="name-posit">
+          {row.positionName ? row.positionName : "ຍັງບໍ່ມີ"}
+        </p>
       </div>
     ),
     sortable: true,
@@ -100,7 +111,7 @@ const columns = [
   },
   {
     name: "ສະມາຊິກທິມ",
-    selector: (row) => row.children_count ? row.children_count : "ບໍ່ມີ",
+    selector: (row) => (row.children_count ? row.children_count : "ບໍ່ມີ"),
     sortable: true,
     width: "110px",
   },
@@ -129,7 +140,7 @@ const columns = [
   {
     name: "ຄະແນນໂບນັດ",
     sortable: true,
-    cell: (row) => <p>{row.bonusPV ?  row.bonusPV : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{row.bonusPV ? row.bonusPV : "ບໍ່ມີ"} ຄະແນນ</p>,
     width: "180px",
   },
   {
@@ -147,15 +158,35 @@ const columns = [
   {
     name: "ຄ່າແນະນຳ",
     sortable: true,
-    cell: (row) => <p>{row.recommended ? row.recommended  : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{row.recommended ? row.recommended : "ບໍ່ມີ"} ຄະແນນ</p>,
     width: "180px",
   },
   {
     name: "ໄດ້ຮັບເງິນຄືນ",
     sortable: true,
-    cell: (row) => <p>{formatPrice(row.cashback ) ? formatPrice(row.cashback )  : "ບໍ່ມີ"} ₭</p>,
+    cell: (row) => (
+      <p>{formatPrice(row.cashback) ? formatPrice(row.cashback) : "ບໍ່ມີ"} ₭</p>
+    ),
     width: "180px",
   },
+];
+
+const header = [
+  "ລະຫັດຜູ້ໃຊ້",
+  "ຊື່ທະນາຄານ",
+  "ຊື່ບັນຊີ",
+  "ເລກບັນຊີ",
+  "ຊື່",
+  "ນາມສະກຸນ",
+  "ຕຳແນ່ງ",
+  "ລູກທີມ",
+  "ຄະແນນ PV",
+  "ຄະແນນທີມ PV",
+  "ໄດ້ຮັບເງິນຄືນ",
+  "ໂບນັດ PV",
+  "ຄ່າແນະນຳ",
+  "ໂບນັດທີມ PV",
+  "ລວມໂບນັດ",
 ];
 const HistoryTransfer = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -167,6 +198,8 @@ const HistoryTransfer = () => {
   const [valueInput, setValueInput] = useState("");
   const [toggleCleared, setToggleCleared] = useState(false);
   const navigate = useNavigate();
+
+  console.log("SelectRow", selectRows);
 
   // load all success transfer
   useEffect(() => {
@@ -430,14 +463,20 @@ const HistoryTransfer = () => {
                   Import ຂໍ້ມູນ
                 </button> */}
 
-                <button
+                {/* <button
                   type="button"
                   // disabled={selectRows.length ? false : true}
                   onClick={handleExport}
                   class="btn"
                 >
                   Export ທັງໝົດທີ່ເລຶອກ
-                </button>
+                </button> */}
+                <ExportToExcelBonus
+                  setSelectableRow={setSelectRows}
+                  selectableRow={selectRows}
+                  header={header}
+                  setToggleCleared={setToggleCleared}
+                />
               </div>
             </div>
           </div>
