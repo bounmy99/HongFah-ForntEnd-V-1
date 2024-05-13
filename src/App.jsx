@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Swal from "sweetalert2";
 import "./App.css";
-
-import { GetAllNoti } from "./functions/AdminNoti";
 
 // ==================== protectRoutes =====================
 import RouteProtect from "./protectRoute/RouteProtect";
 //==================== Layout ======================
 import Headers from "./layouts/Headers";
 import SideBar from "./layouts/SideBar";
-import SideBarUser from "./layouts/SideBarUser";
 
 //==================== Pages  =====================
 import LoginPages from "./pages/LoginPages";

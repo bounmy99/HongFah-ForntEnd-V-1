@@ -19,25 +19,27 @@ const toDataURL = (url) => {
   return promise;
 };
 
- const ExportToExcelBonus = ({ selectableRow, header, setToggleCleared,setSelectableRow }) => {
-
-  console.log("data Export",selectableRow)
+const ExportToExcelBonus = ({
+  selectableRow,
+  header,
+  setToggleCleared,
+  setSelectableRow,
+}) => {
+  // console.log("data Export",selectableRow)
   // console.log("heaer Export",header)
 
   // ======== find max value ==================
-    // ======== find max value ==================
-    let BunusTeamePV = selectableRow?.map((point)=>point.bunusTeamePV);
-    let MaxBunusTeamePV = Math.max.apply(null,BunusTeamePV)
-  
-    let PV = selectableRow?.map((point)=>point.PV);
-    let MaxPV = Math.max.apply(null,PV)
-  
-    let TotalBonus = selectableRow?.map((point)=>point.totalBonus);
-    let MaxTotalBonus = Math.max.apply(null,TotalBonus)
+  // ======== find max value ==================
+  let BunusTeamePV = selectableRow?.map((point) => point.bunusTeamePV);
+  let MaxBunusTeamePV = Math.max.apply(null, BunusTeamePV);
 
+  let PV = selectableRow?.map((point) => point.PV);
+  let MaxPV = Math.max.apply(null, PV);
+
+  let TotalBonus = selectableRow?.map((point) => point.totalBonus);
+  let MaxTotalBonus = Math.max.apply(null, TotalBonus);
 
   const exportExcelFile = () => {
-
     if (selectableRow.length === 0) {
       const Toast = Swal.mixin({
         toast: true,
@@ -56,28 +58,28 @@ const toDataURL = (url) => {
       });
       return;
     }
-    setSelectableRow([])
+    setSelectableRow([]);
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
 
     // sheet.mergeCells("A1:B1");
     // sheet.mergeCells("C1:D1");
     // sheet.mergeCells("E1:G1");
-    sheet.getCell("A2").value = header[0]
-    sheet.getCell("B2").value = header[1]
-    sheet.getCell("C2").value = header[2]
-    sheet.getCell("D2").value = header[3]
-    sheet.getCell("E2").value = header[4]
-    sheet.getCell("F2").value = header[5]
-    sheet.getCell("G2").value = header[6]
-    sheet.getCell("H2").value = header[7]
-    sheet.getCell("I2").value = header[8]
-    sheet.getCell("J2").value = header[9]
-    sheet.getCell("K2").value = header[10]
-    sheet.getCell("L2").value = header[11]
-    sheet.getCell("M2").value = header[12]
-    sheet.getCell("N2").value = header[13]
-    sheet.getCell("O2").value = header[14]
+    sheet.getCell("A2").value = header[0];
+    sheet.getCell("B2").value = header[1];
+    sheet.getCell("C2").value = header[2];
+    sheet.getCell("D2").value = header[3];
+    sheet.getCell("E2").value = header[4];
+    sheet.getCell("F2").value = header[5];
+    sheet.getCell("G2").value = header[6];
+    sheet.getCell("H2").value = header[7];
+    sheet.getCell("I2").value = header[8];
+    sheet.getCell("J2").value = header[9];
+    sheet.getCell("K2").value = header[10];
+    sheet.getCell("L2").value = header[11];
+    sheet.getCell("M2").value = header[12];
+    sheet.getCell("N2").value = header[13];
+    sheet.getCell("O2").value = header[14];
 
     // sheet.getRow(2).commit();
     // merge by start row, start column, end row, end column
@@ -92,16 +94,21 @@ const toDataURL = (url) => {
 
     for (var i = 1; i < header.length; i++) {
       sheet.getRow(2).getCell(i).border = {
-        top: { style: "thick" },
-        left: { style: "thick" },
-        bottom: { style: "thick" },
-        right: { style: "thick" },
+        top: { style: "thin", color: { argb: "9c9997" } },
+        left: { style: "thin", color: { argb: "9c9997" } },
+        bottom: { style: "thin", color: { argb: "9c9997" } },
+        right: { style: "thin", color: { argb: "9c9997" } },
       };
 
       sheet.getRow(2).getCell(i).fill = {
-        type: 'pattern',
-        pattern:'',
-        fgColor:{argb:'00A5E8'}
+        type: "gradient",
+        gradient: "angle",
+        degree: 0,
+        stops: [
+          { position: 0, color: { argb: "00A5E8" } },
+          { position: 0.5, color: { argb: "00A5E8" } },
+          { position: 1, color: { argb: "00A5E8" } },
+        ],
       };
     }
 
@@ -229,7 +236,7 @@ const toDataURL = (url) => {
       const MaxBunusTeamePVCol = sheet.getColumn(10);
       const MaxTotalBonusCol = sheet.getColumn(6);
 
-  // ============== qty ==================    
+      // ============== qty ==================
       PVCol.eachCell((cell) => {
         const cellValue = sheet.getCell(cell?.address).value;
 
@@ -241,8 +248,8 @@ const toDataURL = (url) => {
           };
         }
       });
-  // ================ point total ===============
-  MaxBunusTeamePVCol.eachCell((cell) => {
+      // ================ point total ===============
+      MaxBunusTeamePVCol.eachCell((cell) => {
         const cellValue = sheet.getCell(cell?.address).value;
 
         if (cellValue > 1000 && cellValue <= MaxBunusTeamePV) {
@@ -253,8 +260,8 @@ const toDataURL = (url) => {
           };
         }
       });
-  // ================ point ===============
-  MaxTotalBonusCol.eachCell((cell) => {
+      // ================ point ===============
+      MaxTotalBonusCol.eachCell((cell) => {
         const cellValue = sheet.getCell(cell?.address).value;
 
         if (cellValue > 1000 && cellValue <= MaxTotalBonus) {
@@ -283,13 +290,15 @@ const toDataURL = (url) => {
       });
     });
 
-    setToggleCleared(true)
+    setToggleCleared(true);
   };
 
   return (
     <>
       <div>
-        <button className="btn" onClick={exportExcelFile}>Export</button>
+        <button className="btn" onClick={exportExcelFile}>
+          Export
+        </button>
       </div>
     </>
   );

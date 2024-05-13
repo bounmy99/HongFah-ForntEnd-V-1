@@ -63,23 +63,23 @@ const ExportToExcelAdmin = ({ data, header, setToggleCleared,setDataExport }) =>
     // sheet.mergeCells("A1:B1");
     // sheet.mergeCells("C1:D1");
     // sheet.mergeCells("E1:G1");
-    sheet.getCell("A2").value = header[1].CodeSale;
-    sheet.getCell("B2").value = header[2].nameSale;
-    sheet.getCell("C2").value = header[3].c_code;
-    sheet.getCell("D2").value = header[4].c_name;
-    sheet.getCell("E2").value = header[5].p_name;
-    sheet.getCell("F2").value = header[6].p_price;
-    sheet.getCell("G2").value = header[7].p_cashBack;
-    sheet.getCell("H2").value = header[8].p_point;
-    sheet.getCell("I2").value = header[9].p_qty;
-    sheet.getCell("J2").value = header[10].t_qty;
-    sheet.getCell("K2").value = header[11].t_price;
-    sheet.getCell("L2").value = header[12].t_cashBack;
-    sheet.getCell("M2").value = header[13].t_point;
-    sheet.getCell("N2").value = header[14].paymentType;
-    sheet.getCell("O2").value = header[15].status;
-    sheet.getCell("P2").value = header[16].createDate;
-    // sheet.getRow(2).commit();
+    sheet.getCell("A2").value = header[1];
+    sheet.getCell("B2").value = header[2];
+    sheet.getCell("C2").value = header[3];
+    sheet.getCell("D2").value = header[4];
+    sheet.getCell("E2").value = header[5];
+    sheet.getCell("F2").value = header[6];
+    sheet.getCell("G2").value = header[7];
+    sheet.getCell("H2").value = header[8];
+    sheet.getCell("I2").value = header[9];
+    sheet.getCell("J2").value = header[10];
+    sheet.getCell("K2").value = header[11];
+    sheet.getCell("L2").value = header[12];
+    sheet.getCell("M2").value = header[13];
+    sheet.getCell("N2").value = header[14];
+    sheet.getCell("O2").value = header[15];
+    sheet.getCell("P2").value = header[16];
+    sheet.getRow(2).commit();
     // merge by start row, start column, end row, end column
     sheet.properties.defaultRowHeight = 80;
     color: {
@@ -92,16 +92,21 @@ const ExportToExcelAdmin = ({ data, header, setToggleCleared,setDataExport }) =>
 
     for (var i = 1; i < header.length; i++) {
       sheet.getRow(2).getCell(i).border = {
-        top: { style: "thick" },
-        left: { style: "thick" },
-        bottom: { style: "thick" },
-        right: { style: "thick" },
+        top: { style: "thin", color: { argb: "9c9997" } },
+        left: { style: "thin", color: { argb: "9c9997" } },
+        bottom: { style: "thin", color: { argb: "9c9997" } },
+        right: { style: "thin", color: { argb: "9c9997" } },
       };
 
       sheet.getRow(2).getCell(i).fill = {
-        type: 'pattern',
-        pattern:'',
-        fgColor:{argb:'00A5E8'}
+        type: "gradient",
+        gradient: "angle",
+        degree: 0,
+        stops: [
+          { position: 0, color: { argb: "00A5E8" } },
+          { position: 0.5, color: { argb: "00A5E8" } },
+          { position: 1, color: { argb: "00A5E8" } },
+        ],
       };
     }
 
@@ -183,7 +188,7 @@ const ExportToExcelAdmin = ({ data, header, setToggleCleared,setDataExport }) =>
       },
       {
         // header: "......",
-        key: "createdAdd",
+        key: "createdAt",
         width: 12,
       },
     ];
