@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation,useNavigate } from 'react-router-dom';
 import DiagramEm from './DiagramEm';
-import { Empty } from 'antd'
+import Swal from 'sweetalert2';
 
 import Diamond from "../../../assets/image/position/diamond.jpg"
 import BlackDiamond from "../../../assets/image/position/BKD-removebg-preview.jpg"
@@ -147,12 +147,12 @@ const ListLineWork = () => {
   // load all line work
   useEffect(() => {
     setLoading(true)
-    GetLineWorkTable(users.token,"").then(res => {
+     GetLineWorkTable(users.token,"").then(res => {
       setLoading(false)
       setEmployee(res.data.data)
     }).catch(err => {
       setLoading(false)
-      setLineWorkEmpty(err.response.data.message);
+      setLineWorkEmpty("ບໍ່ມີຂໍ້ມູນ");
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -166,7 +166,7 @@ const ListLineWork = () => {
       });
       Toast.fire({
         icon: "warning",
-        title: err.response.data.message,
+        title: "ບໍ່ມີຂໍ້ມູນ",
       });
       
       if (err.response.data.message === "unauthorized") {
@@ -198,7 +198,7 @@ const ListLineWork = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         
         if (err.response.data.message === "unauthorized") {
@@ -215,19 +215,21 @@ const ListLineWork = () => {
       setChang(state.key)
     }
   }, []);
+
+
 // set value search
   const handleChangeSearch = (e)=>{
     setValueSearch(e.target.value)
   }
-//  function search
-  const handleClickSearch = ()=>{
+
+  useEffect(()=>{
     setLoading(true)
     GetLineWorkTable(users.token,valueSearch).then(res => {
       setLoading(false)
       setEmployee(res.data.data)
     }).catch(err => {
       setLoading(false)
-      setLineWorkEmpty(err.response.data.message);
+      setLineWorkEmpty("ບໍ່ມີຂໍ້ມູນ");
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -241,7 +243,42 @@ const ListLineWork = () => {
       });
       Toast.fire({
         icon: "warning",
-        title: err.response.data.message,
+        title: "ບໍ່ມີຂໍ້ມູນ",
+      });
+      
+      if (err.response.data.message === "unauthorized") {
+        dispatch({
+          type: "USER_LOGOUT",
+          payload: null,
+        });
+        navigate("/");
+      }
+    })
+  },[valueSearch])
+
+//  function search
+  const handleClickSearch = ()=>{
+    setLoading(true)
+    GetLineWorkTable(users.token,valueSearch).then(res => {
+      setLoading(false)
+      setEmployee(res.data.data)
+    }).catch(err => {
+      setLoading(false)
+      setLineWorkEmpty("ບໍ່ມີຂໍ້ມູນ");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "ບໍ່ມີຂໍ້ມູນ",
       });
       
       if (err.response.data.message === "unauthorized") {
@@ -357,6 +394,7 @@ const ListLineWork = () => {
                 <button type="button" class={`btn ${change === 2 ? 'active' : ''}`} onClick={() => setChang(2)}>ສະແດງຕາມແຜນຜັງ</button>
               </div>
             </div>
+            { change === 2 ? "" :  
             <div className="search">
               <div className="icon-filter">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
@@ -379,11 +417,12 @@ const ListLineWork = () => {
                 <button type="button" onClick={handleClickSearch}>ຄົ້ນຫາ</button>
               </div>
             </div>
+            }
           </div>
 
           {
-            lineworkEmpty ?
-              <EmptyContent Messages={lineworkEmpty} />
+            !employee ?
+              <EmptyContent Messages={lineworkEmpty ? lineworkEmpty : "ບໍ່ມີຂໍ້ມູນ"} />
               :
               <>
                 {loading ?
@@ -391,8 +430,6 @@ const ListLineWork = () => {
                   :
                   <>
                     {change === 1 &&
-
-
                       <DataTable
                         columns={columns}
                         data={employee}

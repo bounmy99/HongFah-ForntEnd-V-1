@@ -15,8 +15,8 @@ const DetailSuccesTrip = () => {
   const [member, setMember] = useState([]);
   const [preview, setPreview] = useState([]);
 
-  console.log("preview", preview);
-  console.log("detail", detail);
+  // console.log("preview", preview);
+  // console.log("detail", detail);
 
   // function load data
   useEffect(() => {
@@ -39,7 +39,7 @@ const DetailSuccesTrip = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

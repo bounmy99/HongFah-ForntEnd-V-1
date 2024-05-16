@@ -18,6 +18,9 @@ const toDataURL = (url) => {
 };
 
 const ExportExcel = ({ bestSell }) => {
+
+  console.log(bestSell)
+
   const exportExcelFile = () => {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
@@ -46,16 +49,21 @@ const ExportExcel = ({ bestSell }) => {
 
     for (var i = 1; i < 9; i++) {
       sheet.getRow(2).getCell(i).border = {
-        top: { style: "thick" },
-        left: { style: "thick" },
-        bottom: { style: "thick" },
-        right: { style: "thick" },
+        top: { style: "thin", color: { argb: "9c9997" } },
+        left: { style: "thin", color: { argb: "9c9997" } },
+        bottom: { style: "thin", color: { argb: "9c9997" } },
+        right: { style: "thin", color: { argb: "9c9997" } },
       };
 
       sheet.getRow(2).getCell(i).fill = {
-        type: 'pattern',
-        pattern:'darkVertical',
-        fgColor:{argb:'00A5E8'}
+        type: "gradient",
+        gradient: "angle",
+        degree: 0,
+        stops: [
+          { position: 0, color: { argb: "00A5E8" } },
+          { position: 0.5, color: { argb: "00A5E8" } },
+          { position: 1, color: { argb: "00A5E8" } },
+        ],
       };
     }
 
@@ -63,7 +71,7 @@ const ExportExcel = ({ bestSell }) => {
       {
         // header: "ProductCode",
         key: "productCode",
-        width: 10,
+        width: 15,
       },
       {
         // header: "Name",
@@ -88,17 +96,17 @@ const ExportExcel = ({ bestSell }) => {
       {
         // header: "SalsePrice",
         key: "salsePrice",
-        width: 10,
+        width: 15,
       },
       {
         // header: "SalseAmount",
         key: "salseAmount",
-        width: 10,
+        width: 15,
       },
       {
         // header: "Images",
         key: "images",
-        width: 12,
+        width: 15,
       },
     ];
 
@@ -170,7 +178,7 @@ const ExportExcel = ({ bestSell }) => {
   return (
     <>
       <div className="btn-export-excel">
-        <button className="btn-export" onClick={exportExcelFile}>Export Excel</button>
+        <button className="btn-export" onClick={exportExcelFile}>Export</button>
       </div>
     </>
   );

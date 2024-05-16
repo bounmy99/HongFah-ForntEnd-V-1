@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Empty, Image } from "antd";
 import icons from "../../../assets/image/icons-add.png";
@@ -41,12 +41,17 @@ const ListProducts = () => {
 
   const [previewImages, setPreviewImages] = useState([]);
 
-  const ProductPrice = [15000, 30000, 50000, 100000];
+  const ProductPrice = [15000, 30000, 50000, 100000,500000];
 
   // ===========pagination antd =============
-  const indexOfLastPages = pages * pageSize;
-  const indexOfFirstPages = indexOfLastPages - pageSize;
-  const currentPages = product.slice(indexOfFirstPages, indexOfLastPages);
+
+
+    const indexOfLastPages = pages * pageSize;
+    const indexOfFirstPages = indexOfLastPages - pageSize;
+    const currentPages = product ?  product.slice(indexOfFirstPages, indexOfLastPages) : null ;
+
+    
+  
 
   // console.log("currentPages",currentPages)
   // ================ end pagination antd ===========
@@ -56,10 +61,6 @@ const ListProducts = () => {
     loadAllProductType();
     setPages(1);
   }, []);
-
-
-
-
 
   // load all products
   const LoadData = () => {
@@ -86,7 +87,7 @@ const ListProducts = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -170,7 +171,7 @@ const ListProducts = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setProductsEmpty(err.response.data.message);
+        setProductsEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -184,7 +185,7 @@ const ListProducts = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -207,7 +208,7 @@ const ListProducts = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setProductsEmpty(err.response.data.message);
+        setProductsEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -221,7 +222,7 @@ const ListProducts = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -271,7 +272,7 @@ const ListProducts = () => {
                 {isActiveDropdownType && (
                   <ul className="options-type">
                     {productTypes.map((item, idx) => (
-                      <div className="option-type">
+                      <div className="option-type" key={idx}>
                         <option
                           className="option-type-text"
                           value={item._id}
@@ -305,7 +306,7 @@ const ListProducts = () => {
                         key={idx}
                         onClick={handleClickPrice}
                       >
-                        <span className="option-price-text ">{item}</span>
+                        <span className="option-price-text ">{formatPrice(item)}</span>
                       </li>
                     ))}
                   </ul>
@@ -332,7 +333,7 @@ const ListProducts = () => {
               </div>
             </div>
           </div>
-          {productsEmpty ? (
+          {!currentPages ? (
             <div className="empty-card">
               <Empty
                 image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -437,7 +438,7 @@ const ListProducts = () => {
                 <img src={icons} alt="" />
               </Link>
             </div>
-            {product.length >= 25 && (
+            {product?.length >= 25 && (
               <div className="pagination">
                 <PaginationComponent
                   count={count}

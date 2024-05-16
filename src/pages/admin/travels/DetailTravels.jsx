@@ -61,7 +61,7 @@ const DetailTravels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -81,7 +81,7 @@ const DetailTravels = () => {
     });
   };
 
-  console.log("memberTrip",member)
+  // console.log("memberTrip",member)
 
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
@@ -131,7 +131,7 @@ const DetailTravels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         setOpen(false);
         setUserCode("");
@@ -189,7 +189,7 @@ const DetailTravels = () => {
     const formData = new FormData(e.currentTarget);
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-    console.log("Data from Input", Data);
+    // console.log("Data from Input", Data);
     AddmemberTrip(users.token, Data)
       .then((res) => {
         setOpen(false);
@@ -213,7 +213,7 @@ const DetailTravels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ສາມາດເພີ່ມສະມາຊິກໄດ້",
         });
 
         if (err.response.data.message === "unauthorized") {

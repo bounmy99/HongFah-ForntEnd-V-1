@@ -204,7 +204,7 @@ const HistoryProduct = () => {
         setSuccessOrders(res.data.data);
       }).catch((err) => {
         setLoading(false);
-        setSuccessOrdersEmpty(err.response.data.message);
+        setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
 
         const Toast = Swal.mixin({
           toast: true,
@@ -219,7 +219,7 @@ const HistoryProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

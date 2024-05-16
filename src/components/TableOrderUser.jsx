@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import Loadding from "./Loadding";
 import DatePicker from "react-datepicker";
 import { writeFileXLSX, utils } from "xlsx";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { GetAllOrders } from "../functions/Orders";
 import EmptyContent from "./EmptyContent";
 import ExportToExcel from "./ExportToExcel";
@@ -29,7 +29,6 @@ const TableOrderUser = ({
   const [startDate, setStartDate] = useState();
   const [endDate, setEndtDate] = useState();
   const [valueInput, setValueInput] = useState();
-  const { users } = useSelector((state) => ({ ...state }));
   const [dataExport, setDataExport] = useState();
   const [toggleCleared, setToggleCleared] = useState(false);
   const dispatch = useDispatch();
@@ -43,15 +42,9 @@ const TableOrderUser = ({
   const handleSearch = () => {
     GetAllOrders(getData.token, startDate, endDate, valueInput, Status)
       .then((res) => {
-        if (setOrders) {
-          setOrders(res.data.data);
-        }
-        if (setCancelOrder) {
-          setCancelOrder(res.data.data);
-        }
-        if (setSuccessOrders) {
-          setSuccessOrders(res.data.data);
-        }
+        setOrders(res.data.data);
+        setCancelOrder(res.data.data);
+        setSuccessOrders(res.data.data);
       })
       .catch((err) => {
         if (setEmptyOrder) {
@@ -88,6 +81,56 @@ const TableOrderUser = ({
         }
       });
   };
+
+  useEffect(() => {
+    GetAllOrders(getData.token, startDate, endDate, valueInput, Status)
+      .then((res) => {
+        if (setOrders) {
+          setOrders(res.data.data);
+        }
+        if (setCancelOrder) {
+          setCancelOrder(res.data.data);
+        }
+        if (setSuccessOrders) {
+          setSuccessOrders(res.data.data);
+          console.log("fetch data search",res.data.data)
+        }
+      })
+      .catch((err) => {
+        if (setEmptyOrder) {
+          setEmptyOrder(err.response.data.message);
+        }
+        if (setCancelOrderEmpty) {
+          setCancelOrderEmpty(err.response.data.message);
+        }
+        if (setSuccessOrdersEmpty) {
+          setSuccessOrdersEmpty(err.response.data.message);
+        }
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  }, [startDate, endDate, valueInput]);
 
   const header = [
     "ລະຫັດໄອດີ",
@@ -211,7 +254,7 @@ const TableOrderUser = ({
                   cy="7.27273"
                   r="6.27273"
                   stroke="#00A5E8"
-                  stroke-width="2"
+                  strokeWidth="2"
                 />
                 <line
                   x1="14.5858"
@@ -219,8 +262,8 @@ const TableOrderUser = ({
                   x2="11.6364"
                   y2="13.0506"
                   stroke="#00A5E8"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
               </svg>
             </div>
@@ -252,7 +295,7 @@ const TableOrderUser = ({
             </div>
           </div>
         </div>
-        {orderEmpty || successOrdersEmpty || cancelOrderEmpty ? (
+        {!data ? (
           <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
         ) : loading ? (
           <Loadding paragraph={10} />

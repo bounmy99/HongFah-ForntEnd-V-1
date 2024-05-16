@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Spin } from "antd";
-import { io } from "socket.io-client";
+
 
 
 // image
@@ -19,7 +19,6 @@ const LoginPages = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { users } = useSelector((state) => ({ ...state }));
   const [value, setValue] = useState({
     userCode: "A27614",
     password: "12345678",

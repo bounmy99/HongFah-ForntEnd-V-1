@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import imagePreview from "../../../assets/avatar/image-avatar.jpeg";
-import { GetOneLineWork, GetRootLineWork } from "../../../functions/LineWork";
+import { GetRootLineWork } from "../../../functions/LineWork";
 import Diagram from "../../../components/Diagram";
 import { Spin } from "antd";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 const DiagramEm = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [levelOne, setLavelOne] = useState([]);
   const [linework, setLinework] = useState([]);
-  const [detail, setDetail] = useState([]);
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState([]);
-  const [show, setShow] = useState(false);
 
   useEffect(() => {
     loadingGetRoot();
@@ -22,6 +23,7 @@ const DiagramEm = () => {
     setLoading(true);
     GetRootLineWork(users.token)
       .then((res) => {
+        console.log("Diagram",res.data)
         setLoading(false);
         setPosition(res.data.data.positionCount);
         setLinework(res.data.data.tree);
@@ -42,7 +44,7 @@ const DiagramEm = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -54,42 +56,7 @@ const DiagramEm = () => {
         }
       });
   };
-  // show detail right
-  const handleShow = () => {
-    setShow((show) => !show);
-    setLoading(true);
-    GetOneLineWork(users.token, linework._id)
-      .then((res) => {
-        setLoading(false);
-        setDetail(res.data.data);
-      })
-      .catch((err) => {
-        setLoading(false);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
-        Toast.fire({
-          icon: "warning",
-          title: err.response.data.message,
-        });
 
-        if (err.response.data.message === "unauthorized") {
-          dispatch({
-            type: "USER_LOGOUT",
-            payload: null,
-          });
-          navigate("/");
-        }
-      });
-  };
 
   return (
     <div className="plan-card-emp genealogy-scroll">
@@ -97,68 +64,8 @@ const DiagramEm = () => {
         {loading ? (
           ""
         ) : (
-          <Diagram linework={linework} levelOne={levelOne} show={show} imagePreview={imagePreview} handleShow={handleShow} />
+          <Diagram linework={linework} levelOne={levelOne}  imagePreview={imagePreview} />
         )}
-        {loading
-          ? ""
-          : show && (
-              <>
-                <div className="plan-card-emp-sub-1">
-                  <h5>ລະຫັດສະມາຊິກ</h5>
-                  <div className="content-sub">
-                    <div className="sub-group">
-                      <span>ຊື່ທຸລະກິດ :</span>
-                      <span>HONGFAH COMPANY</span>
-                    </div>
-                    <div className="sub-group">
-                      <div>ຜູ້ອັບໄລ :</div>
-                      <div>
-                        <p>{detail.user_id && detail.user_id.userCode}</p>
-                        <p>
-                          {detail.user_id &&
-                            `${detail.user_id.firstName} ${detail.user_id.lastName}`}
-                        </p>
-                      </div>
-                    </div>
-                    {detail.userLineUp && (
-                      <div className="sub-group">
-                        <div>ຜູ້ແນະນຳ :</div>
-                        <div>
-                          <p>
-                            {detail.userLineUp && detail.userLineUp.userCode}
-                          </p>
-                          <p>
-                            {detail.userLineUp &&
-                              `${detail.userLineUp.firstName} ${detail.userLineUp.lastName}`}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="sub-group">
-                      <span>ຕຳແໜ່ງ :</span>
-                      <span>Business</span>
-                    </div>
-                    <div className="sub-group">
-                      <span>Point ສະສົມສ່ວນໂຕ :</span>
-                      <span>{detail.pvTotal}</span>
-                    </div>
-                    <div className="sub-group">
-                      <span>ຮັກສາຍອດເດຶອນປັດຈຸບັນ :</span>
-                      <span>
-                        {detail.thisMonth && detail.thisMonth.PV_Amount} PV
-                      </span>
-                    </div>
-                    <div className="sub-group">
-                      <span>ຮັກສາຍອດເດຶອນແລ້ວ :</span>
-                      <span>
-                        {detail.lastMonth && detail.lastMonth.PV_Amount} PV
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
       </Spin>
     </div>
   );

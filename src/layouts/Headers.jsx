@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Tooltip, notification } from "antd";
 import { Badge, Drawer } from "antd";
@@ -10,7 +10,6 @@ import {
   CloseOutlined,
   DollarOutlined,
   ProfileOutlined,
-  UserAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import Swal from "sweetalert2";
@@ -21,7 +20,7 @@ import UserImage from "../assets/image/profile-1.jpg";
 import Breadcrumbs from "../components/Breadcrumbs";
 import imageWarning from "../assets/image/warning.png";
 import EmptyContent from "../components/EmptyContent";
-import { formatPrice }from "../functions/FormatPrices"
+import { formatPrice } from "../functions/FormatPrices";
 import { ReadedNoti, GetOneNoti, GetAllNoti } from "../functions/AdminNoti";
 
 const Headers = () => {
@@ -31,34 +30,31 @@ const Headers = () => {
   const [openNoti, setOpenNoti] = useState(false);
   const [dataNotiOne, setDataNotiOneOne] = useState([]);
   const [notifications, setNotifications] = useState(null);
-  const [notificationsData, setNotificationsData] = useState(null);
 
-
-  const CallNotification = () =>{
+  const CallNotification = () => {
     GetAllNoti(users?.token)
       .then((res) => {
-        setNotificationsData(res.data.data);
         dispatch({
           type: "NEW_USER",
           payload: res.data.data,
         });
       })
       .catch((err) => {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
-        Toast.fire({
-          icon: "warning",
-          title: err.response.data.message,
-        });
+        // const Toast = Swal.mixin({
+        //   toast: true,
+        //   position: "top-end",
+        //   showConfirmButton: false,
+        //   timer: 3000,
+        //   timerProgressBar: true,
+        //   didOpen: (toast) => {
+        //     toast.onmouseenter = Swal.stopTimer;
+        //     toast.onmouseleave = Swal.resumeTimer;
+        //   },
+        // });
+        // Toast.fire({
+        //   icon: "warning",
+        //   title: "ບໍ່ມີຂໍ້ມູນການແຈ້ງເຕືອນ",
+        // });
 
         if (err.response.data.message === "unauthorized") {
           dispatch({
@@ -68,8 +64,7 @@ const Headers = () => {
           navigate("/");
         }
       });
-  }
-
+  };
 
   // ====================== connect to socket io start =========================
   const config = {
@@ -85,8 +80,8 @@ const Headers = () => {
   socket.emit("join_room_admin");
 
   socket.on("notification", (data) => {
-       setNotifications({...notifications, data});
-    });
+    setNotifications({ ...notifications, data });
+  });
 
   // ============ connect socket io end =============
 
@@ -132,7 +127,7 @@ const Headers = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -144,7 +139,9 @@ const Headers = () => {
         }
       });
     ReadedNoti(users.token, { notiID: id }).then((res) => {
-      CallNotification();
+      if (res) {
+        CallNotification();
+      }
     });
   };
   const onClose = () => {
@@ -161,19 +158,25 @@ const Headers = () => {
   const BonusDirection = (notiID) => {
     navigate("/Bonus", { state: { key: 1 } });
     ReadedNoti(users.token, { notiID: notiID }).then((res) => {
-      CallNotification();
+      if (res) {
+        CallNotification();
+      }
     });
   };
   const UserDirection = (notiID) => {
     navigate("/users", { state: { key: 2 } });
     ReadedNoti(users.token, { notiID: notiID }).then((res) => {
-      CallNotification();
+      if (res) {
+        CallNotification();
+      }
     });
   };
   const OrdersDirection = (notiID) => {
     navigate("/homeOrders", { state: { key: 1 } });
     ReadedNoti(users.token, { notiID: notiID }).then((res) => {
-      CallNotification();
+      if (res) {
+        CallNotification();
+      }
     });
   };
 
@@ -378,7 +381,9 @@ const Headers = () => {
             <div>ປະເພດ : {dataNotiOne.type ? dataNotiOne.type : "ບໍ່ມີ"}</div>
             <div>
               ວັນທີສ້າງ :{" "}
-              {dataNotiOne.createdAt ? moment(dataNotiOne.createdAt).format("DD-MM-YYYY") : "ບໍ່ມີ"}
+              {dataNotiOne.createdAt
+                ? moment(dataNotiOne.createdAt).format("DD-MM-YYYY")
+                : "ບໍ່ມີ"}
             </div>
           </div>
           <div className="detail-noti-title">

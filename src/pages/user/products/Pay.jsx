@@ -47,7 +47,7 @@ const Pay = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -171,7 +171,7 @@ const Pay = () => {
             });
             Toast.fire({
               icon: "success",
-              title: res.data.message,
+              title: "ສ້າງອໍເດີສຳເລັດ",
             });
 
             dispatch({
@@ -198,7 +198,7 @@ const Pay = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ສ້າງອໍເດີ້ບໍ່ສຳເລັດ",
             });
             setLoading(true);
           });

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { Empty,Spin } from "antd";
+import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GetAllMaintain } from "../../../functions/Bonus";
@@ -164,7 +164,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
   const [emptyData, setEmptyData] = useState("");
   const [loading, setLoading] = useState(false);
 
-  console.log("toggleCleared",toggleCleared)
+  // console.log("toggleCleared",toggleCleared)
 
   useEffect(() => {
     loadData();
@@ -179,7 +179,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
       })
       .catch((err) => {
         setLoading(false);
-        setEmptyData(err.response.data.message);
+        setEmptyData("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -193,7 +193,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         
         if (err.response.data.message === "unauthorized") {
@@ -216,7 +216,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
       })
       .catch((err) => {
         setLoading(false);
-        setEmptyData(err.response.data.message);
+        setEmptyData("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -230,7 +230,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         
         if (err.response.data.message === "unauthorized") {
@@ -245,7 +245,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
 
   return (
     <div className="maintain-table">
-      {emptyData ? (
+      {!maintain ? (
         <div className="empty-card">
           <Empty
             image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -254,7 +254,7 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
             }}
             description={
               <span>
-                <a>{emptyData}</a>
+                <a>{emptyData ? emptyData : "ບໍ່ມີຂໍ້ມູນ"}</a>
               </span>
             }
           ></Empty>

@@ -7,7 +7,6 @@ import { formatPrice } from "../../../functions/FormatPrices"
 import moment from 'moment';
 const CancelOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
-  let getData = JSON.parse(localStorage.getItem("data"));
   const navigate = useNavigate();
   const [cancelOrder, setCancelOrder] = useState([]);
   const [cancelOrderEmpty, setCancelOrderEmpty] = useState("");
@@ -137,7 +136,7 @@ const CancelOrders = () => {
     GetAllOrders(users.token, "","","","cancel").then(res => {
       setCancelOrder(res.data.data);
     }).catch(err => {
-      setCancelOrderEmpty(err.response.data.message);
+      setCancelOrderEmpty("ບໍ່ມີຂໍ້ມູນ");
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -151,7 +150,7 @@ const CancelOrders = () => {
       });
       Toast.fire({
         icon: "warning",
-        title: err.response.data.message,
+        title: "ບໍ່ມີຂໍ້ມູນ",
       });
       
       if (err.response.data.message === "unauthorized") {

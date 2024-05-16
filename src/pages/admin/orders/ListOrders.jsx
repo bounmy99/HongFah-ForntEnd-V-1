@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -159,7 +159,7 @@ const ListOrders = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setEmptyOrder(err.response.data.message);
+        setEmptyOrder("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -173,7 +173,7 @@ const ListOrders = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

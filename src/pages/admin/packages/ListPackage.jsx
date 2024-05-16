@@ -49,7 +49,7 @@ const ListPackage = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setPackageEmpty(err.response.data.message);
+        setPackageEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -63,7 +63,7 @@ const ListPackage = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -102,18 +102,28 @@ const ListPackage = () => {
     const isEmpty = values.includes("");
 
     if (isEmpty) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
         showConfirmButton: false,
-        timer: 3500,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
       });
-      setOpenModal(false);
+      Toast.fire({
+        icon: "warning",
+        title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+      });
+      // setOpenModal(false);
+      setLoading(false);
+      setLoadingSave(false)
       return;
     }
     const Data = Object.fromEntries(formData);
-    console.log("Data Modal Form Add", Data);
+    // console.log("Data Modal Form Add", Data);
 
     // return
 
@@ -122,7 +132,7 @@ const ListPackage = () => {
       ? // update package
         UpdatePackage(users.token, Data, packageEdit._id)
           .then((res) => {
-            console.log("Data Edit From Database", res.data);
+            // console.log("Data Edit From Database", res.data);
             if (res.status === 200) {
               const Toast = Swal.mixin({
                 toast: true,
@@ -160,7 +170,7 @@ const ListPackage = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດອັບເດດແພັກເກດໄດ້",
             });
 
             if (err.response.data.message === "unauthorized") {
@@ -213,7 +223,7 @@ const ListPackage = () => {
               });
               Toast.fire({
                 icon: "warning",
-                title: err.response.data.message,
+                title: "ບໍ່ສາມາດເພີ່ມແພັກເກດໄດ້",
               });
               setOpenModal(false);
             }
@@ -233,7 +243,7 @@ const ListPackage = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດເພີ່ມແພັກເກດໄດ້",
             });
 
             if (err.response.data.message === "unauthorized") {
@@ -288,6 +298,8 @@ const ListPackage = () => {
   const handleModalCancel = () => {
     setPackageEdit([]);
     setOpenModal(false);
+    setLoading(false);
+    setLoadingSave(false);
     // window.location.reload();
   };
 

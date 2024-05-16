@@ -41,7 +41,7 @@ const EditUser = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -78,7 +78,7 @@ const EditUser = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -166,7 +166,7 @@ const EditUser = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ອັບເດດຂໍ້ມູນບໍ່ໄດ້",
         });
 
         if (err.response.data.message === "unauthorized") {

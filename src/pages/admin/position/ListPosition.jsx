@@ -64,7 +64,7 @@ const ListPosition = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setPositionEmpty(err.response.data.message);
+        setPositionEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -108,8 +108,9 @@ const ListPosition = () => {
     const values = [...formData.values()];
     const isEmpty = values.includes("");
     if (isEmpty) {
-      setOpenModal(false);
-
+      // setOpenModal(false);
+      setLoadSave(false);
+      setLoading(false)
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -169,7 +170,7 @@ const ListPosition = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດອັບເດດແໜ່ງໄດ້",
             });
             
             if (err.response.data.message === "unauthorized") {
@@ -219,7 +220,7 @@ const ListPosition = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດສ້າງຕຳແໜ່ງໄດ້",
             });
             
             if (err.response.data.message === "unauthorized") {
@@ -250,6 +251,8 @@ const ListPosition = () => {
 // cancel button
   const handleModalCancel = () => {
     setOpenModal(false);
+      setLoadSave(false);
+      setLoading(false)
     setImage("");
     setPositionEdit([]);
   };

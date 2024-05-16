@@ -2,13 +2,13 @@ import react, { useState } from "react";
 
 export const CaruselAdd = ({ images, handleChangeImage, imagePreview }) => {
 
-    console.log("Images Length", images.length)
+    // console.log("Images Length", images.length)
 
     const [activeIndex, setActiveIndex] = useState(0);
 
     const updateIndex = (newIndex) => {
 
-        console.log("newIndex", newIndex)
+        // console.log("newIndex", newIndex)
 
         if (newIndex < 0) {
             newIndex = 0

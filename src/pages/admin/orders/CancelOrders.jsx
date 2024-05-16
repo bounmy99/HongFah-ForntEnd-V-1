@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TableOrderUser from "../../../components/TableOrderUser";
 import { GetAllOrders } from "../../../functions/Orders";
 import { useSelector, useDispatch } from "react-redux";
 import { formatPrice } from "../../../functions/FormatPrices";
+import Swal from "sweetalert2";
 import moment from "moment";
 const CancelOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -141,7 +142,7 @@ const CancelOrders = () => {
         setCancelOrder(res.data.data);
       })
       .catch((err) => {
-        setCancelOrderEmpty(err.response.data.message);
+        setCancelOrderEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -155,7 +156,7 @@ const CancelOrders = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

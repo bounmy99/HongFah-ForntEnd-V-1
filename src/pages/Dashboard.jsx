@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
 import {
   MoreOutlined,
   ArrowDownOutlined,
@@ -10,11 +10,9 @@ import {
   UserAddOutlined,
   ShoppingCartOutlined,
   AppstoreOutlined,
-  WalletOutlined,
   ApartmentOutlined,
   FileProtectOutlined,
   TransactionOutlined,
-  SolutionOutlined,
   GoldOutlined,
 } from "@ant-design/icons";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -23,9 +21,6 @@ import { formatPrice } from "../functions/FormatPrices";
 import {
   AreaChart,
   Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   // Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -206,7 +201,7 @@ const Dashboard = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -242,7 +237,7 @@ const Dashboard = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -278,7 +273,7 @@ const Dashboard = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -367,7 +362,7 @@ const Dashboard = () => {
               </div>
             </div>
           </Tooltip>
-          <Tooltip color="#00A5E8">
+          <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
             <div
               className="box"
               onClick={() => {

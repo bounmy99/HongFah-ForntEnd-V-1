@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Empty, Tabs, Badge, Button, Image } from "antd";
-import icons from "../../../assets/image/icons-add.png";
-import { GetAllProduct } from "../../../functions/Products";
+import { Tabs, Badge, Button, Image } from "antd";
+import { GetAllProduct,GetAllProductSearch } from "../../../functions/Products";
 import { GetAllProductType } from "../../../functions/ProductType";
 import LoadingCard from "../../../components/LoadingCard";
 import InputSearch from "../../../components/InputSearch";
@@ -13,6 +12,7 @@ import CardProduct from "../../../components/CardProduct";
 import PaginationComponent from "../../../components/PaginationComponent";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
+import Swal from "sweetalert2";
 const initialValue = {
   productType: "",
   maxPrice: "",
@@ -51,7 +51,7 @@ const SaleProduct = () => {
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
-  const currentPages = product.slice(indexOfFirstPages, indexOfLastPages);
+  const currentPages = product ? product.slice(indexOfFirstPages, indexOfLastPages) : null;
   // ================ end pagination antd ===========
 
   useEffect(() => {
@@ -87,7 +87,7 @@ const SaleProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -145,7 +145,7 @@ const SaleProduct = () => {
   // search with Produc price , product Type, Product name
   useEffect(() => {
     setLoading(true);
-    GetAllProduct(users.token, productType, maxPrice, search)
+    (productType || maxPrice || search ? GetAllProductSearch(users.token, productType, maxPrice, search) : GetAllProduct(users.token))
       .then((res) => {
         setProduct(res.data.data);
         setCount(res.data.count);
@@ -153,7 +153,7 @@ const SaleProduct = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setProductsEmpty(err.response.data.message);
+        setProductsEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -167,7 +167,7 @@ const SaleProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -179,6 +179,7 @@ const SaleProduct = () => {
         }
       });
   }, [productType, maxPrice, search]);
+
   const handleSearch = () => {
     setLoading(true);
     GetAllProduct(users.token, productType, maxPrice, search)
@@ -189,7 +190,7 @@ const SaleProduct = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setProductsEmpty(err.response.data.message);
+        setProductsEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -203,7 +204,7 @@ const SaleProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -224,7 +225,7 @@ const SaleProduct = () => {
     GetAllProduct(users.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
-      console.log("Product API", res.data);
+      // console.log("Product API", res.data);
       setProductsEmpty("");
       setSearch("");
       setArg("");
@@ -251,7 +252,7 @@ const SaleProduct = () => {
             {isActiveDropdownType && (
               <ul className="options-type">
                 {productTypes.map((item, idx) => (
-                  <div className="option-type">
+                  <div className="option-type" key={idx}>
                     <option
                       className="option-type-text"
                       value={item._id}
@@ -312,7 +313,7 @@ const SaleProduct = () => {
           </div>
         </div>
       </div>
-      {productsEmpty ? (
+      {!currentPages ? (
         <EmptyContent Messages={productsEmpty} />
       ) : loading ? (
         <div className="content">
@@ -364,7 +365,7 @@ const SaleProduct = () => {
             <button type="button">ກັບໜ້າຫຼັກ</button>
           </Link>
         </div>
-        {product.length >= 25 && (
+        {product?.length >= 25 && (
           <div className="pagination">
             <PaginationComponent
               count={count}

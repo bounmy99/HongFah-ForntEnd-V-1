@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import {
@@ -6,19 +6,26 @@ import {
   GetAllUser,
   AdminSignSuperadmin,
 } from "../../../functions/Authentication";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Spin, Tabs, Select } from "antd";
 
 const AddUser = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [roleList, setRoleList] = useState([]);
   const [roles, setRoles] = useState("");
   const [isPasswordShow, setIsPasswordShow] = useState(false);
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState({
+    firstName: "",
+    lastName: "",
+    password: "",
+    phoneNumber: "",
+  });
+  const [erroMessage, setErrorMessage] = useState({});
 
-  // console.log("value",value)
+  console.log("Roles", roles);
 
   // function show hide password
   const showHide = () => {
@@ -46,7 +53,7 @@ const AddUser = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -68,39 +75,81 @@ const AddUser = () => {
 
   // signin admin
   const handleSubmitAdmin = (e) => {
-    setLoading(true);
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const values = [...formData.values()];
-    const isEmpty = values.includes("");
-    if (isEmpty) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "error",
-        title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
-      });
-      setLoading(false);
-      return;
+
+    const validationError = {};
+
+    if (!value.firstName.trim()) {
+      validationError.firstName = "ກະລຸນາປ້ອນຊື່";
+    }
+    if (!value.lastName.trim()) {
+      validationError.lastName = "ກະລຸນາປ້ອນນາມສະກຸນ";
+    }
+    if (!value.password.trim()) {
+      validationError.password = "ກະລຸນາປ້ອນລະຫັດຜ່ານ";
+    } else if (value.password.length < 8) {
+      validationError.password = "ລະຫັດຜ່ານຕ້ອງ 8 ຕົວອັກສອນຂື້ນໄປ";
+    }
+    if (!value.phoneNumber.trim()) {
+      validationError.phoneNumber = "ກະລຸນາປ້ອນເບີໂທ";
+    } else if (value.phoneNumber.length < 8) {
+      validationError.phoneNumber = "ເບີໂທ 8 ຕົວອັກສອນຂື້ນໄປ";
     }
 
-    const Data = Object.fromEntries(formData);
-    e.currentTarget.reset();
-    const FinalData = { ...Data, role: roles };
+    setErrorMessage(validationError);
 
-    AdminSignStaff(users.token, FinalData)
-      .then((res) => {
+    if (Object.keys(validationError).length === 0) {
+      setLoading(true);
+      const formData = new FormData(e.currentTarget);
+      const values = [...formData.values()];
+      const isEmpty = values.includes("");
+      if (isEmpty) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+        });
         setLoading(false);
-        if (res.data.data) {
+        return;
+      }
+
+      const Data = Object.fromEntries(formData);
+      e.currentTarget.reset();
+      const FinalData = { ...Data, role: roles };
+
+      AdminSignStaff(users.token, FinalData)
+        .then((res) => {
+          setLoading(false);
+          if (res.data.data) {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: "ສ້າງຜູ້ໃຊ້ສຳເລັດ",
+            });
+            navigate("/auth");
+          }
+        })
+        .catch((err) => {
           const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -113,49 +162,90 @@ const AddUser = () => {
             },
           });
           Toast.fire({
-            icon: "success",
-            title: "ສ້າງຜູ້ໃຊ້ສຳເລັດ",
+            icon: "error",
+            title: "ບໍ່ສາມາດສ້າງຜູ້ໃຊ້ໄດ້",
           });
-          navigate("/auth");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+          setLoading(false);
+        });
+    }
   };
   // signin supper admin
   const handleSubmitSuperAdmin = (e) => {
-    setLoading(true);
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const values = [...formData.values()];
-    const isEmpty = values.includes("");
-    if (isEmpty) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "error",
-        title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
-      });
-      setLoading(false);
-      return;
+
+    const validationError = {};
+
+    if (!value.firstName.trim()) {
+      validationError.firstName = "ກະລຸນາປ້ອນຊື່";
+    }
+    if (!value.lastName.trim()) {
+      validationError.lastName = "ກະລຸນາປ້ອນນາມສະກຸນ";
+    }
+    if (!value.password.trim()) {
+      validationError.password = "ກະລຸນາປ້ອນລະຫັດຜ່ານ";
+    } else if (value.password.length < 8) {
+      validationError.password = "ລະຫັດຜ່ານຕ້ອງ 8 ຕົວອັກສອນຂື້ນໄປ";
+    }
+    if (!value.phoneNumber.trim()) {
+      validationError.phoneNumber = "ກະລຸນາປ້ອນເບີໂທ";
+    } else if (value.phoneNumber.length < 8) {
+      validationError.phoneNumber = "ເບີໂທ 8 ຕົວອັກສອນຂື້ນໄປ";
     }
 
-    const Data = Object.fromEntries(formData);
-    e.currentTarget.reset();
-    AdminSignSuperadmin(users.token, Data)
-      .then((res) => {
-        if (res.data.data) {
+    setErrorMessage(validationError);
+
+    if (Object.keys(validationError).length === 0) {
+      setLoading(true);
+
+      const formData = new FormData(e.currentTarget);
+      const values = [...formData.values()];
+      const isEmpty = values.includes("");
+      if (isEmpty) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+        });
+        setLoading(false);
+        return;
+      }
+
+      const Data = Object.fromEntries(formData);
+      e.currentTarget.reset();
+      console.log(Data);
+      AdminSignSuperadmin(users.token, Data)
+        .then((res) => {
+          if (res.data.data) {
+            setLoading(false);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: "ສ້າງຜູ້ໃຊ້ສຳເລັດ",
+            });
+            navigate("/auth");
+          }
+        })
+        .catch((err) => {
           setLoading(false);
           const Toast = Swal.mixin({
             toast: true,
@@ -169,16 +259,12 @@ const AddUser = () => {
             },
           });
           Toast.fire({
-            icon: "success",
-            title: "ສ້າງຜູ້ໃຊ້ສຳເລັດ",
+            icon: "error",
+            title: "ບໍ່ສາມາດສ້າງຜູ້ໃຊ້ໄດ້",
           });
-          navigate("/auth");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
+          setLoading(false);
+        });
+    }
   };
 
   const SignupAdmin = () => (
@@ -195,6 +281,11 @@ const AddUser = () => {
                 placeholder="ກະລຸນາປ້ອນຊື່"
                 onChange={handleChange}
               />
+              {erroMessage && (
+                <span className="error__validation">
+                  {erroMessage.firstName}
+                </span>
+              )}
             </div>
             <div className="input-group">
               <label htmlFor="">ນາມສະກຸນ</label>
@@ -205,6 +296,11 @@ const AddUser = () => {
                 placeholder="ກະລຸນາປ້ອນນາມສະກຸນ"
                 onChange={handleChange}
               />
+              {erroMessage && (
+                <span className="error__validation">
+                  {erroMessage.lastName}
+                </span>
+              )}
             </div>
             <div className="input-group">
               <label htmlFor="">ລະຫັດຜ່ານ</label>
@@ -215,6 +311,11 @@ const AddUser = () => {
                 placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ"
                 onChange={handleChange}
               />
+              {erroMessage && (
+                <span className="error__validation">
+                  {erroMessage.password}
+                </span>
+              )}
               {value.password && (
                 <div className="icon-right-auth" onClick={showHide}>
                   <i
@@ -234,6 +335,11 @@ const AddUser = () => {
                 placeholder="9xxx xxxx"
                 onChange={handleChange}
               />
+              {erroMessage && (
+                <span className="error__validation">
+                  {erroMessage.phoneNumber}
+                </span>
+              )}
             </div>
             <div className="input-group">
               <label htmlFor="">ສິດເຂົ້າໃຊ້</label>
@@ -253,7 +359,7 @@ const AddUser = () => {
                 }
                 options={
                   roleList &&
-                  roleList.map((item, idx) => ({
+                  roleList.map((item) => ({
                     value: item,
                     label: item,
                   }))
@@ -288,6 +394,11 @@ const AddUser = () => {
                   placeholder="ກະລຸນາປ້ອນຊື່"
                   onChange={handleChange}
                 />
+                {erroMessage && (
+                  <span className="error__validation">
+                    {erroMessage.firstName}
+                  </span>
+                )}
               </div>
               <div className="input-group">
                 <label htmlFor="">ນາມສະກຸນ</label>
@@ -298,6 +409,11 @@ const AddUser = () => {
                   placeholder="ກະລຸນາປ້ອນນາມສະກຸນ"
                   onChange={handleChange}
                 />
+                {erroMessage && (
+                  <span className="error__validation">
+                    {erroMessage.lastName}
+                  </span>
+                )}
               </div>
               <div className="input-group">
                 <label htmlFor="">ລະຫັດຜ່ານ</label>
@@ -308,6 +424,20 @@ const AddUser = () => {
                   placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ"
                   onChange={handleChange}
                 />
+                {erroMessage && (
+                  <span className="error__validation">
+                    {erroMessage.password}
+                  </span>
+                )}
+                {value.password && (
+                  <div className="icon-right-auth" onClick={showHide}>
+                    <i
+                      className={`bx ${
+                        isPasswordShow ? "bx-show-alt" : "bx-low-vision"
+                      }`}
+                    ></i>
+                  </div>
+                )}
               </div>
               <div className="input-group">
                 <label htmlFor="">ເບີໂທ</label>
@@ -318,6 +448,11 @@ const AddUser = () => {
                   placeholder="9xxx xxxx"
                   onChange={handleChange}
                 />
+                {erroMessage && (
+                  <span className="error__validation">
+                    {erroMessage.phoneNumber}
+                  </span>
+                )}
               </div>
             </div>
             <div className="user-btn">

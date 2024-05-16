@@ -38,7 +38,7 @@ const InfoOrders = () => {
               });
               Toast.fire({
                 icon: "warning",
-                title: err.response.data.message,
+                title: "ບໍ່ມີຂໍ້ມູນ",
               });
               
               if (err.response.data.message === "unauthorized") {
@@ -137,7 +137,7 @@ const InfoOrders = () => {
                         });
                         Toast.fire({
                             icon: "error",
-                            title: err.response.data.message
+                            title: "ປະຕິເສດຂໍ້ມູນບໍ່ສຳເລັດ"
                         });
                         navigate("/homeOrders/users", { state: { key: 1 } });
                     }
@@ -194,7 +194,7 @@ const InfoOrders = () => {
                         });
                         Toast.fire({
                             icon: "error",
-                            title: err.response.data.message
+                            title: "ຢືນຢັນການອະນຸມັດບໍ່ສຳເລັດ"
                         });
                         navigate("/HomeOrders/users", { state: { key: 1 } });
                     }

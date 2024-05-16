@@ -369,7 +369,7 @@ const ListTotalSales = () => {
           .then((res) => {
             Swal.fire({
               title: "ສຳເລັດ",
-              text: "ການລົບສຳເລັດແລ້ວ.",
+              text: "ການລົບສຳເລັດແລ້ວ",
               icon: "success",
               confirmButtonText: "ຕົກລົງ",
             });
@@ -391,7 +391,7 @@ const ListTotalSales = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດລົບຂໍ້ມູນໄດ້",
             });
 
             if (err.response.data.message === "unauthorized") {
@@ -460,7 +460,7 @@ const ListTotalSales = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດຈ່າຍໂບນັດໄດ້",
             });
 
             if (err.response.data.message === "unauthorized") {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 // function
@@ -10,7 +10,7 @@ import {
 import LoadingInfo from "../../../components/LoadingInfo";
 import PaginationComponent from "../../../components/PaginationComponent";
 import Swal from "sweetalert2";
-import { Button, Tooltip, Empty, Spin } from "antd";
+import { Tooltip, Empty, Spin } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const Auth = () => {
@@ -25,6 +25,7 @@ const Auth = () => {
   const [authEmpty, setAuthEmpty] = useState("");
   const [pages, setPages] = useState(1);
   const [pageSize, setPageSize] = useState(4);
+
 
   useEffect(() => {
     setLoading(true);
@@ -48,7 +49,7 @@ const Auth = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setAuthEmpty(err.response.data.message);
+        setAuthEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -62,7 +63,7 @@ const Auth = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

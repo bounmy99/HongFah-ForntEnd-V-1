@@ -283,6 +283,11 @@ body {
   height: 100%;
 }
 
+.error__validation{
+  color : rgb(255, 25, 25);
+  margin-top: 5px;
+}
+
 .card {
   background-color: var(--card-color);
   border-radius: 10px 10px 0px 0px;
@@ -900,6 +905,151 @@ body {
 
 
 /* =============================== Modal-notification end========================== */
+
+
+
+
+/* ====================== models add type products ============== */
+
+.modal-add-products {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  overflow: auto;
+  background-color: rgba(200, 197, 197, 0.3);
+  position: fixed;
+  display: none;
+}
+
+.modal-add-products-card {
+  width: 35rem;
+  height: 33rem;
+  flex-shrink: 0;
+  padding: 25px;
+  align-items: center;
+  animation: DropTopOpenAddTypeProduct .3s linear;
+  -webkit-animation: DropTopOpenAddTypeProduct .3s linear;
+  background-color: var(--panel-color);
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.40);
+  position: relative;
+}
+.close-btn{
+  position: absolute;
+  top : 0;
+  right: 0;
+  margin: 12px;
+  color: var(--black-light-color);
+  cursor: pointer;
+}
+.header-card-products-type{
+    width: 100%; 
+    .form-type-products{
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      .input-group-type{
+        width: 100%;
+        .form-control-type-product{
+          width: 100%;
+          padding: 7px;
+          border: none;
+          border: 1px solid var(--toggle-color);
+          border-radius: 5px;
+          outline :none;
+          margin-top: 5px;
+        }
+        .form-control-type-product:focus{
+          border: 1px solid #008BCB;
+        }
+      }
+      .btn-group-type{
+          margin-top: 23px;
+          width: 20%;
+         .btn-typ-product{
+          width: 80px;
+          border :none;
+          padding : 8px;
+          border-radius: var(--border-radius-2);
+          cursor: pointer;
+          background-color: #02cf0c;
+          color :var(--panel-color)
+        }
+      }
+    }
+
+}
+.btn__manage{
+  display: flex;
+  gap: 5px;
+  .btn__type__edit{
+    width: 60px;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    color : var(--panel-color);
+    background-color: #00A5E8;
+    cursor: pointer;
+  }
+  .btn__type__delete{
+    width: 60px;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    color : var(--panel-color);
+    background-color: #f31811;
+    cursor: pointer;
+  }
+  .btn__type__edit:hover{
+    background-color: #2ebef7;
+  }
+  .btn__type__delete:hover{
+    background-color: #e73731;
+  }
+}
+.body-card-products-type{
+  width: 100%;
+  margin-top: 5px;
+  .title{
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+}
+
+
+.modal-add-products.open {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  overflow: auto;
+  display: block;
+  background-color: rgba(200, 197, 197, 0.5);
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+@keyframes DropTopOpenAddTypeProduct {
+  0% {
+    transform: translateY(-100%) scale(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ============== End modals add type products =================== */
 
 
 
@@ -3105,7 +3255,7 @@ body {
   overflow: auto;
 }
 
-.plan-card-emp-sub-1 {
+/* .plan-card-emp-sub-1 {
   position: absolute;
   width: 16rem;
   height: 20rem;
@@ -3141,7 +3291,7 @@ body {
   top: 1rem;
   left: 1rem;
   z-index: 1
-}
+} */
 .icons-show-hide .btn-zoomIn {
   cursor: pointer;
   display: flex;
@@ -3154,7 +3304,7 @@ body {
   color: #0089be;
   font-size: 20px;
   position: absolute;
-  top: 5rem;
+  top: 1rem;
   left: 1rem;
   z-index: 1
 }
@@ -3170,7 +3320,7 @@ body {
   color: #0089be;
   font-size: 20px;
   position: absolute;
-  top: 9rem;
+  top: 5rem;
   left: 1rem;
   z-index: 1
 }
@@ -4313,7 +4463,7 @@ body {
   background-color: var(--panel-color);
   border-radius: 8px;
   width: 100%;
-  height: 35rem;
+  height: calc(100%);
   padding: 10px;
 
   .card-user-add-content {
@@ -4390,7 +4540,7 @@ body {
   }
 
   .user-add-btn {
-    margin-top: 15px;
+    /* margin-top: 5px; */
     display: flex;
     justify-content: center;
     gap: 1rem;
@@ -4447,6 +4597,7 @@ body {
       color: white;
     }
   }
+
 
 }
 
@@ -4534,7 +4685,19 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  border-bottom: 1px solid #c2c2c2
+  border-bottom: 1px solid #c2c2c2;
+}
+
+.btn__add__type{
+      background-color: #00A4CD;
+      border : none;
+      border-radius: 5px;
+      color : var(--panel-color);
+      padding : 6px;
+      cursor: pointer;
+}
+.btn__add__type:hover{
+      background-color: #07c1f0;
 }
 
 .text-link {

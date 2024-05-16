@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { Empty, Flex, Spin, Tooltip } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../../components/DataTable";
 import {
@@ -12,7 +11,7 @@ import {
   DeleteUsers,
   Verify,
 } from "../../../functions/Users";
-import noImage from "../../../assets/image/no-image.png"
+import noImage from "../../../assets/image/no-image.png";
 import EmptyContent from "../../../components/EmptyContent";
 const ListUserNotVerify = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -26,28 +25,28 @@ const ListUserNotVerify = () => {
   const [userEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
 
-  const [isPasswordShow, setIsPasswordShow] = useState(false)
+  const [isPasswordShow, setIsPasswordShow] = useState(false);
 
   // function show hide password
   const showHide = () => {
-    setIsPasswordShow(isPasswordShow => !isPasswordShow);
-  }
+    setIsPasswordShow((isPasswordShow) => !isPasswordShow);
+  };
 
-// function first load when open pages
+  // function first load when open pages
   useEffect(() => {
     setLoading(true);
     loadData();
   }, []);
 
-// load all data 
+  // load all data
   const loadData = () => {
-    GetAllNotVerify(users.token,"")
+    GetAllNotVerify(users.token, "")
       .then((res) => {
         setUserNotVerify(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setUserEmpty(err.response.data.message);
+        setUserEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -61,9 +60,9 @@ const ListUserNotVerify = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -75,21 +74,20 @@ const ListUserNotVerify = () => {
       });
   };
 
-// function open modal
-  const handleModal = (id) => {
+  // function open modal
+  const handleModal = () => {
     setOpenModal(true);
   };
   let openModals = openModal ? "open" : "";
 
-// function reset password
+  // function reset password
   const handleSubmit = (e) => {
-    setLoadingAwaitMoney(true);
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const values = [...formData.values()];
     const isEmpty = values.includes("");
     if (isEmpty) {
-      setOpenModal(false);
+      // setOpenModal(false);
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -130,14 +128,12 @@ const ListUserNotVerify = () => {
             icon: "success",
             title: "ອັບເດດສຳເລັດແລ້ວ",
           });
-          setLoadingAwaitMoney(false);
           setOpenModal(false);
           loadData();
           navigate("/users", { state: { key: 2 } });
         }
       })
       .catch((err) => {
-        setLoadingAwaitMoney(false);
         if (err) {
           const Toast = Swal.mixin({
             toast: true,
@@ -152,7 +148,7 @@ const ListUserNotVerify = () => {
           });
           Toast.fire({
             icon: "success",
-            title: err.response.data.message,
+            title: "ບໍ່ສາມາດອັບເດດຂໍ້ມູນໄດ້",
           });
           if (err.response.data.message === "unauthorized") {
             dispatch({
@@ -166,18 +162,17 @@ const ListUserNotVerify = () => {
       });
   };
 
-// function cancel button modal
+  // function cancel button modal
   const handleModalCancel = () => {
     setOpenModal(false);
-    setFormType(true);
     setinfoUsers([]);
   };
 
-// function delete
+  // function delete
   const handleDelete = (id) => {
     Swal.fire({
-      title: "ຢືນຢັນການປະຕິເສດ",
-      text: "ທ່ານຕ້ອງການປະຕິເສດແທ້ບໍ່ ?",
+      title: "ລົບຂໍ້ມູນ",
+      text: "ທ່ານຕ້ອງການລົບຂໍ້ມູນແທ້ບໍ່ ?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -186,11 +181,11 @@ const ListUserNotVerify = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
-        setLoadingSearch(true)
+        setLoadingSearch(true);
         DeleteUsers(users.token, id)
           .then((res) => {
             if (res.status === 200) {
-              setLoadingSearch(false)
+              setLoadingSearch(false);
               const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -210,7 +205,7 @@ const ListUserNotVerify = () => {
             }
           })
           .catch((err) => {
-            setLoadingSearch(false)
+            setLoadingSearch(false);
             const Toast = Swal.mixin({
               toast: true,
               position: "top-end",
@@ -224,9 +219,9 @@ const ListUserNotVerify = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດລົບຂໍ້ມູນໄດ້",
             });
-    
+
             if (err.response.data.message === "unauthorized") {
               dispatch({
                 type: "USER_LOGOUT",
@@ -239,8 +234,7 @@ const ListUserNotVerify = () => {
     });
   };
 
- 
-// function verify users
+  // function verify users
   const handleVerify = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການ Verify",
@@ -276,12 +270,28 @@ const ListUserNotVerify = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
+            if (err) {
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "success",
+                title: "ບໍ່ສາມາດ Verify ໄດ້",
+              });
+            }
           });
       }
     });
   };
-// customize header of table
+  // customize header of table
   const customStyles = {
     rows: {
       style: {
@@ -308,7 +318,7 @@ const ListUserNotVerify = () => {
       },
     },
   };
-// colums header of table
+  // colums header of table
   const columns = [
     {
       name: "ຮູບພາບ",
@@ -344,12 +354,12 @@ const ListUserNotVerify = () => {
               >
                 <p>verify</p>
               </div>
-              <div
+              {/* <div
                 className="status-danger"
                 onClick={() => handleReject(row._id)}
               >
                 <p>ປະຕິເສດ</p>
-              </div>
+              </div> */}
             </>
           )}
         </div>
@@ -378,7 +388,16 @@ const ListUserNotVerify = () => {
       name: "ເບີໂທ",
       selector: (row) => row.phoneNumber,
       cell: (row) => (
-        <p className="posit-text-acount-name">{row.phoneNumber}</p>
+        <Tooltip title="ກົດໃສ່ເບີໂທເພື່ອໄປທີ່ Whatsapp" color="#00A5E8">
+          <p className="posit-text-acount-name">
+            <Link
+              to={`https://wa.me/${row.phoneNumber}?text=ສົ່ງການແຈ້ງເຕືອນການອະນຸມັດໃຫ້ກັບບຸກຄົນນີ້`}
+              target="_blank"
+            >
+              {row.phoneNumber}
+            </Link>
+          </p>
+        </Tooltip>
       ),
       sortable: true,
       width: "210px",
@@ -424,27 +443,27 @@ const ListUserNotVerify = () => {
       width: "180px",
     },
   ];
-// set value
+  // set value
   const handleChange = (e) => {
     setinfoUsers({ ...infoUsers, [e.target.name]: e.target.value });
   };
-// set value input search
+  // set value input search
   const handleChangeSearch = (e) => {
     setValueSearch(e.target.value);
   };
 
-// function handle Search
-  useEffect(()=>{
-    setLoadingSearch(true)
-    GetAllNotVerify(users.token,valueSearch)
+  // function handle Search
+  useEffect(() => {
+    setLoadingSearch(true);
+    GetAllNotVerify(users.token, valueSearch)
       .then((res) => {
         setUserNotVerify(res.data.data);
         setLoading(false);
-        setLoadingSearch(false)
+        setLoadingSearch(false);
       })
       .catch((err) => {
-        setLoadingSearch(false)
-        setUserEmpty(err.response.data.message);
+        setLoadingSearch(false);
+        setUserEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -458,31 +477,31 @@ const ListUserNotVerify = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
-        
-        if (err.response.data.message === "unauthorized") {
-          dispatch({
-            type: "USER_LOGOUT",
-            payload: null,
-          });
-          navigate("/");
-        }
-        setLoading(false);
-      });
-  },[valueSearch]);
 
-  const handleClickSearch = ()=>{
-    setLoadingSearch(true)
-    GetAllNotVerify(users.token,valueSearch)
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+        setLoading(false);
+      });
+  }, [valueSearch]);
+
+  const handleClickSearch = () => {
+    setLoadingSearch(true);
+    GetAllNotVerify(users.token, valueSearch)
       .then((res) => {
         setUserNotVerify(res.data.data);
         setLoading(false);
-        setLoadingSearch(false)
+        setLoadingSearch(false);
       })
       .catch((err) => {
-        setLoadingSearch(false)
-        setUserEmpty(err.response.data.message);
+        setLoadingSearch(false);
+        setUserEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -496,9 +515,9 @@ const ListUserNotVerify = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
-        
+
         if (err.response.data.message === "unauthorized") {
           dispatch({
             type: "USER_LOGOUT",
@@ -508,7 +527,7 @@ const ListUserNotVerify = () => {
         }
         setLoading(false);
       });
-  }
+  };
   return (
     <div className="card-main">
       {loading ? (
@@ -517,54 +536,58 @@ const ListUserNotVerify = () => {
         <>
           <Spin spinning={loadingSearch}>
             <div className="user-table">
-            <div className="user-card-header">
-              <div className="search">
-                <div className="input-search">
-                  <input
-                    type="search"
-                    placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
-                    onChange={handleChangeSearch}
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    fill="none"
-                  >
-                    <circle
-                      cx="7.27273"
-                      cy="7.27273"
-                      r="6.27273"
-                      stroke="#00A5E8"
-                      stroke-width="2"
-                    ></circle>
-                    <line
-                      x1="14.5858"
-                      y1="16"
-                      x2="11.6364"
-                      y2="13.0506"
-                      stroke="#00A5E8"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                    ></line>
-                  </svg>
-                </div>
-                <div className="btn-search">
-                  <button type="button" onClick={handleClickSearch}>
-                    ຄົ້ນຫາ
-                  </button>
+              <div className="user-card-header">
+                <div className="search">
+                  <div className="input-search">
+                    <input
+                      type="search"
+                      placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
+                      onChange={handleChangeSearch}
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="17"
+                      viewBox="0 0 16 17"
+                      fill="none"
+                    >
+                      <circle
+                        cx="7.27273"
+                        cy="7.27273"
+                        r="6.27273"
+                        stroke="#00A5E8"
+                        strokeWidth="2"
+                      ></circle>
+                      <line
+                        x1="14.5858"
+                        y1="16"
+                        x2="11.6364"
+                        y2="13.0506"
+                        stroke="#00A5E8"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      ></line>
+                    </svg>
+                  </div>
+                  <div className="btn-search">
+                    <button type="button" onClick={handleClickSearch}>
+                      ຄົ້ນຫາ
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            {
-              <DataTables
-                columns={columns}
-                data={userNotVerify}
-                customStyles={customStyles}
-                userEmpty={userEmpty}
-              />
-            }
+              {
+
+                !userNotVerify ?
+                <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
+                 :
+                <DataTables
+                  columns={columns}
+                  data={userNotVerify}
+                  customStyles={customStyles}
+                  userEmpty={userEmpty}
+                />
+              }
             </div>
           </Spin>
         </>
@@ -593,21 +616,20 @@ const ListUserNotVerify = () => {
                     <div className="input-group-user">
                       <label htmlFor="">ລະຫັດຜ່ານ</label>
                       <input
-                        type={`${isPasswordShow ? 'text' : 'password'}`}
+                        type={`${isPasswordShow ? "text" : "password"}`}
                         name="newPassword"
                         className="form-modal-control-user"
                         onChange={handleChange}
                       />
-                      {
-                      userNotVerify.newPassword && 
-                      <div className="icon-right" onClick={showHide}>
-                        <i
-                          className={`bx ${
-                            isPasswordShow ? "bx-show-alt" : "bx-low-vision"
-                          }`}
-                        ></i>
-                      </div>
-                      }
+                      {userNotVerify?.newPassword && (
+                        <div className="icon-right" onClick={showHide}>
+                          <i
+                            className={`bx ${
+                              isPasswordShow ? "bx-show-alt" : "bx-low-vision"
+                            }`}
+                          ></i>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -621,24 +643,7 @@ const ListUserNotVerify = () => {
                   ຍົກເລີກ
                 </button>
                 <button type="submit" className="modal-user-btn btn-info">
-                  {loading ? (
-                    <>
-                      <span>ກຳລັງ....</span>
-                      <Spin
-                        indicator={
-                          <LoadingOutlined
-                            style={{
-                              fontSize: 24,
-                              color: "white",
-                            }}
-                            spin
-                          />
-                        }
-                      />
-                    </>
-                  ) : (
-                    "ຢືນຢັນ"
-                  )}
+                  ຢືນຢັນ
                 </button>
               </div>
             </div>

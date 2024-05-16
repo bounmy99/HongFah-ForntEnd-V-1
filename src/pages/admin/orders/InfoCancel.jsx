@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Table, Image } from "antd";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Table } from "antd";
 import Swal from "sweetalert2";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 // functions
@@ -12,6 +12,7 @@ import Loading from "../../../components/Loadding";
 
 const InfoOrders = () => {
   const navigate = useNavigate();
+  const dispatch  = useDispatch();
   const { users } = useSelector((state) => ({ ...state }));
   const { id } = useParams();
   const [order, setOrder] = useState([]);
@@ -41,7 +42,7 @@ const InfoOrders = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

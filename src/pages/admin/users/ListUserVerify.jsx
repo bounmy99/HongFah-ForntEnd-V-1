@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { Empty, Spin, Tooltip } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import { Spin, Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../../components/DataTable";
 import {
@@ -26,13 +25,12 @@ const ListVerify = () => {
   const [usersEmpty, setUserEmpty] = useState(null);
   const [valueSearch, setValueSearch] = useState("");
 
-  const [isPasswordShow, setIsPasswordShow] = useState(false)
+  const [isPasswordShow, setIsPasswordShow] = useState(false);
 
   // function show hide password
   const showHide = () => {
-    setIsPasswordShow(isPasswordShow => !isPasswordShow);
-  }
-
+    setIsPasswordShow((isPasswordShow) => !isPasswordShow);
+  };
 
   // function first load when open pages
   useEffect(() => {
@@ -47,7 +45,7 @@ const ListVerify = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setUserEmpty(err.response.data.message);
+        setUserEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -61,7 +59,7 @@ const ListVerify = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -87,7 +85,7 @@ const ListVerify = () => {
     const values = [...formData.values()];
     const isEmpty = values.includes("");
     if (isEmpty) {
-      setOpenModal(false);
+      // setOpenModal(false);
       const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -146,7 +144,7 @@ const ListVerify = () => {
           });
           Toast.fire({
             icon: "warning",
-            title: err.response.data.message,
+            title: "ບໍ່ສາມາດອັບເດດລະຫັດຜ່ານໄດ້",
           });
 
           if (err.response.data.message === "unauthorized") {
@@ -164,6 +162,8 @@ const ListVerify = () => {
   // function cancel button
   const handleModalCancel = () => {
     setOpenModal(false);
+    setLoading(false);
+    setLoadingSearch(false);
     setInfoUsersVerify([]);
   };
 
@@ -180,11 +180,11 @@ const ListVerify = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
-        setLoadingSearch(true)
+        setLoadingSearch(true);
         DeleteUsers(users.token, id)
           .then((res) => {
             if (res.status === 200) {
-              setLoadingSearch(false)
+              setLoadingSearch(false);
               const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -204,7 +204,7 @@ const ListVerify = () => {
             }
           })
           .catch((err) => {
-            setLoadingSearch(false)
+            setLoadingSearch(false);
             const Toast = Swal.mixin({
               toast: true,
               position: "top-end",
@@ -218,9 +218,9 @@ const ListVerify = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດລົບຂໍ້ມູນໄດ້",
             });
-  
+
             if (err.response.data.message === "unauthorized") {
               dispatch({
                 type: "USER_LOGOUT",
@@ -303,7 +303,16 @@ const ListVerify = () => {
       name: "ເບີໂທ",
       selector: (row) => row.phoneNumber,
       cell: (row) => (
-        <p className="posit-text-acount-name">{row.phoneNumber}</p>
+        <Tooltip title="ກົດໃສ່ເບີໂທເພື່ອໄປທີ່ Whatsapp" color="#00A5E8">
+          <p className="posit-text-acount-name">
+            <Link
+              to={`https://wa.me/${row.phoneNumber}?text=ສົ່ງການແຈ້ງເຕືອນການອະນຸມັດໃຫ້ກັບບຸກຄົນນີ້`}
+              target="_blank"
+            >
+              {row.phoneNumber}
+            </Link>
+          </p>
+        </Tooltip>
       ),
       sortable: true,
       width: "210px",
@@ -370,7 +379,7 @@ const ListVerify = () => {
         setLoadingSearch(false);
       })
       .catch((err) => {
-        setUserEmpty(err.response.data.message);
+        setUserEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -384,7 +393,7 @@ const ListVerify = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -402,12 +411,12 @@ const ListVerify = () => {
   const handleClickSearch = () => {
     GetAllVerify(users.token, valueSearch)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setUserVirify(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
-        setUserEmpty(err.response.data.message);
+        setUserEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -421,7 +430,7 @@ const ListVerify = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -463,7 +472,7 @@ const ListVerify = () => {
                         cy="7.27273"
                         r="6.27273"
                         stroke="#00A5E8"
-                        stroke-width="2"
+                        strokeWidth="2"
                       ></circle>
                       <line
                         x1="14.5858"
@@ -471,8 +480,8 @@ const ListVerify = () => {
                         x2="11.6364"
                         y2="13.0506"
                         stroke="#00A5E8"
-                        stroke-width="2"
-                        stroke-linecap="round"
+                        strokeWidth="2"
+                        strokeLinecap="round"
                       ></line>
                     </svg>
                   </div>
@@ -483,14 +492,16 @@ const ListVerify = () => {
                   </div>
                 </div>
               </div>
-              {
+              {!userVerify ? (
+                <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
+              ) : (
                 <DataTables
                   columns={columns}
                   data={userVerify}
                   customStyles={customStyles}
                   userEmpty={usersEmpty}
                 />
-              }
+              )}
             </div>
           </Spin>
         </>
@@ -519,21 +530,20 @@ const ListVerify = () => {
                     <div className="input-group-user">
                       <label htmlFor="">ລະຫັດຜ່ານ</label>
                       <input
-                        type={`${isPasswordShow ? 'text' : 'password'}`}
+                        type={`${isPasswordShow ? "text" : "password"}`}
                         name="newPassword"
                         className="form-modal-control-user"
                         onChange={handleChange}
                       />
-                      {
-                      infoUsersVerify.newPassword && 
-                      <div className="icon-right" onClick={showHide}>
-                        <i
-                          className={`bx ${
-                            isPasswordShow ? "bx-show-alt" : "bx-low-vision"
-                          }`}
-                        ></i>
-                      </div>
-                      }
+                      {infoUsersVerify.newPassword && (
+                        <div className="icon-right" onClick={showHide}>
+                          <i
+                            className={`bx ${
+                              isPasswordShow ? "bx-show-alt" : "bx-low-vision"
+                            }`}
+                          ></i>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -547,24 +557,7 @@ const ListVerify = () => {
                   ຍົກເລີກ
                 </button>
                 <button type="submit" className="modal-user-btn btn-info">
-                  {loadingSearch ? (
-                    <>
-                      <span>ກຳລັງ....</span>
-                      <Spin
-                        indicator={
-                          <LoadingOutlined
-                            style={{
-                              fontSize: 24,
-                              color: "white",
-                            }}
-                            spin
-                          />
-                        }
-                      />
-                    </>
-                  ) : (
-                    "ຢືນຢັນ"
-                  )}
+                  ຢືນຢັນ
                 </button>
               </div>
             </div>

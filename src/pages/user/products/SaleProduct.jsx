@@ -87,7 +87,7 @@ const SaleProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -153,7 +153,7 @@ const SaleProduct = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setProductsEmpty(err.response.data.message);
+        setProductsEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -167,7 +167,7 @@ const SaleProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -189,7 +189,7 @@ const SaleProduct = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setProductsEmpty(err.response.data.message);
+        setProductsEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -203,7 +203,7 @@ const SaleProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -224,7 +224,6 @@ const SaleProduct = () => {
     GetAllProduct(getData.token, productType, maxPrice, search).then((res) => {
       setProduct(res.data.data);
       setCount(res.data.count);
-      console.log("Product API", res.data);
       setProductsEmpty("");
       setSearch("");
       setArg("");

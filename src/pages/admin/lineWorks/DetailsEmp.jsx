@@ -1,87 +1,20 @@
-import react, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { GetOneLineWork } from "../../../functions/LineWork";
 import { formatPrice } from "../../../functions/FormatPrices";
 import moment from "moment";
-import DataTables from "../../../components/DataTable";
+import Swal from "sweetalert2";
+
 const DetailsEmp = () => {
   const { id } = useParams();
   const { users } = useSelector((state) => ({ ...state }));
   const [detail, setDetail] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // customize style cell of table
-  const customStyles = {
-    rows: {
-      style: {
-        minHeight: "60px", // override the row height
-      },
-    },
-    headCells: {
-      style: {
-        paddingLeft: "8px", // override the cell padding for head cells
-        paddingRight: "8px",
-        fontSize: "15px",
-        justifyContent: "center",
-        fontWeight: "bold",
-        color: "#00A5E8",
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: "8px", // override the cell padding for data cells
-        paddingRight: "8px",
-        justifyContent: "center",
-        fontSize: "12px",
-        fontWeight: "bold",
-      },
-    },
-  };
-  // columns header of table
-  const columns = [
-    {
-      name: "ລຳດັບ",
-      selector: (row) => row._id,
-      cell: (row) => <p>{row._id}</p>,
-      sortable: true,
-      width: "150px",
-    },
-    {
-      name: "Level",
-      selector: (row) => row.level,
-      cell: (row) => (
-        <div className="position">
-          <p className="posit-gold">{row.level}</p>
-        </div>
-      ),
-      sortable: true,
-      width: "80px",
-    },
-    {
-      name: "LineUp",
-      selector: (row) => row.lineUp,
-      cell: (row) => <p className="posit-text-acount-name">{row.lineUp}</p>,
-      sortable: true,
-      width: "210px",
-    },
-    {
-      name: "PriceTotal",
-      sortable: true,
-      selector: (row) => row.priceTotal,
-      cell: (row) => (
-        <p className="posit-text-acount-number">{row.priceTotal}</p>
-      ),
-      width: "180px",
-    },
-    {
-      name: "PV Total",
-      sortable: true,
-      selector: (row) => row.pvTotal,
-      cell: (row) => <p className="posit-text-withdraw">{row.pvTotal}.00</p>,
-      width: "100px",
-    },
-  ];
+
   // load detail
   useEffect(() => {
     setLoading(true);
@@ -104,7 +37,7 @@ const DetailsEmp = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -117,6 +50,8 @@ const DetailsEmp = () => {
         setLoading(false);
       });
   }, []);
+
+
 
   console.log(detail);
 

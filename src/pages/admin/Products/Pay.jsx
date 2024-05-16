@@ -100,117 +100,54 @@ const Pay = () => {
       }
     }
 
-    Swal.fire({
-      title: "ພິມໃບບິນ",
-      text: "ທ່ານຕ້ອງການພິມໃບບິນບໍ່ ?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#00a5e8",
-      confirmButtonText: "ພິມບິນ",
-      cancelButtonText: "ບັນທຶກ",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // return
-        CreateOrder(users.token, formData)
-          .then((res) => {
-            setLoading(false);
-            let Id = res.data.data._id;
-            // return
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "success",
-              title: res.data.message,
-            });
+    CreateOrder(users.token, formData)
+    .then((res) => {
+      setLoading(false);
+      let Id = res.data.data._id;
+      // return
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "success",
+        title: "ສ້າງອໍເດີ້ສຳເລັດ",
+      });
 
-            dispatch({
-              type: "EMPTY_CART",
-              payload: [],
-            });
-            dispatch({
-              type: "EMPTY_ORDER",
-              payload: [],
-            });
-            navigate(`/listProducts/Bill/${Id}`);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "warning",
-              title: err.response.data.message,
-            });
-            setLoading(false);
-          });
-      } else {
-        setLoading(true);
-        CreateOrder(users.token, formData)
-          .then((res) => {
-            setLoading(false);
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "success",
-              title: res.data.message,
-            });
-
-            dispatch({
-              type: "EMPTY_CART",
-              payload: [],
-            });
-            dispatch({
-              type: "EMPTY_ORDER",
-              payload: [],
-            });
-            navigate("/listProducts/saleProducts", { state: { key: 3 } });
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "warning",
-              title: err.response.data.message,
-            });
-            setLoading(true);
-          });
-      }
+      dispatch({
+        type: "EMPTY_CART",
+        payload: [],
+      });
+      dispatch({
+        type: "EMPTY_ORDER",
+        payload: [],
+      });
+      navigate(`/listProducts/Bill/${Id}`);
+    })
+    .catch((err) => {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: err.response.data.message,
+      });
+      setLoading(false);
     });
   };
   

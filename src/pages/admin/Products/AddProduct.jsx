@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import imagePreview from "../../../assets/image/upload.png";
-import { GetAllProductType } from "../../../functions/ProductType";
+import {
+  DeleteProductType,
+  GetAllProductType,
+  GetOneProductType,
+  InsertProductType,
+  UpdateProductType,
+} from "../../../functions/ProductType";
 import { CreateProduct } from "../../../functions/Products";
 import { CaruselAdd } from "../../../components/CaroselAdd";
 
 import Swal from "sweetalert2";
-import { Spin, Select } from "antd";
-import { values } from "lodash";
+import { Spin, Select, Table } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import EmptyContent from "../../../components/EmptyContent";
+
 const initialState = {
   name: "",
   productType: [],
@@ -22,6 +29,7 @@ const initialState = {
   cashback: "",
   unit: [],
 };
+
 const AddProduct = () => {
   const navigate = useNavigate();
   const { users } = useSelector((state) => ({ ...state }));
@@ -40,13 +48,26 @@ const AddProduct = () => {
     unit,
   } = product;
 
-  console.log("productType", productType);
+  // console.log("productType", productType);
 
   const [productTypes, setProductTypes] = useState([]);
+  const [valueProductType, setValueProductType] = useState();
+  const [page, setPage] = useState(1);
+  const [pageSiize, setPageSiize] = useState(4);
+
+  const [IdProductType, setIdProductType] =useState(null);
+  const [openAddProductType,setOpenAddProductType] = useState(false);
+  const dispatch = useDispatch();
+
+  
+  // console.log("IdProductType",IdProductType);
+  // console.log("ValueProductType", valueProductType);
 
   useEffect(() => {
     loadAllProductType();
   }, []);
+
+
   // load product type
   const loadAllProductType = () => {
     GetAllProductType(users.token)
@@ -67,7 +88,7 @@ const AddProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -134,12 +155,20 @@ const AddProduct = () => {
     for (const [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
       if (!value) {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
           showConfirmButton: false,
-          timer: 3500,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ",
         });
         setLoading(false);
         return;
@@ -186,7 +215,7 @@ const AddProduct = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ສາມາດບັນທຶກສິນຄ້າໄດ້",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -206,6 +235,214 @@ const AddProduct = () => {
     window.location.reload();
   };
 
+  // ===================== ປະເພດຂອງສິນຄ້າ ======================
+  const openModalAdd = ()=>{
+    setOpenAddProductType(!openAddProductType)
+  }
+  const ToggOpen = openAddProductType ? "open" : ""
+
+
+  const columns = [
+    {
+      title: "ຊື່ປະເພດສິນຄ້າ",
+      dataIndex: "name",
+      width: "500px",
+    },
+    {
+      title: "ຈັດການ",
+      render: (row) => (
+        <>
+          <div className="btn__manage">
+            <button
+              className="btn__type__edit"
+              onClick={() => editProductType(row._id)}
+            >
+              ແກ້ໄຂ
+            </button>
+            <button
+              className="btn__type__delete"
+              onClick={() => deleteProductType(row._id)}
+            >
+              ລົບ
+            </button>
+          </div>
+        </>
+      ),
+    },
+  ];
+
+  const editProductType = (id) => {
+    setIdProductType(id)
+    GetOneProductType(users.token,id).then(res=>{
+      setValueProductType(res.data.data.name)
+    }).catch(err=>{
+      console.log(err)
+    })
+  };
+
+  const deleteProductType = (id) => {
+    setLoading(true);
+    Swal.fire({
+      title: "ລົບຂໍ້ມູນ",
+      text: "ທ່ານຕ້ອງການລົບຂໍ້ມູນແທ້ບໍ່ ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ລົບຂໍ້ມູນ",
+      cancelButtonText: "ຍົກເລີກ",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // return
+        DeleteProductType(users.token, id).then((res) => {
+          if (res.data) {
+            setLoading(false);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: "ລົບປະເພດສິນຄ້າສຳເລັດ",
+            });
+            loadAllProductType();
+            // setOpenAddProductType(false);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: "ບໍ່ສາມາດລົບປະເພດສິນຄ້າໄດ້",
+          });
+  
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
+        });
+      }else{
+        setLoading(false)
+      }
+    });
+ 
+  };
+
+  const handleSubmitProductType = (e) => {
+    e.preventDefault();
+  
+    if (!valueProductType) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "ກະລຸນາປ້ອນຊື່ປະເພດສິນຄ້າ",
+      });
+      return
+    }
+
+      setLoading(true);
+      IdProductType && IdProductType ?
+      UpdateProductType(users.token,IdProductType,{ name: valueProductType }).then(res=>{
+        if (res.data) {
+          setIdProductType(null);
+          setValueProductType("");
+          loadAllProductType();
+          setLoading(false);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "ອັບເດດສຳເລັດ",
+          });
+        }
+      }).catch(err=>{
+        setLoading(false);
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
+      })
+      :
+     
+      InsertProductType(users.token, { name: valueProductType }).then((res) => {
+          if (res.data) {
+            setValueProductType("");
+            loadAllProductType();
+            setLoading(false);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: "ບັນທຶກສຳເລັດ",
+            });
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
+        })
+    
+    
+  };
+
   return (
     <div className="card-main">
       <Spin spinning={loading}>
@@ -219,6 +456,9 @@ const AddProduct = () => {
                 <i className="bx bx-chevron-left"></i>
                 ກັບໄປໜ້າກ່ອນ
               </button>
+            </div>
+            <div className="text-tilte">
+              <button className="btn__add__type" onClick={openModalAdd}>ເພີ່ມປະເພດສິນຄ້າ</button>
             </div>
           </div>
           <form onSubmit={handleSubmit}>
@@ -253,7 +493,7 @@ const AddProduct = () => {
                       type="text"
                       name="name"
                       onChange={handleChange}
-                      id=""
+                      placeholder="ກະລຸນາປ້ອນຊື່ສິນຄ້າ"
                       className="form-controls"
                       value={name}
                     />
@@ -264,7 +504,7 @@ const AddProduct = () => {
                       type="text"
                       name="price"
                       onChange={handleChange}
-                      id=""
+                      placeholder="ກະລຸນາປ້ອນລາຄາສິນຄ້າ"
                       className="form-controls"
                       value={price}
                     />
@@ -277,7 +517,7 @@ const AddProduct = () => {
                       name="productType"
                       style={{
                         width: 230,
-                        height :48
+                        height: 48,
                       }}
                       placeholder="ເລຶອກປະເພດ"
                       optionFilterProp="children"
@@ -292,13 +532,12 @@ const AddProduct = () => {
                       }
                       options={
                         productTypes &&
-                        productTypes.map((item, idx) => ({
+                        productTypes.map((item) => ({
                           value: item._id,
                           label: item.name,
                         }))
                       }
                     />
-
                   </div>
                   <div className="input-group">
                     <label htmlFor="">ຫົວໜ່ວຍສິນຄ້າ:</label>
@@ -306,7 +545,7 @@ const AddProduct = () => {
                       type="text"
                       name="unit"
                       onChange={handleChange}
-                      id=""
+                      placeholder="ກະລຸນາປ້ອນຫົວໜ່ວຍສິນຄ້າ"
                       className="form-controls"
                       value={unit}
                     />
@@ -319,7 +558,7 @@ const AddProduct = () => {
                       type="text"
                       name="point"
                       onChange={handleChange}
-                      id=""
+                      placeholder="ກະລຸນາປ້ອນຄະແນນ"
                       className="form-controls"
                       value={point}
                     />
@@ -330,7 +569,7 @@ const AddProduct = () => {
                       type="text"
                       name="cashback"
                       onChange={handleChange}
-                      id=""
+                      placeholder="ກະລຸນາປ້ອນຈຳນວນໄດ້ຮັບເງິນຄືນ"
                       className="form-controls"
                       value={cashback}
                     />
@@ -343,7 +582,7 @@ const AddProduct = () => {
                       type="text"
                       name="amount"
                       onChange={handleChange}
-                      id=""
+                      placeholder="ກະລຸນາປ້ອນຈຳນວນ"
                       className="form-controls"
                       value={amount}
                     />
@@ -357,7 +596,7 @@ const AddProduct = () => {
                     name="detail"
                     onChange={handleChange}
                     value={detail}
-                    id=""
+                    placeholder="ກະລຸນາປ້ອນລາຍລະອຽດສິນຄ້າ"
                     cols="30"
                     rows="10"
                   ></textarea>
@@ -365,6 +604,66 @@ const AddProduct = () => {
               </div>
             </div>
           </form>
+        </div>
+        {/* ================================ Modal ============================= */}
+        <div className={`modal-add-products ${ToggOpen}`}>
+          <div className="modal-add-products-card genealogy-scroll">
+            <div className="close-btn" onClick={()=>setOpenAddProductType(false)}>
+                <CloseOutlined />
+            </div>
+            <div className="header-card-products-type">
+              <form
+                className="form-type-products"
+                onSubmit={handleSubmitProductType}
+              >
+                <div className="input-group-type">
+                  <label htmlFor="">ຊື່ປະເພດສິນຄ້າ</label>
+                  {/* <span className="error__validation">Errors</span> */}
+                  <input
+                    type="text"
+                    name="name"
+                    value={valueProductType}
+                    className="form-control-type-product"
+                    placeholder="ກະລຸນາປ້ອນຊື່ປະເພດສິນຄ້າ"
+                    onChange={(e) => setValueProductType(e.target.value)}
+                  />
+                </div>
+                <div className="btn-group-type">
+                  {IdProductType ?
+                  <button type="submit" className="btn-typ-product">
+                  ອັບເດດ
+                </button>
+                  :
+                  <button type="submit" className="btn-typ-product">
+                    ເພີ່ມ
+                  </button>
+                  }
+                </div>
+               
+              </form>
+            </div>
+            <div className="body-card-products-type">
+              <h3 className="title">ລາຍການປະເພດສິນຄ້າ</h3>
+              <div className="table-type">
+                { productTypes.length ?  
+                <Table
+                  columns={columns}
+                  dataSource={productTypes}
+                  pagination={{
+                    current: page,
+                    pageSize: pageSiize,
+                    onChange: (page, pageSiize) => {
+                      setPage(page);
+                      setPageSiize(pageSiize);
+                    },
+                  }}
+                />
+                :
+                <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"}/>
+                }
+              </div>
+            </div>
+          </div>
         </div>
       </Spin>
     </div>

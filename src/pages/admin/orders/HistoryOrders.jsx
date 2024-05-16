@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TableOrderUser from "../../../components/TableOrderUser";
 import { GetAllOrdersExport } from "../../../functions/Orders";
 import { useSelector, useDispatch } from "react-redux";
 import { formatPrice } from "../../../functions/FormatPrices";
-import moment from "moment";
 import { Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
 const HistoryOrders = ({ btnExport }) => {
   const { users } = useSelector((state) => ({ ...state }));
   const [successOrders, setSuccessOrders] = useState([]);
@@ -184,12 +184,14 @@ const HistoryOrders = ({ btnExport }) => {
   ];
   // load all success orders
   useEffect(() => {
+    btnExport = true
     GetAllOrdersExport(users.token, "", "", "", "success")
       .then((res) => {
         setSuccessOrders(res.data.data);
+        // console.log("Fetch Data",res.data.data)
       })
       .catch((err) => {
-        setSuccessOrdersEmpty(err.response.data.message);
+        setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -203,7 +205,7 @@ const HistoryOrders = ({ btnExport }) => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {

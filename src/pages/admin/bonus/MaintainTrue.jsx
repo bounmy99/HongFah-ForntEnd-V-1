@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { Empty, Spin } from "antd";
+import { Empty } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GetAllBonus } from "../../../functions/Bonus";
@@ -108,7 +108,7 @@ const columns = [
     sortable: true,
     cell: (row) => (
       <div className="score">
-        {row.isMaintainSales === true ? <p>ຮັກສາຍອດ</p> : <p>ບໍ່ຮັກສາຍອດ</p>}
+         <p>ຮັກສາຍອດ</p>
       </div>
     ),
     width: "118px",
@@ -180,7 +180,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
       })
       .catch((err) => {
         setLoading(false);
-        setEmptyData(err.response.data.message);
+        setEmptyData("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -194,7 +194,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         
         if (err.response.data.message === "unauthorized") {
@@ -217,7 +217,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
       })
       .catch((err) => {
         setLoading(false);
-        setEmptyData(err.response.data.message);
+        setEmptyData("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -231,7 +231,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         
         if (err.response.data.message === "unauthorized") {
@@ -246,7 +246,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
 
   return (
     <div className="maintain-table">
-      {emptyData ? (
+      {!maintain ? (
         <div className="empty-card">
           <Empty
             image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
@@ -255,7 +255,7 @@ const MaintainTrue = ({setSelectableRow,valueInput,toggleCleared }) => {
             }}
             description={
               <span>
-                <a>{emptyData}</a>
+                <a>{emptyData ? emptyData : "ບໍ່ມີຂໍ້ມູນ" }</a>
               </span>
             }
           ></Empty>

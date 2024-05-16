@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import  { useState } from 'react'
 import  Logo  from '../assets/logo/logo.png';
 import  LogoHeadLeft  from '../assets/logo/logo-head-left.png';
 import  LogoHeadRight  from '../assets/logo/logo-head-right.png';
 import Logo1 from '../assets/logo/Logo1.png'
 import Logo2 from '../assets/logo/Logo2.png';
 import { forgetPassword } from '../functions/Authentication';
-import { Link,useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import { Spin } from "antd"

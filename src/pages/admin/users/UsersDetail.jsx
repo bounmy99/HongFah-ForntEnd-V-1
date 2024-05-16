@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams,useNavigate } from "react-router-dom";
 import { GetOneUser } from "../../../functions/Users";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Loading from "../../../components/Loadding";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import noImage from "../../../assets/image/no-image.png"
 import moment from "moment";
+import Swal from "sweetalert2";
 const UsersDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { users } = useSelector((state) => ({ ...state }));
   const [detail, setDetail] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,7 +36,7 @@ const UsersDetail = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
         
         if (err.response.data.message === "unauthorized") {

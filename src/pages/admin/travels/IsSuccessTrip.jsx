@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
-import { Empty, Image } from "antd";
+import { Image } from "antd";
 import ImageTravel from "../../../assets/image/no-image.png";
 import LoadingCard from "../../../components/LoadingCard";
 import moment from "moment";
@@ -18,7 +18,8 @@ const IsSuccessTrip = () => {
   const navigate = useNavigate();
   const [trip, setTrip] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [tripEmpty, setTripEmpty] = useState("");
 
   const [count, setCount] = useState("");
@@ -41,7 +42,7 @@ const IsSuccessTrip = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setTripEmpty(err.response.data.message);
+        setTripEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -55,7 +56,7 @@ const IsSuccessTrip = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -83,7 +84,7 @@ const IsSuccessTrip = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setTripEmpty(err.response.data.message);
+        setTripEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -97,7 +98,7 @@ const IsSuccessTrip = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -113,7 +114,7 @@ const IsSuccessTrip = () => {
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
-  const currentPages = trip.slice(indexOfFirstPages, indexOfLastPages);
+  const currentPages = trip ? trip.slice(indexOfFirstPages, indexOfLastPages) : null;
   // ================ end pagination antd ===========
 
   const styles = {
@@ -137,8 +138,8 @@ const IsSuccessTrip = () => {
   return (
     <>
       <div className="card-main">
-        <div class="list-trip-filter">
-          <div class="trip-filter-date">
+        <div className="list-trip-filter">
+          {/* <div className="trip-filter-date">
             <div className="date-trip">
               <div className="datepicker-trip">
                 <i className="bx bx-calendar icons-left-trip"></i>
@@ -148,7 +149,6 @@ const IsSuccessTrip = () => {
                   selected={startDate}
                   onChange={(date) => {
                     setStartDate(date);
-                    setIsActiveDropdownFilter(false);
                   }}
                 />
                 <i className="bx bx-chevron-down icons-right-trip"></i>
@@ -160,18 +160,17 @@ const IsSuccessTrip = () => {
                 <span className="text-date-trip">ວັນທີ</span>
                 <DatePicker
                   className="btn-datepicker-trip"
-                  selected={startDate}
+                  selected={endDate}
                   onChange={(date) => {
-                    setStartDate(date);
-                    setIsActiveDropdownFilter(false);
+                    setEndDate(date);
                   }}
                 />
                 <i className="bx bx-chevron-down icons-right-trip"></i>
               </div>
             </div>
-          </div>
-          <div class="search">
-            <div class="input-search">
+          </div> */}
+          <div className="search">
+            <div className="input-search">
               <input type="search" placeholder="ຄົ້ນຫາລາຍການ" onChange={handleChange}/>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +184,7 @@ const IsSuccessTrip = () => {
                   cy="7.27273"
                   r="6.27273"
                   stroke="#00A5E8"
-                  stroke-width="2"
+                  strokeWidth="2"
                 ></circle>
                 <line
                   x1="14.5858"
@@ -193,23 +192,23 @@ const IsSuccessTrip = () => {
                   x2="11.6364"
                   y2="13.0506"
                   stroke="#00A5E8"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 ></line>
               </svg>
             </div>
-            <div class="btn-search">
+            <div className="btn-search">
               <button type="button">ຄົ້ນຫາ</button>
             </div>
           </div>
         </div>
-        <div class="trip-container">
-          {tripEmpty ? (
-            <EmptyContent Messages={tripEmpty} />
+        <div className="trip-container">
+          {!currentPages ? (
+            <EmptyContent Messages={tripEmpty ? tripEmpty : "ບໍ່ມີຂໍ້ມູນ"} />
           ) : (
             <>
               {loading ? (
-                <div class="trip-cards">
+                <div className="trip-cards">
                   <div className="cards-loading-trips_1">
                     <LoadingCard count={4} styles={styles_1} />
                   </div>
@@ -222,7 +221,7 @@ const IsSuccessTrip = () => {
                 </div>
               ) : (
                 <>
-                  <div class="trip-cards">
+                  <div className="trip-cards">
                     {currentPages &&
                       currentPages.map((item, idx) => (
                         <div className="cards" key={idx}>
@@ -268,7 +267,7 @@ const IsSuccessTrip = () => {
                         </div>
                       ))}
                   </div>
-                  {trip.length >= 5 && (
+                  {trip?.length >= 5 && (
                     <div className="pagination-trip">
                       <PaginationComponent
                         count={count}

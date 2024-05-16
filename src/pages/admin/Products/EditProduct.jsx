@@ -142,7 +142,29 @@ const EditProduct = () => {
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "ບໍ່ສາມາດອັບເດດສິນຄ້າໄດ້",
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
       });
   };
 
@@ -157,7 +179,7 @@ const EditProduct = () => {
   const handleDelete = (id) => {
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
-      text: "ທ່ານຕ້ອງການລົບຕຳແໜ່ງນີ້ແທ້ບໍ່ ?",
+      text: "ທ່ານຕ້ອງການລົບລາຍການນີ້ແທ້ບໍ່ ?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -182,7 +204,7 @@ const EditProduct = () => {
               });
               Toast.fire({
                 icon: "success",
-                title: "ລົບສຳເລັດແລ້ວ",
+                title: "ລົບສິນຄ້າສຳເລັດແລ້ວ",
               });
               navigate("/listProducts");
             }
@@ -201,7 +223,7 @@ const EditProduct = () => {
             });
             Toast.fire({
               icon: "warning",
-              title: err.response.data.message,
+              title: "ບໍ່ສາມາດລົບສິນຄ້າໄດ້",
             });
 
             if (err.response.data.message === "unauthorized") {
@@ -331,7 +353,7 @@ const EditProduct = () => {
                 </div>
                 <div className="form-group">
                   <div className="input-group">
-                    <label htmlFor="">ຫົວໜ່ວຍສິນຄ້າ:</label>
+                    <label htmlFor="">ຈຳນວນ:</label>
                     <input
                       type="text"
                       name="amount"

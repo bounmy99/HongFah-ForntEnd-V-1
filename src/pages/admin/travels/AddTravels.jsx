@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import { CreateTrip } from '../../../functions/Trip';
 import ImagePreviews from '../../../assets/image/upload.png';
 import { Spin } from 'antd';
@@ -11,6 +11,7 @@ const AddTravels = () => {
   const [fileName, setFileName] = useState("");
   const [value, setValue] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
 
   // set value trip
@@ -40,11 +41,12 @@ const AddTravels = () => {
         icon: "error",
         title: "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ"
       });
+      setLoading(false)
       return;
     }
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-    console.log("Data from Input", Data)
+    // console.log("Data from Input", Data)
 
     CreateTrip(Data, users.token).then(res => {
       if (res.status === 200) {
@@ -83,7 +85,7 @@ const AddTravels = () => {
       });
       Toast.fire({
         icon: "warning",
-        title: err.response.data.message,
+        title: "ບໍ່ສາມາດບັນທຶກຂໍ້ມູນໄດ້",
       });
       
       if (err.response.data.message === "unauthorized") {

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Swal from "sweetalert2";
 import moment from "moment";
-import { Empty, Modal, Spin, Tabs, Image,Button } from "antd";
+import { Modal, Spin, Tabs, Image,Button } from "antd";
 import ImageTravel from "../../../assets/image/no-image.png";
 import LoadingCard from "../../../components/LoadingCard";
 import {
@@ -63,7 +63,7 @@ const Travels = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setTripEmpty(err.response.data.message);
+        setTripEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -77,7 +77,7 @@ const Travels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -93,7 +93,7 @@ const Travels = () => {
   // ===========pagination antd =============
   const indexOfLastPages = pages * pageSize;
   const indexOfFirstPages = indexOfLastPages - pageSize;
-  const currentPages = trip.slice(indexOfFirstPages, indexOfLastPages);
+  const currentPages = trip ? trip.slice(indexOfFirstPages, indexOfLastPages) : null;
   // ================ end pagination antd ===========
 
   // function open modal
@@ -102,7 +102,7 @@ const Travels = () => {
     setTripId(id);
   };
 // function set file list
-  const handleChange = ({ fileList, file }) => {
+  const handleChange = ({ fileList}) => {
     setFileList(fileList);
   };
 
@@ -145,7 +145,7 @@ const Travels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ເກີດຂໍ້ຜິດພາດ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -193,7 +193,7 @@ const Travels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ສາມາດຢືນຢັນທິບໄດ້",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -268,7 +268,31 @@ const Travels = () => {
             }
           })
           .catch((err) => {
-            console.log(err.response.data.message);
+            setLoading(false);
+          setTripEmpty(err.response.data.message);
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: "ບໍ່ສາມາດລົບໄດ້",
+          });
+  
+          if (err.response.data.message === "unauthorized") {
+            dispatch({
+              type: "USER_LOGOUT",
+              payload: null,
+            });
+            navigate("/");
+          }
           });
       }
     });
@@ -288,7 +312,7 @@ const Travels = () => {
         })
         .catch((err) => {
           setLoading(false);
-          setTripEmpty(err.response.data.message);
+          setTripEmpty("ບໍ່ມີຂໍ້ມູນ");
           const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -302,7 +326,7 @@ const Travels = () => {
           });
           Toast.fire({
             icon: "warning",
-            title: err.response.data.message,
+            title: "ບໍ່ມີຂໍ້ມູນ",
           });
   
           if (err.response.data.message === "unauthorized") {
@@ -325,7 +349,7 @@ const Travels = () => {
       })
       .catch((err) => {
         setLoading(false);
-        setTripEmpty(err.response.data.message);
+        setTripEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -339,7 +363,7 @@ const Travels = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -354,16 +378,16 @@ const Travels = () => {
 
   const ManageTrip = () => (
     <>
-      <div class="list-trip-filter">
+      <div className="list-trip-filter">
         <div className="btn-add">
           <Link to={"/travels/addtravels"}>
             <button type="submit" className="btn-success">
               ເພີ່ມທິບທ່ອງທ່ຽວ
             </button>
-            <i class="bx bxs-plus-circle"></i>
+            <i className="bx bxs-plus-circle"></i>
           </Link>
         </div>
-        <div class="trip-filter-date">
+        {/* <div className="trip-filter-date">
           <div className="date-trip">
             <div className="datepicker-trip">
               <i className="bx bx-calendar icons-left-trip"></i>
@@ -373,7 +397,6 @@ const Travels = () => {
                 selected={startDate}
                 onChange={(date) => {
                   setStartDate(date);
-                  setIsActiveDropdownFilter(false);
                 }}
               />
               <i className="bx bx-chevron-down icons-right-trip"></i>
@@ -388,15 +411,14 @@ const Travels = () => {
                 selected={endDate}
                 onChange={(date) => {
                   setEndDate(date);
-                  setIsActiveDropdownFilter(false);
                 }}
               />
               <i className="bx bx-chevron-down icons-right-trip"></i>
             </div>
           </div>
-        </div>
-        <div class="search">
-          <div class="input-search">
+        </div> */}
+        <div className="search">
+          <div className="input-search">
             <input
               type="search"
               onChange={handleSearch}
@@ -414,7 +436,7 @@ const Travels = () => {
                 cy="7.27273"
                 r="6.27273"
                 stroke="#00A5E8"
-                stroke-width="2"
+                strokeWidth="2"
               ></circle>
               <line
                 x1="14.5858"
@@ -422,28 +444,28 @@ const Travels = () => {
                 x2="11.6364"
                 y2="13.0506"
                 stroke="#00A5E8"
-                stroke-width="2"
-                stroke-linecap="round"
+                strokeWidth="2"
+                strokeLinecap="round"
               ></line>
             </svg>
           </div>
-          <div class="btn-search">
+          <div className="btn-search">
             <button type="button" onClick={handleClickSearch}>
               ຄົ້ນຫາ
             </button>
           </div>
         </div>
       </div>
-      <div class="trip-container">
+      <div className="trip-container">
         <div className="trip-title">
           <h5>ຈັດການທິບທ່ອງທຽ່ວ</h5>
         </div>
-        {tripEmpty ? (
-          <EmptyContent Messages={tripEmpty} />
+        {!currentPages ? (
+          <EmptyContent Messages={tripEmpty ? tripEmpty : "ບໍ່ມີຂໍ້ມູນ"} />
         ) : (
           <>
             {loading ? (
-              <div class="trip-cards">
+              <div className="trip-cards">
                 <div className="cards-loading-trips_1">
                   <LoadingCard count={4} styles={styles_1} />
                 </div>
@@ -456,7 +478,7 @@ const Travels = () => {
               </div>
             ) : (
               <>
-                <div class="trip-cards">
+                <div className="trip-cards">
                   {currentPages &&
                     currentPages.map((item, idx) => (
                       <div className="cards" key={idx}>
@@ -506,7 +528,7 @@ const Travels = () => {
                               className="btn-outline success-outline"
                               onClick={() => showModal(item._id)}
                             >
-                              <i class="bx bx-check"></i> ຢືນຢັນ
+                              <i className="bx bx-check"></i> ຢືນຢັນ
                             </button>
 
                             <Link to={`/travels/detailTravels/${item._id}`}>
@@ -514,7 +536,7 @@ const Travels = () => {
                                 type="button"
                                 className="btn-outline info-outline"
                               >
-                                <i class="bx bxs-edit"></i> ແກ້ໄຂ
+                                <i className="bx bxs-edit"></i> ແກ້ໄຂ
                               </button>
                             </Link>
                           </div>
@@ -522,7 +544,7 @@ const Travels = () => {
                       </div>
                     ))}
                 </div>
-                {trip.length >= 5 && (
+                {trip?.length >= 5 && (
                   <div className="pagination-trip">
                     <PaginationComponent
                       count={count}

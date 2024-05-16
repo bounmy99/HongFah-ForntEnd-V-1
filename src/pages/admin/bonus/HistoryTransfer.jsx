@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { read, writeFileXLSX, utils } from "xlsx";
 import { GetAllSuccess } from "../../../functions/Bonus";
-import { useSelector } from "react-redux";
-import { Empty, Spin } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
@@ -193,13 +192,12 @@ const HistoryTransfer = () => {
   const [selectRows, setSelectRows] = useState([]);
   const [maintain, setMainTain] = useState([]);
   const [emptyData, setEmptyData] = useState("");
-  const [dataImport, setDataImport] = useState([]);
   const [loading, setLoading] = useState(false);
   const [valueInput, setValueInput] = useState("");
   const [toggleCleared, setToggleCleared] = useState(false);
   const navigate = useNavigate();
-
-  console.log("SelectRow", selectRows);
+  const dispatch = useDispatch();
+  // console.log("SelectRow", selectRows);
 
   // load all success transfer
   useEffect(() => {
@@ -224,7 +222,7 @@ const HistoryTransfer = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -234,7 +232,7 @@ const HistoryTransfer = () => {
           });
           navigate("/");
         }
-        setEmptyData(err.response.data.message);
+        setEmptyData("ບໍ່ມີຂໍ້ມູນ");
       });
   }, []);
 
@@ -268,7 +266,7 @@ const HistoryTransfer = () => {
         });
         Toast.fire({
           icon: "warning",
-          title: err.response.data.message,
+          title: "ບໍ່ມີຂໍ້ມູນ",
         });
 
         if (err.response.data.message === "unauthorized") {
@@ -278,91 +276,19 @@ const HistoryTransfer = () => {
           });
           navigate("/");
         }
-        setEmptyData(err.response.data.message);
+        setEmptyData("ບໍ່ມີຂໍ້ມູນ");
       });
   }, [valueInput]);
 
-  // import file csv or excel
-  const handleImport = (e) => {
-    const files = e.target.files;
-    if (files.length) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const wb = read(e.target.result);
-        const sheets = wb.SheetNames;
-        if (sheets.length) {
-          const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-          setDataImport(rows);
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    }
-    setSelectRows([]);
-  };
-
-  // export file csv or excel
-  const handleExport = () => {
-    setSelectRows([]);
-
-    console.log("selectRows", selectRows);
-    // return;
-
-    if (selectRows.length === 0) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-      });
-      return;
-    }
-    const heading = [
-      [
-        "ລະຫັດຜູ້ໃຊ້",
-        "ຊື່ທະນາຄານ",
-        "ຊື່ບັນຊີ",
-        "ເລກບັນຊີ",
-        "ຊື່",
-        "ນາມສະກຸນ",
-        "ຕຳແນ່ງ",
-        "ລະຫັດໄອດີ",
-        "ລູກທີມ",
-        "ຄະແນນ PV",
-        "ຄະແນນທີມ PV",
-        "ໄດ້ຮັບເງິນຄືນ",
-        "ໂບນັດ PV",
-        "ຄ່າແນະນຳ",
-        "ໂບນັດທີມ PV",
-        "ລວມໂບນັດ",
-      ],
-    ];
-    const wb = utils.book_new();
-    const ws = utils.json_to_sheet([]);
-    utils.sheet_add_aoa(ws, heading);
-    utils.sheet_add_json(ws, selectRows, { origin: "A2", skipHeader: true });
-    utils.book_append_sheet(wb, ws, "ການເຄື່ອນໄຫວ");
-    writeFileXLSX(wb, "History.xlsx");
-    setToggleCleared(true);
-  };
-
+ 
   return (
     <div className="card-main">
       <Spin spinning={loading} style={{ marginTop: 80 }}>
-        <div class="orders-button">
+        <div className="orders-button">
           <>
             <button
               type="button"
-              class={`btn-order  btn-secondary`}
+              className={`btn-order  btn-secondary`}
               onClick={() => navigate("/Bonus")}
             >
               ລາຍຊື່ທີ່ໄດ້ຮັບໂບນັດ
@@ -370,7 +296,7 @@ const HistoryTransfer = () => {
 
             <button
               type="button"
-              class={`btn-order btn-info`}
+              className={`btn-order btn-info`}
               onClick={() => navigate("/Bonus/history")}
             >
               ປະຫວັດ
@@ -378,9 +304,9 @@ const HistoryTransfer = () => {
           </>
         </div>
         <div className="employee-table">
-          <div class="employee-card-header">
-            <div class="search">
-              <div class="icon-filter">
+          <div className="employee-card-header">
+            <div className="search">
+              <div className="icon-filter">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="30"
@@ -388,7 +314,7 @@ const HistoryTransfer = () => {
                   viewBox="0 0 30 30"
                   fill="none"
                 >
-                  <g clip-path="url(#clip0_731_6498)">
+                  <g clipPath="url(#clip0_731_6498)">
                     <path
                       d="M1.25 5.9377H4.67C4.9383 6.92487 5.52397 7.79632 6.33666 8.41762C7.14935 9.03891 8.1439 9.37553 9.16687 9.37553C10.1898 9.37553 11.1844 9.03891 11.9971 8.41762C12.8098 7.79632 13.3955 6.92487 13.6637 5.9377H28.75C29.0815 5.9377 29.3995 5.80601 29.6339 5.57158C29.8683 5.33716 30 5.01922 30 4.6877C30 4.35618 29.8683 4.03824 29.6339 3.80382C29.3995 3.5694 29.0815 3.4377 28.75 3.4377H13.6637C13.3955 2.45054 12.8098 1.57908 11.9971 0.957788C11.1844 0.336492 10.1898 -0.00012207 9.16687 -0.00012207C8.1439 -0.00012207 7.14935 0.336492 6.33666 0.957788C5.52397 1.57908 4.9383 2.45054 4.67 3.4377H1.25C0.918479 3.4377 0.600537 3.5694 0.366117 3.80382C0.131696 4.03824 0 4.35618 0 4.6877C0 5.01922 0.131696 5.33716 0.366117 5.57158C0.600537 5.80601 0.918479 5.9377 1.25 5.9377ZM9.16625 2.5002C9.5989 2.5002 10.0218 2.6285 10.3816 2.86886C10.7413 3.10923 11.0217 3.45087 11.1872 3.85058C11.3528 4.25029 11.3961 4.69013 11.3117 5.11446C11.2273 5.5388 11.019 5.92857 10.713 6.2345C10.4071 6.54042 10.0173 6.74876 9.59301 6.83317C9.16868 6.91757 8.72884 6.87426 8.32913 6.70869C7.92942 6.54312 7.58778 6.26274 7.34741 5.90301C7.10704 5.54328 6.97875 5.12035 6.97875 4.6877C6.97941 4.10774 7.21009 3.55173 7.62018 3.14164C8.03028 2.73154 8.58629 2.50086 9.16625 2.5002Z"
                       fill="white"
@@ -409,9 +335,9 @@ const HistoryTransfer = () => {
                   </defs>
                 </svg>
               </div>
-              <div class="input-search">
+              <div className="input-search">
                 <input
-                  type="text"
+                  type="search"
                   placeholder="ຄົ້ນຫາ..........."
                   onChange={handleChange}
                 />
@@ -427,7 +353,7 @@ const HistoryTransfer = () => {
                     cy="7.27273"
                     r="6.27273"
                     stroke="#00A5E8"
-                    stroke-width="2"
+                    strokeWidth="2"
                   ></circle>
                   <line
                     x1="14.5858"
@@ -435,42 +361,17 @@ const HistoryTransfer = () => {
                     x2="11.6364"
                     y2="13.0506"
                     stroke="#00A5E8"
-                    stroke-width="2"
-                    stroke-linecap="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
                   ></line>
                 </svg>
               </div>
-              <div class="btn-search">
+              <div className="btn-search">
                 <button type="button">ຄົ້ນຫາ</button>
               </div>
             </div>
-            <div class="button">
-              <div class="btn-show">
-                <input
-                  type="file"
-                  hidden
-                  className="input-field"
-                  name="file"
-                  onChange={handleImport}
-                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                />
-                {/* <button
-                  type="button"
-                  style={{ marginRight: 5 }}
-                  class="btn"
-                  onClick={() => document.querySelector(".input-field").click()}
-                >
-                  Import ຂໍ້ມູນ
-                </button> */}
-
-                {/* <button
-                  type="button"
-                  // disabled={selectRows.length ? false : true}
-                  onClick={handleExport}
-                  class="btn"
-                >
-                  Export ທັງໝົດທີ່ເລຶອກ
-                </button> */}
+            <div className="button">
+              <div className="btn-show">
                 <ExportToExcelBonus
                   setSelectableRow={setSelectRows}
                   selectableRow={selectRows}
@@ -481,19 +382,10 @@ const HistoryTransfer = () => {
             </div>
           </div>
 
-          {emptyData ? (
-            <EmptyContent Messages={emptyData} />
-          ) : dataImport.length ? (
-            <DataTable
-              columns={columns}
-              data={dataImport}
-              pagination
-              customStyles={customStyles}
-              selectableRows
-              clearSelectedRows={toggleCleared}
-              onSelectedRowsChange={(row) => setSelectRows(row.selectedRows)}
-            />
-          ) : (
+          {!maintain ? (
+            <EmptyContent Messages={emptyData ? emptyData : "ບໍ່ມີຂໍ້ມູນ"} />
+          )
+           : (
             <DataTable
               columns={columns}
               data={maintain}
