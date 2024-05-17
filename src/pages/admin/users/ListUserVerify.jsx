@@ -126,6 +126,7 @@ const ListVerify = () => {
           loadData();
           setLoadingSearch(false);
           setOpenModal(false);
+          setValueSearch("")
         }
       })
       .catch((err) => {
@@ -459,6 +460,7 @@ const ListVerify = () => {
                       type="search"
                       placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
                       onChange={handleChangeSearch}
+                      value={valueSearch}
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

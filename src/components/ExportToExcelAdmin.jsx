@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+
 import * as ExcelJS from "exceljs";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -287,7 +287,7 @@ const ExportToExcelAdmin = ({ data, header, setToggleCleared,setDataExport }) =>
         const url = window.URL.createObjectURL(blob);
         const anchor = document.createElement("a");
         anchor.href = url;
-        anchor.download = "ordersHistory.xlsx";
+        anchor.download = "ປະຫວັດການຂາຍສິນຄ້າ.xlsx";
         anchor.click();
         window.URL.revokeObjectURL(url);
       });

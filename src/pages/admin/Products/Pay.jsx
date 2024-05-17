@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import {
   ArrowLeftOutlined,
   DollarOutlined,
@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Spin, Empty } from "antd";
+import { Spin } from "antd";
 import Swal from "sweetalert2";
 
 import { GetUserCode } from "../../../functions/GetUserWithUsercode";
@@ -17,7 +17,7 @@ import EmptyContent from "../../../components/EmptyContent";
 import { OnKeyDown } from "../../../functions/OnkeyDown";
 
 const Pay = () => {
-  const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
+  const { users, orderItems } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

@@ -6789,9 +6789,10 @@ body {
     display: block;
   }
   .Product-card .product-card-content .images img {
-    width: 7.5rem;
+    width: 8.4rem;
   }
 }
+
 
 @media screen and (max-width : 1024px) {
   .dash-content .boxes .box {
@@ -6938,11 +6939,12 @@ body {
   }
 
   .Product-card .product-card-content .content .point {
-    left: calc(70%);
+    left: calc(63%);
   }
 
   .Product-card .product-card-content .images img {
     height: 10rem;
+    width: 11rem;
   }
 
   .Product-card .product-card-content .description h5 {
@@ -7487,6 +7489,10 @@ body {
     height: 8rem;
     position: relative;
   }
+  .Product-card .product-card-content .images img {
+    height: 10rem;
+    width: 13.4rem;
+  }
 
   .Product-card .product-card-header .select {
     display: flex;
@@ -8009,6 +8015,10 @@ body {
   .Product-card {
     width: 17rem;
   }
+  .Product-card .product-card-content .images img {
+    height: 10rem;
+    width: 14.9rem;
+  }
 
   .Product-card .product-card-header {
     width: 17rem;
@@ -8048,7 +8058,7 @@ body {
   }
 
   .Product-card .product-card-content .content .point {
-    left: calc(70%);
+    left: calc(62%);
   }
 
   .Product-card .product-card-content .content .text-bottom .price-text h5 {

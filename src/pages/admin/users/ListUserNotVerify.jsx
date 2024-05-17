@@ -267,6 +267,7 @@ const ListUserNotVerify = () => {
               });
               loadData();
               navigate("/users", { state: { key: 3 } });
+              setValueSearch("")
             }
           })
           .catch((err) => {
@@ -543,6 +544,7 @@ const ListUserNotVerify = () => {
                       type="search"
                       placeholder="ຄົ້ນຫາລູກຄ້າ ຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດພະນັກງານ"
                       onChange={handleChangeSearch}
+                      value={valueSearch}
                     />
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

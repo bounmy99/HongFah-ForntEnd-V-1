@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+
 import * as ExcelJS from "exceljs";
 const toDataURL = (url) => {
   const promise = new Promise((resolve, reject) => {
@@ -19,7 +19,7 @@ const toDataURL = (url) => {
 
 const ExportExcel = ({ bestSell }) => {
 
-  console.log(bestSell)
+  // console.log(bestSell)
 
   const exportExcelFile = () => {
     const workbook = new ExcelJS.Workbook();
@@ -168,7 +168,7 @@ const ExportExcel = ({ bestSell }) => {
         const url = window.URL.createObjectURL(blob);
         const anchor = document.createElement("a");
         anchor.href = url;
-        anchor.download = "download.xlsx";
+        anchor.download = "ສິນຄ້າຂາຍດີ.xlsx";
         anchor.click();
         window.URL.revokeObjectURL(url);
       });

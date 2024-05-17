@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import TableOrderUser from '../../../components/TableOrderUser';
 import { GetAllOrdersExport } from '../../../functions/Orders';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { formatPrice } from "../../../functions/FormatPrices"
-import moment from "moment"
 import { Tooltip } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
-const HistoryOrders = ({btnExport}) => {
-  const { users } = useSelector((state) => ({ ...state }))
+const HistoryOrders = () => {
   const [successOrders, setSuccessOrders] = useState([]);
   const [successOrdersEmpty, setSuccessOrdersEmpty] = useState("");
   const dispatch = useDispatch();
@@ -206,7 +204,7 @@ const HistoryOrders = ({btnExport}) => {
   return (
     <>
           <div>
-            <TableOrderUser btnExport={btnExport} successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
+            <TableOrderUser  successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
           </div>
     </>
 

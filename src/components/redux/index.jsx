@@ -5,6 +5,7 @@ import { OrderItems } from './OrderItems';
 import { ToggleSideBar } from './ToggleSideBar';
 import { Notification } from './Notification';
 import { ResetPassword } from './ResetPassword';
+import { ShowBtnExportOrders } from './ShowBtnExportOrders';
 
 
 const rootReducer = combineReducers({
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
     orderItems : OrderItems,
     ToggleSideBar,
     Notification,
-    ResetPassword
+    ResetPassword,
+    ShowBtnExportOrders
 })
 
 export default rootReducer

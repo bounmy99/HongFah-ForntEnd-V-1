@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import {Table} from 'antd'
@@ -10,6 +10,7 @@ import Loading from '../../../components/Loadding';
 import { formatPrice } from "../../../functions/FormatPrices"
 const InfoOrders = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { users } = useSelector((state) => ({ ...state }))
     const { id } = useParams();
     const [order, setOrder] = useState([]);
@@ -177,6 +178,10 @@ const InfoOrders = () => {
                             title: "ຢືນຢັນການອະນຸມັດສຳເລັດ"
                         });
                         navigate("/HomeOrders", { state: { key: 3 } });
+                        dispatch({
+                            type : "SHOW_BTN_EXPORT",
+                            payload : true
+                        });
                     }
                 }).catch((err) => {
                     if (err.response.data.message) {

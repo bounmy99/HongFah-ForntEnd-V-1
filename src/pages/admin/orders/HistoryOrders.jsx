@@ -7,12 +7,14 @@ import { formatPrice } from "../../../functions/FormatPrices";
 import { Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
-const HistoryOrders = ({ btnExport }) => {
-  const { users } = useSelector((state) => ({ ...state }));
+const HistoryOrders = () => {
+  const { users} = useSelector((state) => ({ ...state }));
   const [successOrders, setSuccessOrders] = useState([]);
   const [successOrdersEmpty, setSuccessOrdersEmpty] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  
 
   // customize style cell of table
   const customStyles = {
@@ -184,7 +186,12 @@ const HistoryOrders = ({ btnExport }) => {
   ];
   // load all success orders
   useEffect(() => {
-    btnExport = true
+
+    dispatch({
+      type : "SHOW_BTN_EXPORT",
+      payload : true
+    })
+   
     GetAllOrdersExport(users.token, "", "", "", "success")
       .then((res) => {
         setSuccessOrders(res.data.data);
@@ -222,7 +229,6 @@ const HistoryOrders = ({ btnExport }) => {
     <>
       <div>
         <TableOrderUser
-          btnExport={btnExport}
           successOrdersEmpty={successOrdersEmpty}
           Status={"success"}
           setSuccessOrders={setSuccessOrders}

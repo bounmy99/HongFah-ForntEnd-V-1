@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowLeftOutlined,
   DollarOutlined,
@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import { CreateOrder } from "../../../functions/OrdersAdmin";
 import { OnKeyDown } from "../../../functions/OnkeyDown";
 const Pay = () => {
-  const { users, carts, orderItems } = useSelector((state) => ({ ...state }));
+  const { users, orderItems } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -92,117 +92,55 @@ const Pay = () => {
         return;
       }
     }
-    Swal.fire({
-      title: "ພິມໃບບິນ",
-      text: "ທ່ານຕ້ອງການພິມໃບບິນບໍ່ ?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#00a5e8",
-      confirmButtonText: "ພິມບິນ",
-      cancelButtonText: "ບັນທຶກ",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // return
-        CreateOrder(users.token, formData)
-          .then((res) => {
-            setLoading(false);
-            let Id = res.data.data._id;
-            // return
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "success",
-              title: res.data.message,
-            });
 
-            dispatch({
-              type: "EMPTY_CART",
-              payload: [],
-            });
-            dispatch({
-              type: "EMPTY_ORDER",
-              payload: [],
-            });
-            navigate(`/listProducts/saleProducts/users/bill/${Id}`);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "warning",
-              title: err.response.data.message,
-            });
-            setLoading(false);
-          });
-      } else {
-        setLoading(true);
-        CreateOrder(users.token, formData)
-          .then((res) => {
-            setLoading(false);
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "success",
-              title: "ສ້າງອໍເດີສຳເລັດ",
-            });
+    CreateOrder(users.token, formData)
+    .then((res) => {
+      setLoading(false);
+      let Id = res.data.data._id;
+      // return
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "success",
+        title: "ສ້າງອໍເດີ້ສຳເລັດ",
+      });
 
-            dispatch({
-              type: "EMPTY_CART",
-              payload: [],
-            });
-            dispatch({
-              type: "EMPTY_ORDER",
-              payload: [],
-            });
-            navigate("/listProducts/saleProducts/users", { state: { key: 3 } });
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "warning",
-              title: "ສ້າງອໍເດີ້ບໍ່ສຳເລັດ",
-            });
-            setLoading(true);
-          });
-      }
+      dispatch({
+        type: "EMPTY_CART",
+        payload: [],
+      });
+      dispatch({
+        type: "EMPTY_ORDER",
+        payload: [],
+      });
+      navigate(`/listProducts/saleProducts/users/bill/${Id}`);
+    })
+    .catch((err) => {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "ບໍ່່ສາມາດສ້າງອໍເດີ້ໄດ້",
+      });
+      setLoading(false);
     });
   };
 

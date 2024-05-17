@@ -5,8 +5,8 @@ import DatePicker from "react-datepicker";
 import { writeFileXLSX, utils } from "xlsx";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
-import { GetAllOrders } from "../functions/Orders";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAllOrders,GetAllOrdersExport } from "../functions/Orders";
 import EmptyContent from "./EmptyContent";
 import ExportToExcel from "./ExportToExcel";
 const TableOrderUser = ({
@@ -24,7 +24,6 @@ const TableOrderUser = ({
   orderEmpty,
   successOrdersEmpty,
   cancelOrderEmpty,
-  btnExport,
 }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndtDate] = useState();
@@ -33,6 +32,7 @@ const TableOrderUser = ({
   const [toggleCleared, setToggleCleared] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { ShowBtnExportOrders } = useSelector((state)=>({...state}));
   let getData = JSON.parse(localStorage.getItem("data"));
 
   const handleChange = (e) => {
@@ -91,10 +91,6 @@ const TableOrderUser = ({
         if (setCancelOrder) {
           setCancelOrder(res.data.data);
         }
-        if (setSuccessOrders) {
-          setSuccessOrders(res.data.data);
-          console.log("fetch data search",res.data.data)
-        }
       })
       .catch((err) => {
         if (setEmptyOrder) {
@@ -103,6 +99,39 @@ const TableOrderUser = ({
         if (setCancelOrderEmpty) {
           setCancelOrderEmpty(err.response.data.message);
         }
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: err.response.data.message,
+        });
+
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+      GetAllOrdersExport(getData.token, startDate, endDate, valueInput, Status)
+      .then((res) => {
+       
+        if (setSuccessOrders) {
+          setSuccessOrders(res.data.data);
+          console.log("fetch data search",res.data.data)
+        }
+      })
+      .catch((err) => {
         if (setSuccessOrdersEmpty) {
           setSuccessOrdersEmpty(err.response.data.message);
         }
@@ -130,8 +159,10 @@ const TableOrderUser = ({
           navigate("/");
         }
       });
-  }, [startDate, endDate, valueInput]);
 
+
+  }, [startDate, endDate, valueInput]);
+ 
   const header = [
     "ລະຫັດໄອດີ",
     "ລະຫັດລູກຄ້າ",
@@ -241,6 +272,7 @@ const TableOrderUser = ({
                 name="search"
                 onChange={handleChange}
                 placeholder="ຄົ້ນຫາລາຍການສິນຄ້າ"
+                value={valueInput}
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +307,7 @@ const TableOrderUser = ({
               >
                 ຄົ້ນຫາ
               </button>
-              {btnExport && (
+              {ShowBtnExportOrders && (
                 <>
                   {/* <button
                     type="button"
