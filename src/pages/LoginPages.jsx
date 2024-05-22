@@ -20,7 +20,7 @@ const LoginPages = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState({
-    userCode: "A27614",
+    userCode: "super82915",
     password: "12345678",
   });
 

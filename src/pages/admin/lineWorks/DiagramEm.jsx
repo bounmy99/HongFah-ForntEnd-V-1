@@ -15,6 +15,7 @@ const DiagramEm = () => {
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState([]);
 
+
   useEffect(() => {
     loadingGetRoot();
   }, []);
@@ -23,7 +24,7 @@ const DiagramEm = () => {
     setLoading(true);
     GetRootLineWork(users.token)
       .then((res) => {
-        console.log("Diagram",res.data)
+        // console.log("Diagram",res.data)
         setLoading(false);
         setPosition(res.data.data.positionCount);
         setLinework(res.data.data.tree);

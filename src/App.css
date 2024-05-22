@@ -2201,7 +2201,7 @@ body {
 
 
 .Product-card .product-card-content .images img {
-  width: 6.9rem;
+  width: 7.9rem;
   object-fit: cover;
   height: 5rem;
   border-radius: .4rem .4rem 0 0;
@@ -2597,9 +2597,11 @@ body {
 .detail-cart-sale {
   background-color: #ffffff;
   width: 100%;
-  height: 34rem;
+  height: 100%;
   padding: 15px;
   border-radius: 8px;
+
+
   .logo-images{
     display : flex;
     align-items: center;
@@ -2626,10 +2628,10 @@ body {
 
     .detail-cart-top-left {
       p {
-        color: #3d3d3d88;
+        color: #302f2f88;
 
         span {
-          color: #6b6b6b;
+          color: #535353;
         }
 
         .detail-status {
@@ -2644,7 +2646,7 @@ body {
         color: #3d3d3d88;
 
         span {
-          color: #6b6b6b;
+          color: #4d4d4d;
         }
       }
 
@@ -2655,6 +2657,39 @@ body {
       }
     }
   }
+ .print-content{
+  display: flex;
+  justify-content: center;
+  .card-print {
+    display: block; 
+    margin: 25px;
+    
+    .card-print-left {
+      p {
+        color: #3d3d3d88;
+
+        span {
+          color: #6b6b6b;
+        }
+
+        .detail-status {
+          color: #02cf0c;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .card-print-right {
+      p {
+        color: #3d3d3d88;
+
+        span {
+          color: #6b6b6b;
+        }
+      }
+    }
+  }
+ }
 
   .detail-cart-bottom {
     width: 100%;
@@ -5321,7 +5356,7 @@ body {
 
 .package-button {
   display: flex;
-  margin: 25px 15px;
+  margin: 70px 15px;
   gap: 1rem;
   align-items: center;
   justify-content: center;
@@ -6790,6 +6825,12 @@ body {
   }
   .Product-card .product-card-content .images img {
     width: 8.4rem;
+  }
+}
+
+@media screen and (max-width : 1366px) {
+  .Product-card .product-card-content .images img{
+    width: calc(100%);
   }
 }
 
@@ -8645,3 +8686,41 @@ body {
 }
 
 /* ============================ End Screen Responsive ========================== */
+
+@media print {
+  @page {
+    size: 80mm 236mm; 
+  }
+
+  span{
+    font-weight: bolder;
+  }
+
+  .detail-cart-top, .detail-cart-bottom{
+    visibility: hidden;
+  }
+
+  .detail-cart-top{
+    display: block !important;
+  }
+
+  .detail-cart-sale, .print-content{
+    visibility: visible;
+    width: 302px;
+    padding: 5px;
+  }
+
+  .logo-images{
+    margin-left: 5rem;
+    margin-bottom: 10px;
+    img{
+      width: 100px;
+      height: 100px;
+      margin-bottom: 10px;
+    }
+    h3{
+      color : var(--main-color);
+      font-style: 18px;
+    }
+  }
+}

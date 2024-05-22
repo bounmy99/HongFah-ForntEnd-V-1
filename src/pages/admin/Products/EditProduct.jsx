@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate,useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { GetAllProductType } from "../../../functions/ProductType";
 import {
@@ -26,6 +26,7 @@ const initialState = {
 
 const EditProduct = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
   const { users } = useSelector((state) => ({ ...state }));
   const [image, setImage] = useState([]);
@@ -332,7 +333,7 @@ const EditProduct = () => {
                       }
                       options={
                         productType &&
-                        productType.map((item, idx) => ({
+                        productType.map((item) => ({
                           value: item._id,
                           label: item.name,
                         }))
@@ -355,7 +356,7 @@ const EditProduct = () => {
                   <div className="input-group">
                     <label htmlFor="">ຈຳນວນ:</label>
                     <input
-                      type="text"
+                      type="number"
                       name="amount"
                       onChange={handleChange}
                       id=""
@@ -364,6 +365,15 @@ const EditProduct = () => {
                     />
                   </div>
                   <div className="input-group">
+                    <label htmlFor="">ໄດ້ຮັບເງິນຄືນ:</label>
+                    <input
+                      type="number"
+                      name="cashback"
+                      onChange={handleChange}
+                      id=""
+                      className="form-controls"
+                      value={product.cashback}
+                    />
                   </div>
                 </div>
                 <div className="input-group">

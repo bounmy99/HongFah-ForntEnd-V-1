@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -537,7 +537,7 @@ const ListPackage = () => {
                         </div>
                       </div>
                       <div className="package-content">
-                        <div className="content-title">
+                        {/* <div className="content-title">
                           <div className="package-icon">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -568,14 +568,14 @@ const ListPackage = () => {
                           <div className="package-text">
                             <h3>ການຊື້ຕຳແໜ່ງ</h3>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="text-sub">
-                          <div className="text-sub-left">
+                          {/* <div className="text-sub-left">
                             <h3>ລາຄາການຊື້ :</h3>
-                          </div>
+                          </div> 
                           <div className="text-sub-right">
                             <h3>{formatPrice(item.price)} ₭</h3>
-                          </div>
+                          </div>*/}
                         </div>
                         <div className="text-sub">
                           <div className="text-sub-left">

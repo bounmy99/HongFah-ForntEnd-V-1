@@ -389,6 +389,7 @@ const ListUserNotVerify = () => {
       name: "ເບີໂທ",
       selector: (row) => row.phoneNumber,
       cell: (row) => (
+        row.phoneNumber ?
         <Tooltip title="ກົດໃສ່ເບີໂທເພື່ອໄປທີ່ Whatsapp" color="#00A5E8">
           <p className="posit-text-acount-name">
             <Link
@@ -399,6 +400,7 @@ const ListUserNotVerify = () => {
             </Link>
           </p>
         </Tooltip>
+        : "ບໍ່ມີ"
       ),
       sortable: true,
       width: "210px",

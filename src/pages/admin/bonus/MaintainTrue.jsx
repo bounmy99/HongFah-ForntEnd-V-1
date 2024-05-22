@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { Empty } from "antd";
+import { Empty,Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { GetAllBonus } from "../../../functions/Bonus";
 import { formatPrice } from "../../../functions/FormatPrices";
 import Swal from "sweetalert2"
@@ -96,6 +96,25 @@ const columns = [
     ),
     sortable: true,
     width: "80px",
+  },
+  {
+    name: "ເບີໂທ",
+    cell: (row) => (
+      row.phoneNumber ?
+      <Tooltip title="ກົດໃສ່ເບີໂທເພື່ອໄປທີ່ Whatsapp" color="#00A5E8">
+      <p className="posit-text-acount-name">
+        <Link
+          to={`https://wa.me/${row.phoneNumber}?text=ສົ່ງການແຈ້ງເຕືອນໃຫ້ກັບບຸກຄົນນີ້`}
+          target="_blank"
+        >
+          {row.phoneNumber}
+        </Link>
+      </p>
+    </Tooltip>
+    : "ບໍ່ມີ"
+    ),
+    sortable: true,
+    width: "100px",
   },
   {
     name: "ສະມາຊິກທິມ",

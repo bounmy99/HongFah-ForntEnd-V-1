@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { GetAllSuccess } from "../../../functions/Bonus";
 import { useSelector, useDispatch } from "react-redux";
-import { Spin } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Spin,Tooltip } from "antd";
+import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
@@ -109,6 +109,25 @@ const columns = [
     width: "80px",
   },
   {
+    name: "ເບີໂທ",
+    cell: (row) => (
+      row.phoneNumber ?
+      <Tooltip title="ກົດໃສ່ເບີໂທເພື່ອໄປທີ່ Whatsapp" color="#00A5E8">
+      <p className="posit-text-acount-name">
+        <Link
+          to={`https://wa.me/${row.phoneNumber}?text=ສົ່ງການແຈ້ງເຕືອນໃຫ້ກັບບຸກຄົນນີ້`}
+          target="_blank"
+        >
+          {row.phoneNumber}
+        </Link>
+      </p>
+    </Tooltip>
+    : "ບໍ່ມີ"
+    ),
+    sortable: true,
+    width: "100px",
+  },
+  {
     name: "ສະມາຊິກທິມ",
     selector: (row) => (row.children_count ? row.children_count : "ບໍ່ມີ"),
     sortable: true,
@@ -119,7 +138,7 @@ const columns = [
     sortable: true,
     cell: (row) => (
       <div className="score">
-        {row.isMaintainSales === true ? <p>ຮັກສາຍອດ</p> : <p>ບໍ່ຮັກສາຍອດ</p>}
+        {<p>ຮັກສາຍອດ</p>}
       </div>
     ),
     width: "118px",

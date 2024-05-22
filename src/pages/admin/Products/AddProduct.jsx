@@ -555,21 +555,21 @@ const AddProduct = () => {
                   <div className="input-group">
                     <label htmlFor="">ຄະແນນ:</label>
                     <input
-                      type="text"
+                      type="number"
                       name="point"
                       onChange={handleChange}
-                      placeholder="ກະລຸນາປ້ອນຄະແນນ"
+                      placeholder="ຄະແນນຕ້ອງເປັນຈຳຖ້ວນ"
                       className="form-controls"
                       value={point}
                     />
                   </div>
                   <div className="input-group">
-                    <label htmlFor="">ໄດ້ຮັບເງິນຄືນ (cash back):</label>
+                    <label htmlFor="">ໄດ້ຮັບເງິນຄືນ:</label>
                     <input
-                      type="text"
+                      type="number"
                       name="cashback"
                       onChange={handleChange}
-                      placeholder="ກະລຸນາປ້ອນຈຳນວນໄດ້ຮັບເງິນຄືນ"
+                      placeholder="ໄດ້ຮັບເງິນຄືນຕ້ອງເປັນຈຳຖ້ວນ"
                       className="form-controls"
                       value={cashback}
                     />

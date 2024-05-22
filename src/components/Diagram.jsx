@@ -20,7 +20,7 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
   useEffect(() => {
     const ZoomObj = zoomRef.current;
 
-    console.log("ZoomObj", ZoomObj);
+    // console.log("ZoomObj", ZoomObj);
 
     let isDragging = false;
     let prevPosition = { x: 0, y: 0 };
@@ -79,6 +79,7 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
             draggable={false}
             className="genealogy-tree"
           >
+            { linework && 
             <ul>
               <li>
                 <Link to={`/lineWork/Details/${linework._id}`}>
@@ -100,6 +101,7 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                     </div>
                   </div>
                 </Link>
+                {levelOne && 
                 <ul className="active">
                   <li>
                     <ul>
@@ -127,6 +129,7 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                   </div>
                                 </div>
                               </Link>
+                              { level_1 && 
                               <ul>
                                 {level_1 &&
                                   level_1.children.map((level_2, index) => (
@@ -156,6 +159,7 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                             </div>
                                           </div>
                                         </Link>
+                                        {level_2 && 
                                         <ul>
                                           {level_2 &&
                                             level_2.children.map(
@@ -269,6 +273,54 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                                                 </div>
                                                                               </div>
                                                                             </Link>
+                                                                            <ul>
+                                                                              {level_5 &&
+                                                                                level_5.children.map(
+                                                                                  (
+                                                                                    level_6,
+                                                                                    index
+                                                                                  ) => (
+                                                                                    <>
+                                                                                      <li
+                                                                                        key={
+                                                                                          index
+                                                                                        }
+                                                                                      >
+                                                                                        <Link
+                                                                                          to={`/lineWork/Details/${level_6._id}`}
+                                                                                        >
+                                                                                          <div className="member-view-box">
+                                                                                            <div className="member-image">
+                                                                                              <img
+                                                                                                src={
+                                                                                                  level_6
+                                                                                                    .user_id
+                                                                                                    ?.position_id
+                                                                                                    ?.icon
+                                                                                                    ? level_6
+                                                                                                        .user_id
+                                                                                                        ?.position_id
+                                                                                                        ?.icon
+                                                                                                    : imagePreview
+                                                                                                }
+                                                                                                alt="Member"
+                                                                                              />
+                                                                                              <div className="member-details">
+                                                                                                <h3>
+                                                                                                  {level_6.user_id &&
+                                                                                                    level_6
+                                                                                                      .user_id
+                                                                                                      .firstName}
+                                                                                                </h3>
+                                                                                              </div>
+                                                                                            </div>
+                                                                                          </div>
+                                                                                        </Link>
+                                                                                      </li>
+                                                                                    </>
+                                                                                  )
+                                                                                )}
+                                                                            </ul>
                                                                           </li>
                                                                         </>
                                                                       )
@@ -284,18 +336,22 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                               )
                                             )}
                                         </ul>
+                                        }
                                       </li>
                                     </>
                                   ))}
                               </ul>
+                              }
                             </li>
                           </>
                         ))}
                     </ul>
                   </li>
                 </ul>
+                }
               </li>
             </ul>
+            }
           </div>
         </>
       </div>
