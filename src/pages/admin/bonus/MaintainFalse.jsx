@@ -134,43 +134,38 @@ const columns = [
   {
     name: "ຄະແນນ",
     sortable: true,
-    cell: (row) => <p>{row.PV ? row.PV  : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{row.PV ? row.PV  : "0"} ຄະແນນ</p>,
     width: "180px",
   },
   {
     name: "ຄະແນນທີມ",
     sortable: true,
-    cell: (row) => <p>{row.teamePV ? row.teamePV  : "ບໍ່ມີ"} ຄະແນນ</p>,
-    width: "180px",
-  },
-  {
-    name: "ຄະແນນໂບນັດ",
-    sortable: true,
-    cell: (row) => <p>{row.bonusPV ? row.bonusPV  : "ບໍ່ມີ"} ຄະແນນ</p>,
-    width: "180px",
-  },
-  {
-    name: "ຄະແນນໂບນັດທີມ",
-    sortable: true,
-    cell: (row) => <p>{row.bonusTeamePV ? row.bonusTeamePV  : "ບໍ່ມີ"} ຄະແນນ</p>,
-    width: "180px",
-  },
-  {
-    name: "ລວມໂບນັດ",
-    sortable: true,
-    cell: (row) => <p>{row.totalBonus ? row.totalBonus  : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{row.teamePV ? row.teamePV  : "0"} ຄະແນນ</p>,
     width: "180px",
   },
   {
     name: "ຄ່າແນະນຳ",
     sortable: true,
-    cell: (row) => <p>{row.recommended ? row.recommended  : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{row.recommended ? row.recommended  : "0"} ₭</p>,
     width: "180px",
   },
   {
-    name: "ໄດ້ຮັບເງິນຄືນ",
+    name: "ຄະແນນໂບນັດທີມ",
     sortable: true,
-    cell: (row) => <p>{formatPrice(row.cashback ) ? formatPrice(row.cashback )  : "ບໍ່ມີ"} ₭</p>,
+    cell: (row) => <p>{row.bonusTeamePV ? row.bonusTeamePV  : "0"} ຄະແນນ</p>,
+    width: "180px",
+  },
+
+  {
+    name: "ໂບນັດຕຳແໜ່ງ",
+    sortable: true,
+    cell: (row) => <p>{row.bonus_position ? row.bonus_position  : "0"} ₭</p>,
+    width: "180px",
+  },
+  {
+    name: "ລວມໂບນັດ",
+    sortable: true,
+    cell: (row) => <p>{row.totalBonus ? row.totalBonus  : "0"}</p>,
     width: "180px",
   },
 ];

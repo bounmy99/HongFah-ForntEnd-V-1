@@ -5,17 +5,12 @@ export const GetRootLineWork = async(token)=>{
         headers:{Authorization: `Bearer ${token}`}
     })
 }
+
 export const GetLineWorkTable = async(token,searchName)=>{
     return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/linework/getall?searchName=${searchName}`,{
         headers:{Authorization: `Bearer ${token}`}
     })
 }
-
-// export const GetAllEmployee = async(token)=>{
-//     return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/linework/getwithlevel?level=0&toLevel=4`,{
-//         headers:{Authorization: `Bearer ${token}`}
-//     })
-// }
 
 export const GetOneLineWork = async(token,id)=>{
     return await axios.get(`${import.meta.env.VITE_HONGFHA_API}/linework/getone/${id}`,{

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import imagePreview from "../../../assets/avatar/image-avatar.jpeg";
 import { GetRootLineWork } from "../../../functions/LineWork";
 import Diagram from "../../../components/Diagram";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 const DiagramEm = () => {
@@ -11,10 +11,8 @@ const DiagramEm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [levelOne, setLavelOne] = useState([]);
-  const [linework, setLinework] = useState([]);
+  const [linework, setLinework] = useState();
   const [loading, setLoading] = useState(false);
-  const [position, setPosition] = useState([]);
-
 
   useEffect(() => {
     loadingGetRoot();
@@ -26,7 +24,6 @@ const DiagramEm = () => {
       .then((res) => {
         // console.log("Diagram",res.data)
         setLoading(false);
-        setPosition(res.data.data.positionCount);
         setLinework(res.data.data.tree);
         setLavelOne(res.data.data.tree.children);
       })
@@ -65,7 +62,9 @@ const DiagramEm = () => {
         {loading ? (
           ""
         ) : (
+          <>
           <Diagram linework={linework} levelOne={levelOne}  imagePreview={imagePreview} />
+          </>
         )}
       </Spin>
     </div>

@@ -149,11 +149,11 @@ const AddProduct = () => {
 
     images.forEach((file) => {
       formData.append("images", file);
-      console.log("file looped", file);
+      // console.log("file looped", file);
     });
 
     for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
+      // console.log(`${key}: ${value}`);
       if (!value) {
         const Toast = Swal.mixin({
           toast: true,
@@ -177,7 +177,7 @@ const AddProduct = () => {
 
     CreateProduct(users.token, formData)
       .then((res) => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         if (res.status === 200) {
           setLoading(false);
           const Toast = Swal.mixin({

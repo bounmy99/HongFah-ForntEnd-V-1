@@ -253,7 +253,7 @@ const DetailTravels = () => {
     }
     const Data = Object.fromEntries(formData);
     e.currentTarget.reset();
-    console.log("Data from Input update trip", Data);
+    // console.log("Data from Input update trip", Data);
 
     UpdateTrip(Data, id, users.token)
       .then((res) => {

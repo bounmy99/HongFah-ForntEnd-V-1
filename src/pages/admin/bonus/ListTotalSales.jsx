@@ -69,10 +69,11 @@ const ListTotalSales = () => {
           "ລູກທີມ",
           "ຄະແນນ PV",
           "ຄະແນນທີມ PV",
-          "ໄດ້ຮັບເງິນຄືນ",
+          // "ໄດ້ຮັບເງິນຄືນ",
           "ໂບນັດ PV",
           "ຄ່າແນະນຳ",
           "ໂບນັດທີມ PV",
+          "ໂບນັດຕຳແຫນ່ງ",
           "ລວມໂບນັດ",
         ];
 
@@ -125,6 +126,7 @@ const ListTotalSales = () => {
         sheet.getCell("M2").value = header[12];
         sheet.getCell("N2").value = header[13];
         sheet.getCell("O2").value = header[14];
+        // sheet.getCell("P2").value = header[15];
 
         // sheet.getRow(2).commit();
         // merge by start row, start column, end row, end column
@@ -208,14 +210,14 @@ const ListTotalSales = () => {
             key: "teamePV",
             width: 15,
           },
+          // {
+          //   // header: "......",
+          //   key: "cashback",
+          //   width: 12,
+          // },
           {
             // header: "......",
-            key: "cashback",
-            width: 12,
-          },
-          {
-            // header: "......",
-            key: "bunusPV",
+            key: "bonusPV",
             width: 12,
           },
           {
@@ -225,7 +227,12 @@ const ListTotalSales = () => {
           },
           {
             // header: "......",
-            key: "bunusTeamePV",
+            key: "bonusTeamePV",
+            width: 12,
+          },
+          {
+            // header: "......",
+            key: "bonus_position",
             width: 12,
           },
           {
@@ -246,17 +253,18 @@ const ListTotalSales = () => {
               bankName: bonus?.bankName,
               accountName: bonus?.accountName,
               accountNo: bonus?.accountNo,
-              lastName: bonus?.lastName,
               firstName: bonus?.firstName,
+              lastName: bonus?.lastName,
               bonuscashback: bonus?.bonuscashback,
               userPosition: bonus?.userPosition,
               children_count: bonus?.children_count,
               PV: bonus?.PV,
               teamePV: bonus?.teamePV,
-              cashback: bonus?.cashback,
-              bunusPV: bonus?.bunusPV,
+              // cashback: bonus?.cashback,
+              bonusPV: bonus?.bonusPV,
               recommended: bonus?.recommended,
-              bunusTeamePV: bonus?.bunusTeamePV,
+              bonusTeamePV: bonus?.bonusTeamePV,
+              bonus_position: bonus?.bonus_position,
               totalBonus: bonus?.totalBonus,
               // createdAt: moment(bonus?.createdAt).format("DD-MM-YYYY"),
             });

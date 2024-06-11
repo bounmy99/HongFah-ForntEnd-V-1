@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
@@ -13,10 +13,14 @@ import {
   GetOnePosition,
   UpdatePosition,
 } from "../../../functions/Position";
+import {
+  GetAllPackage
+} from "../../../functions/Packages";
 import BtnAddPkg from "../../../assets/image/btn-add-package.png";
 import LoadingCard from "../../../components/LoadingCard";
 import FormCreate from "./FormCreate";
 import FormUpdate from "./FormUpdate";
+import {formatPrice} from "../../../functions/FormatPrices"
 
 const styles = {
   width: 250,
@@ -48,10 +52,22 @@ const ListPosition = () => {
   const [visible, setVisible] = useState(7);
   const [positionSelect, setPositionSelect] = useState([]);
   const [positionEmpty, setPositionEmpty] = useState("");
+  const [packageList, setPackageList] = useState([]);
+
+  // const [fullSelect, setFullSelect] = useState([]);
 
   useEffect(() => {
+    loadPackage();
     loadPosition();
   }, []);
+
+  useEffect(()=>{
+    setPositionSelect([...packageList, ...positionList]);
+  },[packageList, positionList]);
+
+  // console.log("ListPos",positionList)
+  // console.log("PackageList",packageList)
+  // console.log("positionSelect",positionSelect)
 
 // load all position
   const loadPosition = () => {
@@ -61,6 +77,41 @@ const ListPosition = () => {
         setLoading(false);
         setPositionList(res.data.data);
         setPositionSelect(res.data.data);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setPositionEmpty("ບໍ່ມີຂໍ້ມູນ");
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "warning",
+          title: "ບໍ່ມີຂໍ້ມູນ",
+        });
+        
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  };
+  const loadPackage = () => {
+    setLoading(true);
+    GetAllPackage(users.token)
+      .then((res) => {
+        setLoading(false);
+        setPackageList(res.data.data);
       })
       .catch((err) => {
         setLoading(false);
@@ -98,6 +149,7 @@ const ListPosition = () => {
 
 // set value 
   const handleChange = (e) => {
+    // console.log("positionEdit input",{[e.target.name]: e.target.value })
     setPositionEdit({ ...positionEdit, [e.target.name]: e.target.value });
   };
 // inset and update
@@ -274,11 +326,20 @@ const ListPosition = () => {
         DeletePosition(users.token, id)
           .then((res) => {
             if (res.status === 200) {
-              Swal.fire({
-                title: "ສຳເລັດ",
-                text: "ລົບສຳເລັດແລ້ວ.",
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
                 icon: "success",
-                confirmButtonText: "ຕົກລົງ",
+                title: "ລົບຂໍ້ມູນສຳເລັດ",
               });
               loadPosition();
             }
@@ -397,7 +458,7 @@ const ListPosition = () => {
                             <path
                               d="M-2.56078 35.2951C2.78242 36.3356 8.29968 36.0437 13.5032 34.445C18.7067 32.8464 23.4362 29.9903 27.2736 26.1293C31.1109 22.2682 33.9378 17.5212 35.5044 12.308C37.0709 7.09469 37.3289 1.57573 36.2555 -3.76095L26.0839 -1.71502C26.8212 1.95054 26.644 5.7413 25.568 9.32211C24.4919 12.9029 22.5502 16.1634 19.9145 18.8154C17.2788 21.4674 14.0303 23.4292 10.4562 24.5272C6.88211 25.6253 3.09251 25.8258 -0.577529 25.1111L-2.56078 35.2951Z"
                               fill="white"
-                              fill-opacity="0.5"
+                              fillOpacity="0.5"
                             />
                           </svg>
                         </div>
@@ -413,7 +474,7 @@ const ListPosition = () => {
                             <path
                               d="M76.0508 4.70739C67.9524 1.08461 59.0862 -0.487061 50.2359 0.131347C41.3857 0.749754 32.8242 3.53919 25.3083 8.25302C17.7924 12.9669 11.5537 19.4599 7.14376 27.158C2.73382 34.8561 0.288501 43.5222 0.0240037 52.3901L16.9259 52.8942C17.1076 46.8032 18.7872 40.8508 21.8162 35.5633C24.8453 30.2757 29.1304 25.8159 34.2928 22.5781C39.4551 19.3404 45.3357 17.4244 51.4146 16.9997C57.4935 16.5749 63.5834 17.6544 69.1459 20.1428L76.0508 4.70739Z"
                               fill="white"
-                              fill-opacity="0.5"
+                              fillOpacity="0.5"
                             />
                           </svg>
                         </div>
@@ -429,6 +490,7 @@ const ListPosition = () => {
                               />
                             </div>
                           </div>
+
                         </div>
                         <div className="position-content">
                           <div className="content-title">
@@ -453,8 +515,8 @@ const ListPosition = () => {
                                     y2="19.8897"
                                     gradientUnits="userSpaceOnUse"
                                   >
-                                    <stop stop-color="#0DB3E7" />
-                                    <stop offset="1" stop-color="#028FCE" />
+                                    <stop stopColor="#0DB3E7" />
+                                    <stop offset="1" stopColor="#028FCE" />
                                   </linearGradient>
                                 </defs>
                               </svg>
@@ -465,18 +527,26 @@ const ListPosition = () => {
                           </div>
                           <div className="text-sub">
                             <div className="text-sub-left">
-                              <h3>ຄະແນນ PV :</h3>
+                              <h3>ຄະແນນຂອງທີມ : </h3>
                             </div>
                             <div className="text-sub-right">
-                              <h3>{item.conditionPv}</h3>
+                              <h3>{formatPrice(item.PVTeamForBonus)}</h3>
                             </div>
                           </div>
                           <div className="text-sub">
                             <div className="text-sub-left">
-                              <h3>ເງືອນໄຂລູກທີມ :</h3>
+                              <h3>ໂບນັດ  :</h3>
                             </div>
                             <div className="text-sub-right">
-                              <h3>{item.conditionChildren}</h3>
+                              <h3>{formatPrice(item.bonus)}</h3>
+                            </div>
+                          </div>
+                          <div className="text-sub">
+                            <div className="text-sub-left">
+                              <h3>ລູກຕົງ :</h3>
+                            </div>
+                            <div className="text-sub-right">
+                              <h3>{item.children1StLevel}</h3>
                             </div>
                           </div>
                         </div>
@@ -540,7 +610,7 @@ const ListPosition = () => {
                     <path
                       d="M-2.56078 35.2951C2.78242 36.3356 8.29968 36.0437 13.5032 34.445C18.7067 32.8464 23.4362 29.9903 27.2736 26.1293C31.1109 22.2682 33.9378 17.5212 35.5044 12.308C37.0709 7.09469 37.3289 1.57573 36.2555 -3.76095L26.0839 -1.71502C26.8212 1.95054 26.644 5.7413 25.568 9.32211C24.4919 12.9029 22.5502 16.1634 19.9145 18.8154C17.2788 21.4674 14.0303 23.4292 10.4562 24.5272C6.88211 25.6253 3.09251 25.8258 -0.577529 25.1111L-2.56078 35.2951Z"
                       fill="white"
-                      fill-opacity="0.5"
+                      fillOpacity="0.5"
                     />
                   </svg>
                 </div>
@@ -564,7 +634,7 @@ const ListPosition = () => {
                     <path
                       d="M76.0508 4.70739C67.9524 1.08461 59.0862 -0.487061 50.2359 0.131347C41.3857 0.749754 32.8242 3.53919 25.3083 8.25302C17.7924 12.9669 11.5537 19.4599 7.14376 27.158C2.73382 34.8561 0.288501 43.5222 0.0240037 52.3901L16.9259 52.8942C17.1076 46.8032 18.7872 40.8508 21.8162 35.5633C24.8453 30.2757 29.1304 25.8159 34.2928 22.5781C39.4551 19.3404 45.3357 17.4244 51.4146 16.9997C57.4935 16.5749 63.5834 17.6544 69.1459 20.1428L76.0508 4.70739Z"
                       fill="white"
-                      fill-opacity="0.5"
+                      fillOpacity="0.5"
                     />
                   </svg>
                 </div>
@@ -599,7 +669,7 @@ const ListPosition = () => {
                     <path
                       d="M-2.56078 35.2951C2.78242 36.3356 8.29968 36.0437 13.5032 34.445C18.7067 32.8464 23.4362 29.9903 27.2736 26.1293C31.1109 22.2682 33.9378 17.5212 35.5044 12.308C37.0709 7.09469 37.3289 1.57573 36.2555 -3.76095L26.0839 -1.71502C26.8212 1.95054 26.644 5.7413 25.568 9.32211C24.4919 12.9029 22.5502 16.1634 19.9145 18.8154C17.2788 21.4674 14.0303 23.4292 10.4562 24.5272C6.88211 25.6253 3.09251 25.8258 -0.577529 25.1111L-2.56078 35.2951Z"
                       fill="white"
-                      fill-opacity="0.5"
+                      fillOpacity="0.5"
                     />
                   </svg>
                 </div>
@@ -622,7 +692,7 @@ const ListPosition = () => {
                     <path
                       d="M76.0508 4.70739C67.9524 1.08461 59.0862 -0.487061 50.2359 0.131347C41.3857 0.749754 32.8242 3.53919 25.3083 8.25302C17.7924 12.9669 11.5537 19.4599 7.14376 27.158C2.73382 34.8561 0.288501 43.5222 0.0240037 52.3901L16.9259 52.8942C17.1076 46.8032 18.7872 40.8508 21.8162 35.5633C24.8453 30.2757 29.1304 25.8159 34.2928 22.5781C39.4551 19.3404 45.3357 17.4244 51.4146 16.9997C57.4935 16.5749 63.5834 17.6544 69.1459 20.1428L76.0508 4.70739Z"
                       fill="white"
-                      fill-opacity="0.5"
+                      fillOpacity="0.5"
                     />
                   </svg>
                 </div>

@@ -14,11 +14,13 @@ import Logo1 from "../assets/logo/Logo1.png";
 import Logo2 from "../assets/logo/Logo2.png";
 // function
 import { Login } from "../functions/Authentication";
+
 const LoginPages = () => {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
   const [value, setValue] = useState({
     userCode: "super82915",
     password: "12345678",
@@ -136,7 +138,7 @@ const LoginPages = () => {
               </div>
             </div>
             <form onSubmit={handleSubmit}>
-              <label htmlFor="">AdminID</label>
+              <label htmlFor="" className="title__label">ລະຫັດແອັດມິນ</label>
               <div className="input-group">
                 <input
                   type="text"
@@ -150,7 +152,7 @@ const LoginPages = () => {
                   <i className="bx bx-user"></i>
                 </div>
               </div>
-              <label htmlFor="">Password</label>
+              <label htmlFor="" className="title__label">ລະຫັດຜ່ານ</label>
               <div className="input-group">
                 <input
                   type={`${isPasswordShow ? "text" : "password"}`}
@@ -181,7 +183,7 @@ const LoginPages = () => {
                     id="checkedYes"
                     defaultChecked={false}
                   />
-                  <span>remember me</span>
+                  <span>ຈົດຈຳຂ້ອຍ</span>
                 </div>
                 <div>
                   <Link to={"/forgetPassword"} className="forget-password">

@@ -64,6 +64,7 @@ const Pay = () => {
           });
           navigate("/");
         }
+        setLoadingSearch(false);
       });
     setLoading(false);
   };

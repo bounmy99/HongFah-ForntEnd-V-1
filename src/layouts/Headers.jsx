@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Tooltip, notification } from "antd";
+import { Button, Tooltip, notification } from "antd";
 import { Badge, Drawer } from "antd";
 import { io } from "socket.io-client";
 import addNotification from "react-push-notification";
@@ -234,6 +234,18 @@ const Headers = () => {
         payload: false,
       });
 
+// ================== read All Noti ==================
+      const All_id = Notification?.map((n)=>n._id)
+      const readAll = ()=>{
+        console.log(All_id)
+        ReadedNoti(users.token, { notiID: All_id }).then((res) => {
+          if (res) {
+            CallNotification();
+          }
+          });
+        setOpenNoti(false);
+      }
+
   return (
     <div>
       <div className="top">
@@ -361,12 +373,13 @@ const Headers = () => {
                   </div>
                 </div>
               ))
-            ) : (
-              <div className="no-noti">
+              ) : (
+                <div className="no-noti">
                 <EmptyContent Messages={"ບໍ່ມີລາຍການແຈ້ງເຕືອນ"} />
               </div>
             )}
           </div>
+          {Notification?.length >= 2 && <Button type="primary" onClick={readAll} style={{marginLeft:200, marginBottom:20}}>ອ່ານທັງໝົດ</Button>}
         </div>
       </div>
 

@@ -13,7 +13,6 @@ const DetailsEmp = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // customize style cell of table
 
   // load detail
   useEffect(() => {
@@ -67,22 +66,8 @@ const DetailsEmp = () => {
         </button>
       </div>
       <h1>ລາຍລະອຽດ</h1>
-      <p>
-        <span>Level : </span> {detail.level ? detail.level : "ບໍ່ມີ"}
-      </p>
-      <p>
-        <span>LineUp : </span> {detail.lineUp ? detail.lineUp : "ບໍ່ມີ"}
-      </p>
-      <p>
-        <span>PriceTotal : </span>{" "}
-        {detail.priceTotal ? detail.priceTotal : "ບໍ່ມີ"}
-      </p>
-      <p>
-        <span>PV Total : </span> {detail.pvTotal ? detail.pvTotal : "ບໍ່ມີ"}
-      </p>
-      <hr />
       <div className="images-lineWork">
-        <span>IMAGE :</span>
+        <span>ຮູບພາບ :</span>
         {detail.user_id?.profile ? (
           <img src={detail.user_id?.profile} alt="" />
         ) : (
@@ -90,81 +75,79 @@ const DetailsEmp = () => {
         )}
       </div>
       <p>
-        <span>USER CODE : </span>
+        <span>ລະຫັດຜຸ້ໃຊ້ : </span>
         {detail.user_id?.userCode ? detail.user_id?.userCode : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>PACKAGE : </span>
-        {formatPrice(
-          detail.user_id?.package_id?.price
-            ? detail.user_id?.package_id?.price
-            : "ບໍ່ມີ"
-        )}
-        ກີບ
-      </p>
-      <p>
-        <span>POSITION : </span>
+        <span>ຕຳແໜ່ງ : </span>
         {detail.user_id?.position_id ? detail.user_id?.position_id : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>FULL NAME : </span>
+        <span>ຊື່ ແລະ ນາມສະກຸນ : </span>
         {`${detail.user_id?.firstName ? detail.user_id?.firstName : "ບໍ່ມີ"}  ${
           detail.user_id?.lastName ? detail.user_id?.lastName : "ບໍ່ມີ"
         } `}
       </p>
-      <hr />
-      <h3>ລູກທີມ</h3>
+      <p>
+        <span>Level : </span> {detail.level === 0 ? detail.level : detail.level}
+      </p>
+      <p>
+        <span>LineUp : </span> {detail.lineUp ? detail.lineUp : "ບໍ່ມີ"}
+      </p>
+      <p>
+        <span>ຄະແນນລວມ : </span> {detail.pvTotal ? detail.pvTotal : 0}
+      </p>
       <p>
         <span>ຈຳນວນລູກທີມ : </span>
-        {detail?.children_count ? detail?.children_count : "ບໍ່ມີ"} ຄົນ
+        {detail?.children_count ? detail?.children_count : 0 } ຄົນ
       </p>
       {/* <DataTables columns={columns} progressPending={loading} data={detail.children} customStyles={customStyles} /> */}
       <hr />
       <h3>ເດືອນທີ່ແລ້ວ</h3>
       <p>
-        <span>PV_Amount : </span> {detail.lastMonth?.PV_Amount ? detail.lastMonth?.PV_Amount : "ບໍ່ມີ"}
+        <span>ຈຳນວນຄະແນນ : </span> {detail.lastMonth?.PV_Amount ? formatPrice(detail.lastMonth?.PV_Amount) : "0"}
       </p>
       <p>
         <span>lineWork : </span> {detail.lastMonth?.lineWork ? detail.lastMonth?.lineWork : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>type :</span> {detail.lastMonth?.type ? detail.lastMonth?.type : "ບໍ່ມີ"}
+        <span>ປະເພດ :</span> {detail.lastMonth?.type ? detail.lastMonth?.type : "ບໍ່ມີ"}
       </p>
       <p>
         <span>isActive : </span> {detail.lastMonth?.isActive ? "true" : "false"}
       </p>
       <p>
-        <span>user_id : </span> {detail.lastMonth?.user_id ? detail.lastMonth?.user_id : "ບໍ່ມີ"}
+        <span>ລະຫັດໄອດີ : </span> {detail.lastMonth?.user_id ? detail.lastMonth?.user_id : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>createdAt : </span>
+        <span>ວັນທີສ້າງ : </span>
         {moment(detail.lastMonth?.createdAt).format("DD-MM-YYYY")}
       </p>
       <hr />
       <h3>ເດືອນນີ້</h3>
       <p>
-        <span>PV_Amount : </span> {detail.thisMonth?.PV_Amount ? detail.thisMonth?.PV_Amount : "ບໍ່ມີ"}
+        <span>ຈຳນວນຄະແນນ : </span> {detail.thisMonth?.PV_Amount ? formatPrice(detail.thisMonth?.PV_Amount) : "0"}
       </p>
       <p>
         <span>lineWork : </span> {detail.thisMonth?.lineWork ? detail.thisMonth?.lineWork : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>type :</span> {detail.thisMonth?.type ? detail.thisMonth?.type : "ບໍ່ມີ"}
+        <span>ປະເພດ :</span> {detail.thisMonth?.type ? detail.thisMonth?.type : "ບໍ່ມີ"}
       </p>
       <p>
         <span>isActive : </span> {detail.thisMonth?.isActive ? "true" : "false"}
       </p>
       <p>
-        <span>user_id : </span> {detail.thisMonth?.user_id ? detail.thisMonth?.user_id : "ບໍ່ມີ"}
+        <span>ລະຫັດໄອດີ : </span> {detail.thisMonth?.user_id ? detail.thisMonth?.user_id : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>createdAt : </span>{" "}
+        <span>ວັນທີສ້າງ : </span>{" "}
         {moment(detail.thisMonth?.createdAt).format("DD-MM-YYYY")}
       </p>
       <hr />
       <h3>User Line Up</h3>
       <div className="images-lineWork">
-        <span>IMAGE :</span>
+        <span>ຮູບພາບ :</span>
         {detail.userLineUp?.profile ? (
           <img src={detail.userLineUp?.profile} alt="" />
         ) : (
@@ -172,10 +155,10 @@ const DetailsEmp = () => {
         )}
       </div>
       <p>
-        <span>ReferralCode : </span> {detail.userLineUp?.ReferralCode ? detail.userLineUp?.ReferralCode : "ບໍ່ມີ"}
+        <span>ລະຫັດອ້າງອີກ : </span> {detail.userLineUp?.ReferralCode ? detail.userLineUp?.ReferralCode : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>Full Name : </span>{" "}
+        <span>ຊື່ ແລະ ນາມສະກຸນ : </span>{" "}
         {`${
           detail.userLineUp?.firstName ? detail.userLineUp?.firstName : "ບໍ່ມີ"
         }  ${
@@ -183,7 +166,7 @@ const DetailsEmp = () => {
         } `}
       </p>
       <p>
-        <span>User Code :</span> {detail.userLineUp?.userCode ? detail.userLineUp?.userCode : "ບໍ່ມີ" }
+        <span>ລະຫັດຜຸ້ໃຊ້ :</span> {detail.userLineUp?.userCode ? detail.userLineUp?.userCode : "ບໍ່ມີ" }
       </p>
     </div>
   );

@@ -79,7 +79,7 @@ const ExportToExcelBonus = ({
     sheet.getCell("L2").value = header[11];
     sheet.getCell("M2").value = header[12];
     sheet.getCell("N2").value = header[13];
-    sheet.getCell("O2").value = header[14];
+    // sheet.getCell("O2").value = header[14];
 
     // sheet.getRow(2).commit();
     // merge by start row, start column, end row, end column
@@ -134,15 +134,16 @@ const ExportToExcelBonus = ({
         width: 15,
       },
       {
-        // header: ".......",
-        key: "lastName",
-        width: 15,
-      },
-      {
         // header: ".....",
         key: "firstName",
         width: 15,
       },
+      {
+        // header: ".......",
+        key: "lastName",
+        width: 15,
+      },
+      
       {
         // header: "......",
         key: "userPosition",
@@ -165,22 +166,17 @@ const ExportToExcelBonus = ({
       },
       {
         // header: "......",
-        key: "cashback",
-        width: 12,
-      },
-      {
-        // header: "......",
-        key: "bunusPV",
-        width: 12,
-      },
-      {
-        // header: "......",
         key: "recommended",
         width: 12,
       },
       {
         // header: "......",
-        key: "bunusTeamePV",
+        key: "bonusTeamePV",
+        width: 12,
+      },
+      {
+        // header: "......",
+        key: "bonus_postition",
         width: 12,
       },
       {
@@ -188,6 +184,7 @@ const ExportToExcelBonus = ({
         key: "totalBonus",
         width: 12,
       },
+      
     ];
 
     // sheet.getColumn(3).outlineLevel = 2;
@@ -201,17 +198,16 @@ const ExportToExcelBonus = ({
           bankName: bonus?.bankName,
           accountName: bonus?.accountName,
           accountNo: bonus?.accountNo,
-          lastName: bonus?.lastName,
           firstName: bonus?.firstName,
+          lastName: bonus?.lastName,
           userPosition: bonus?.userPosition,
           bonuscashback: bonus?.bonuscashback,
           children_count: bonus?.children_count,
           PV: bonus?.PV,
           teamePV: bonus?.teamePV,
-          cashback: bonus?.cashback,
-          bunusPV: bonus?.bunusPV,
           recommended: bonus?.recommended,
-          bunusTeamePV: bonus?.bunusTeamePV,
+          bonusTeamePV: bonus?.bonusTeamePV,
+          bonus_postition: bonus?.bonus_postition,
           totalBonus: bonus?.totalBonus,
         });
 

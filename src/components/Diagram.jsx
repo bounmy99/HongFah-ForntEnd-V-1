@@ -1,11 +1,25 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import { useState, useEffect, useRef } from "react";
-import { ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
+import { ZoomInOutlined, ZoomOutOutlined,AimOutlined,FullscreenExitOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-const Diagram = ({ levelOne, linework, imagePreview }) => {
-  const [scale, setScale] = useState(1);
+import EmptyContent from "./EmptyContent";
+const Diagram = ({ linework, imagePreview }) => {
+  const [scale, setScale] = useState(0.20000000000000015);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  
   const zoomRef = useRef(null);
+
+  useEffect(() => {
+    const element = document.getElementById("box");
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+    }, []);
+
 
   // Zoom in function
   const handleZoomIn = () => {
@@ -14,11 +28,29 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
 
   // Zoom Out function
   const handleZoomOut = () => {
+    if(scale <= 0.20000000000000000) return
     setScale((scale) => scale - 0.1);
   };
+
+  // Focus function
+  const handleFocus = () => {
+    const element = document.getElementById("box");
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  };
+  // Focus function
+  const handleResetScale = () => {
+   setScale(0.20000000000000015)
+  };
+
   // Effect for handling object dragging and zooming
   useEffect(() => {
-    const ZoomObj = zoomRef.current;
+    const elemets = zoomRef.current;
 
     // console.log("ZoomObj", ZoomObj);
 
@@ -49,170 +81,148 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
     };
 
     // Add event listener
-    ZoomObj?.addEventListener("mousedown", handleMouseDown);
-    ZoomObj?.addEventListener("mousemove", handlerMouseMove);
-    ZoomObj?.addEventListener("mouseup", handleMouseUp);
+    elemets?.addEventListener('mousedown', handleMouseDown);
+    elemets?.addEventListener('mousemove', handlerMouseMove);
+    elemets?.addEventListener('mouseup', handleMouseUp);
 
     // Remove envent listener on component unmount
     return () => {
-      ZoomObj?.removeEventListener("mousedown", handleMouseDown);
-      ZoomObj?.removeEventListener("mousemove", handlerMouseMove);
-      ZoomObj?.removeEventListener("mouseup", handleMouseUp);
+      elemets?.removeEventListener('mousedown', handleMouseDown);
+      elemets?.removeEventListener('mousemove', handlerMouseMove);
+      elemets?.removeEventListener('mouseup', handleMouseUp);
     };
   }, [zoomRef, scale]);
 
+
+
   return (
     <>
-      <div className="body genealogy-body genealogy-scroll">
-        <>
+      <div className={`genealogy-body genealogy-scroll `}>
           <div className="icons-show-hide">
             <ZoomInOutlined className="btn-zoomIn" onClick={handleZoomIn} />
             <ZoomOutOutlined className="btn-zoomOut" onClick={handleZoomOut} />
+            <AimOutlined className="btn-focus" onClick={handleFocus} />
+            <FullscreenExitOutlined className="btn-reset-scale" onClick={handleResetScale} />
           </div>
-
-          <div
-            rel={zoomRef}
-            style={{
-              cursor: "move",
-              transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-            }}
-            draggable={false}
-            className="genealogy-tree"
-          >
-            { linework && 
-            <ul>
-              <li>
-                <Link to={`/lineWork/Details/${linework._id}`}>
-                  <div className="member-view-box">
-                    <div className="member-image">
-                      <img
-                        src={
-                          linework.user_id?.position_id?.icon
-                            ? linework.user_id?.position_id?.icon
-                            : imagePreview
-                        }
-                        alt="Member"
-                      />
-                      <div className="member-details">
-                        <h3>
-                          {linework.user_id && linework.user_id.firstName}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-                {levelOne && 
-                <ul className="active">
+        <>
+          {linework ? (
+            <div
+              rel={zoomRef}
+              style={{
+                cursor: "move",
+                transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+              }}
+              draggable={false}
+              className={`genealogy-tree genealogy-scroll`}
+            >
+              {linework && (
+                <ul>
                   <li>
-                    <ul>
-                      {levelOne &&
-                        levelOne.map((level_1, index) => (
-                          <>
-                            <li key={index}>
-                              <Link to={`/lineWork/Details/${level_1._id}`}>
-                                <div className="member-view-box">
-                                  <div className="member-image">
-                                    <img
-                                      src={
-                                        level_1.user_id?.position_id?.icon
-                                          ? level_1.user_id?.position_id?.icon
-                                          : imagePreview
-                                      }
-                                      alt="Member"
-                                    />
-                                    <div className="member-details">
-                                      <h3>
-                                        {level_1.user_id &&
-                                          level_1.user_id.firstName}
-                                      </h3>
-                                    </div>
-                                  </div>
-                                </div>
-                              </Link>
-                              { level_1 && 
-                              <ul>
-                                {level_1 &&
-                                  level_1.children.map((level_2, index) => (
-                                    <>
-                                      <li key={index}>
-                                        <Link
-                                          to={`/lineWork/Details/${level_2._id}`}
-                                        >
-                                          <div className="member-view-box">
-                                            <div className="member-image">
-                                              <img
-                                                src={
-                                                  level_2.user_id?.position_id
+                    <Link to={`/lineWork/Details/${linework?._id}`}>
+                      <div className="member-view-box">
+                        <div className="member-image" id="box">
+                          <img
+                            src={
+                              linework.user_id?.position_id?.icon
+                                ? linework.user_id?.position_id?.icon
+                                : imagePreview
+                            }
+                            alt="Member"
+                          />
+                          <div className="member-details">
+                            <h3>
+                              {linework?.user_id &&
+                                linework?.user_id?.firstName}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                    {linework && (
+                      <ul className="active">
+                        <li>
+                          <ul>
+                            {linework?.children &&
+                              linework?.children.map((level_1, index) => (
+                                <>
+                                  <li key={index}>
+                                    <Link
+                                      to={`/lineWork/Details/${level_1?._id}`}
+                                    >
+                                      <div className="member-view-box">
+                                        <div className="member-image">
+                                          <img
+                                            src={
+                                              level_1.user_id?.position_id?.icon
+                                                ? level_1.user_id?.position_id
                                                     ?.icon
-                                                    ? level_2.user_id
-                                                        ?.position_id?.icon
-                                                    : imagePreview
-                                                }
-                                                alt="Member"
-                                              />
-                                              <div className="member-details">
-                                                <h3>
-                                                  {level_2.user_id &&
-                                                    level_2.user_id.firstName}
-                                                </h3>
-                                              </div>
-                                            </div>
+                                                : imagePreview
+                                            }
+                                            alt="Member"
+                                          />
+                                          <div className="member-details">
+                                            <h3>
+                                              {level_1?.user_id &&
+                                                level_1?.user_id?.firstName}
+                                            </h3>
                                           </div>
-                                        </Link>
-                                        {level_2 && 
-                                        <ul>
-                                          {level_2 &&
-                                            level_2.children.map(
-                                              (level_3, index) => (
-                                                <>
-                                                  <li key={index}>
-                                                    <Link
-                                                      to={`/lineWork/Details/${level_3._id}`}
-                                                    >
-                                                      <div className="member-view-box">
-                                                        <div className="member-image">
-                                                          <img
-                                                            src={
-                                                              level_3.user_id
-                                                                ?.position_id
-                                                                ?.icon
-                                                                ? level_3
-                                                                    .user_id
-                                                                    ?.position_id
-                                                                    ?.icon
-                                                                : imagePreview
-                                                            }
-                                                            alt="Member"
-                                                          />
-                                                          <div className="member-details">
-                                                            <h3>
-                                                              {level_3.user_id &&
-                                                                level_3.user_id
-                                                                  .firstName}
-                                                            </h3>
-                                                          </div>
+                                        </div>
+                                      </div>
+                                    </Link>
+                                    {level_1 && (
+                                      <ul>
+                                        {level_1 &&
+                                          level_1?.children.map(
+                                            (level_2, index) => (
+                                              <>
+                                                <li key={index}>
+                                                  <Link
+                                                    to={`/lineWork/Details/${level_2?._id}`}
+                                                  >
+                                                    <div className="member-view-box">
+                                                      <div className="member-image">
+                                                        <img
+                                                          src={
+                                                            level_2?.user_id
+                                                              ?.position_id
+                                                              ?.icon
+                                                              ? level_2.user_id
+                                                                  ?.position_id
+                                                                  ?.icon
+                                                              : imagePreview
+                                                          }
+                                                          alt="Member"
+                                                        />
+                                                        <div className="member-details">
+                                                          <h3>
+                                                            {level_2?.user_id &&
+                                                              level_2?.user_id
+                                                                ?.firstName}
+                                                          </h3>
                                                         </div>
                                                       </div>
-                                                    </Link>
+                                                    </div>
+                                                  </Link>
+                                                  {level_2 && (
                                                     <ul>
-                                                      {level_3 &&
-                                                        level_3.children.map(
-                                                          (level_4, index) => (
+                                                      {level_2 &&
+                                                        level_2?.children.map(
+                                                          (level_3, index) => (
                                                             <>
                                                               <li key={index}>
                                                                 <Link
-                                                                  to={`/lineWork/Details/${level_4._id}`}
+                                                                  to={`/lineWork/Details/${level_3?._id}`}
                                                                 >
                                                                   <div className="member-view-box">
                                                                     <div className="member-image">
                                                                       <img
                                                                         src={
-                                                                          level_4
-                                                                            .user_id
+                                                                          level_3
+                                                                            ?.user_id
                                                                             ?.position_id
                                                                             ?.icon
-                                                                            ? level_4
-                                                                                .user_id
+                                                                            ? level_3
+                                                                                ?.user_id
                                                                                 ?.position_id
                                                                                 ?.icon
                                                                             : imagePreview
@@ -221,20 +231,20 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                                       />
                                                                       <div className="member-details">
                                                                         <h3>
-                                                                          {level_4.user_id &&
-                                                                            level_4
-                                                                              .user_id
-                                                                              .firstName}
+                                                                          {level_3?.user_id &&
+                                                                            level_3
+                                                                              ?.user_id
+                                                                              ?.firstName}
                                                                         </h3>
                                                                       </div>
                                                                     </div>
                                                                   </div>
                                                                 </Link>
                                                                 <ul>
-                                                                  {level_4 &&
-                                                                    level_4.children.map(
+                                                                  {level_3 &&
+                                                                    level_3?.children.map(
                                                                       (
-                                                                        level_5,
+                                                                        level_4,
                                                                         index
                                                                       ) => (
                                                                         <>
@@ -244,18 +254,18 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                                             }
                                                                           >
                                                                             <Link
-                                                                              to={`/lineWork/Details/${level_5._id}`}
+                                                                              to={`/lineWork/Details/${level_4?._id}`}
                                                                             >
                                                                               <div className="member-view-box">
                                                                                 <div className="member-image">
                                                                                   <img
                                                                                     src={
-                                                                                      level_5
-                                                                                        .user_id
+                                                                                      level_4
+                                                                                        ?.user_id
                                                                                         ?.position_id
                                                                                         ?.icon
-                                                                                        ? level_5
-                                                                                            .user_id
+                                                                                        ? level_4
+                                                                                            ?.user_id
                                                                                             ?.position_id
                                                                                             ?.icon
                                                                                         : imagePreview
@@ -264,20 +274,20 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                                                   />
                                                                                   <div className="member-details">
                                                                                     <h3>
-                                                                                      {level_5.user_id &&
-                                                                                        level_5
-                                                                                          .user_id
-                                                                                          .firstName}
+                                                                                      {level_4?.user_id &&
+                                                                                        level_4
+                                                                                          ?.user_id
+                                                                                          ?.firstName}
                                                                                     </h3>
                                                                                   </div>
                                                                                 </div>
                                                                               </div>
                                                                             </Link>
                                                                             <ul>
-                                                                              {level_5 &&
-                                                                                level_5.children.map(
+                                                                              {level_4 &&
+                                                                                level_4?.children.map(
                                                                                   (
-                                                                                    level_6,
+                                                                                    level_5,
                                                                                     index
                                                                                   ) => (
                                                                                     <>
@@ -287,18 +297,18 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                                                         }
                                                                                       >
                                                                                         <Link
-                                                                                          to={`/lineWork/Details/${level_6._id}`}
+                                                                                          to={`/lineWork/Details/${level_5?._id}`}
                                                                                         >
                                                                                           <div className="member-view-box">
                                                                                             <div className="member-image">
                                                                                               <img
                                                                                                 src={
-                                                                                                  level_6
-                                                                                                    .user_id
+                                                                                                  level_5
+                                                                                                    ?.user_id
                                                                                                     ?.position_id
                                                                                                     ?.icon
-                                                                                                    ? level_6
-                                                                                                        .user_id
+                                                                                                    ? level_5
+                                                                                                        ?.user_id
                                                                                                         ?.position_id
                                                                                                         ?.icon
                                                                                                     : imagePreview
@@ -307,15 +317,63 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                                                               />
                                                                                               <div className="member-details">
                                                                                                 <h3>
-                                                                                                  {level_6.user_id &&
-                                                                                                    level_6
-                                                                                                      .user_id
-                                                                                                      .firstName}
+                                                                                                  {level_5.user_id &&
+                                                                                                    level_5
+                                                                                                      ?.user_id
+                                                                                                      ?.firstName}
                                                                                                 </h3>
                                                                                               </div>
                                                                                             </div>
                                                                                           </div>
                                                                                         </Link>
+                                                                                        <ul>
+                                                                                          {level_5 &&
+                                                                                            level_5?.children.map(
+                                                                                              (
+                                                                                                level_6,
+                                                                                                index
+                                                                                              ) => (
+                                                                                                <>
+                                                                                                  <li
+                                                                                                    key={
+                                                                                                      index
+                                                                                                    }
+                                                                                                  >
+                                                                                                    <Link
+                                                                                                      to={`/lineWork/Details/${level_6?._id}`}
+                                                                                                    >
+                                                                                                      <div className="member-view-box">
+                                                                                                        <div className="member-image">
+                                                                                                          <img
+                                                                                                            src={
+                                                                                                              level_6
+                                                                                                                ?.user_id
+                                                                                                                ?.position_id
+                                                                                                                ?.icon
+                                                                                                                ? level_6
+                                                                                                                    ?.user_id
+                                                                                                                    ?.position_id
+                                                                                                                    ?.icon
+                                                                                                                : imagePreview
+                                                                                                            }
+                                                                                                            alt="Member"
+                                                                                                          />
+                                                                                                          <div className="member-details">
+                                                                                                            <h3>
+                                                                                                              {level_6?.user_id &&
+                                                                                                                level_6
+                                                                                                                  ?.user_id
+                                                                                                                  ?.firstName}
+                                                                                                            </h3>
+                                                                                                          </div>
+                                                                                                        </div>
+                                                                                                      </div>
+                                                                                                    </Link>
+                                                                                                  </li>
+                                                                                                </>
+                                                                                              )
+                                                                                            )}
+                                                                                        </ul>
                                                                                       </li>
                                                                                     </>
                                                                                   )
@@ -331,29 +389,29 @@ const Diagram = ({ levelOne, linework, imagePreview }) => {
                                                           )
                                                         )}
                                                     </ul>
-                                                  </li>
-                                                </>
-                                              )
-                                            )}
-                                        </ul>
-                                        }
-                                      </li>
-                                    </>
-                                  ))}
-                              </ul>
-                              }
-                            </li>
-                          </>
-                        ))}
-                    </ul>
+                                                  )}
+                                                </li>
+                                              </>
+                                            )
+                                          )}
+                                      </ul>
+                                    )}
+                                  </li>
+                                </>
+                              ))}
+                          </ul>
+                        </li>
+                      </ul>
+                    )}
                   </li>
                 </ul>
-                }
-              </li>
-            </ul>
-            }
-          </div>
+              )}
+            </div>
+          ) : (
+            <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
+          )}
         </>
+     
       </div>
     </>
   );

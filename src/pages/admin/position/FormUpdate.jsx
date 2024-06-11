@@ -1,5 +1,3 @@
-import react from "react";
-
 const FormUpdate = ({
   positionList,
   handleSubmit,
@@ -11,6 +9,7 @@ const FormUpdate = ({
   fileName,
   positionEdit,
 }) => {
+  // console.log("positionEdit",positionEdit.conditionPromoted.source_id)
   return (
     <form onSubmit={handleSubmit}>
       <div className="modal-input">
@@ -42,27 +41,15 @@ const FormUpdate = ({
               }
             }}
           />
-          <div className="input-group-position" style={{ marginTop: "4px" }}>
-            <label htmlFor="">ເງຶອນໄຂຂຶ້ນຕຳແໜ່ງ:</label>
-            <select
-              className="form-select-position"
+          <div className="input-group-position">
+            <label htmlFor="">ຕຳແໜ່ງ</label>
+            <input
+              type="text"
+              name="source"
+              value={positionEdit?.source}
+              className="form-modal-control-position"
               onChange={handleChange}
-              name="conditionPosition"
-            >
-              <option selected disabled>
-                ກະລຸນາເລຶອກ
-              </option>
-              {positionList &&
-                positionList.map((item, idx) => (
-                  <option
-                    value={item._id}
-                    key={idx}
-                    selected={item._id === positionEdit.conditionPosition._id}
-                  >
-                    {item.title}
-                  </option>
-                ))}
-            </select>
+            />
           </div>
         </div>
         <div className="modal-position-input">
@@ -78,36 +65,62 @@ const FormUpdate = ({
               />
             </div>
             <div className="input-group-position">
-              <label htmlFor="">ເງື່ອນໄຂຄະແນນ</label>
+              <label htmlFor="">ໂບນັດ</label>
               <input
                 type="text"
-                value={positionEdit.conditionPv}
-                name="conditionPv"
+                name="bonus"
+                value={positionEdit.bonus}
                 className="form-modal-control-position"
                 onChange={handleChange}
               />
             </div>
             <div className="input-group-position">
-              <label htmlFor="">ເງືອນໄຂລູກທີມ</label>
+              <label htmlFor="">ຄະແນນລວມຂອງທີມ</label>
               <input
                 type="text"
-                name="conditionChildren"
-                value={positionEdit.conditionChildren}
+                name="PVTeamForBonus"
+                value={positionEdit.PVTeamForBonus}
                 className="form-modal-control-position"
                 onChange={handleChange}
               />
             </div>
             <div className="input-group-position">
-              <label htmlFor="">ລູກທີມ</label>
+              <label htmlFor="">ລູກຕົງ</label>
               <input
                 type="text"
-                name="conditionPosChildrenNumber"
-                value={positionEdit.conditionPosChildrenNumber}
+                name="children1StLevel"
+                value={positionEdit?.children1StLevel}
                 className="form-modal-control-position"
                 onChange={handleChange}
               />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="modal-position-textarea">
+        <div className="input-group-position" style={{ marginTop: "4px" }}>
+          <label htmlFor="">ເງຶອນໄຂຂຶ້ນຕຳແໜ່ງ:</label>
+          <select
+            className="form-select-position"
+            onChange={handleChange}
+            name="source_id"
+          >
+            <option selected disabled>
+              ກະລຸນາເລຶອກ
+            </option>
+            {positionList &&
+              positionList?.map((item, idx) => (
+                <option
+                  value={item?._id}
+                  key={idx}
+                  selected={
+                    positionEdit.conditionPromoted.source_id === item?._id
+                  }
+                >
+                  {item?.title ? item?.title : item?.packageName}
+                </option>
+              ))}
+          </select>
         </div>
       </div>
       <div className="modal-position-textarea">

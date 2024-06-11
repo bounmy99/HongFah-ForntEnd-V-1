@@ -8,7 +8,6 @@
 }
 
 :root {
-
   /* ====== Colors ====== */
   --conten-color: #f3f3f3;
   --panel-color: #ffffff;
@@ -399,7 +398,7 @@ body {
 
 .modal-midium-card {
   width: 32rem;
-  height: 33rem;
+  height: 36rem;
   flex-shrink: 0;
   padding: 10px;
   align-items: center;
@@ -695,7 +694,7 @@ body {
   textarea {
     margin-top: 5px;
     width: 100%;
-    height: 100px;
+    height: 65px;
     resize: none;
     border: none;
     outline: none;
@@ -1050,8 +1049,6 @@ body {
 }
 
 /* ============== End modals add type products =================== */
-
-
 
 .nav-bar {
   position: fixed;
@@ -3070,21 +3067,25 @@ body {
 .employee-dash-card {
   display: flex;
   align-items: center;
-  /* justify-content: center; */
-  flex-wrap: wrap;
-  gap: 1rem;
+  /* flex-wrap: wrap; */
+  gap: 1.7rem;
+  overflow: auto;
 }
 
 .emp-dash-boxes {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* width: 8.8rem; */
-  width: calc(100% - 87%);
+  width: calc(100% - 77%);
   height: 7rem;
   padding: 10px;
   border-radius: 1rem;
   background: #E3F5FF;
+  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.emp-dash-boxes:hover {
+  background: #a2b5c0;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
 }
 
@@ -3290,43 +3291,6 @@ body {
   overflow: auto;
 }
 
-/* .plan-card-emp-sub-1 {
-  position: absolute;
-  width: 16rem;
-  height: 20rem;
-  flex-shrink: 0;
-  border-radius: 15px;
-  background: #FFF;
-  box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.25);
-  padding: 20px;
-  top: 1rem;
-  right: 1rem;
-}
-
-.content-sub .sub-group {
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  gap: .3rem;
-  margin-top: 6px;
-}
-
-.icons-show-hide .btn-show {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #CDC5C5;
-  width: 40px;
-  height: 40px;
-  border-radius: 5px;
-  color: #0089be;
-  font-size: 20px;
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1
-} */
 .icons-show-hide .btn-zoomIn {
   cursor: pointer;
   display: flex;
@@ -3339,7 +3303,7 @@ body {
   color: #0089be;
   font-size: 20px;
   position: absolute;
-  top: 1rem;
+  top: 0rem;
   left: 1rem;
   z-index: 1
 }
@@ -3355,8 +3319,41 @@ body {
   color: #0089be;
   font-size: 20px;
   position: absolute;
-  top: 5rem;
+  top: 3rem;
   left: 1rem;
+  z-index: 1
+}
+.icons-show-hide .btn-focus {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #CDC5C5;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  color: #0089be;
+  font-size: 20px;
+  position: absolute;
+  top: 6rem;
+  left: 1rem;
+  z-index: 1
+}
+.icons-show-hide .btn-reset-scale {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #CDC5C5;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  color: #0089be;
+  font-size: 20px;
+  position: absolute;
+  top: 0rem;
+  /* left: 1rem; */
+  right: 0rem;
   z-index: 1
 }
 
@@ -3387,24 +3384,26 @@ body {
 .genealogy-scroll::-webkit-scrollbar {
   width: 5px;
   height: 8px;
+  margin-bottom: 15px;
 }
 
 .genealogy-scroll::-webkit-scrollbar-track {
   border-radius: 10px;
   background-color: #e4e4e4;
+ 
 }
 
 .genealogy-scroll::-webkit-scrollbar-thumb {
   background: #888888;
   border-radius: 10px;
   transition: 0.5s;
+ 
 }
 
 .genealogy-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--main-color);
   transition: 0.5s;
 }
-
 .genealogy-body {
   white-space: nowrap;
   overflow: auto;
@@ -3413,11 +3412,18 @@ body {
   min-width: 800px;
   padding-top: 10px;
 }
+.genealogy-tree{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  width: calc(100% * 100);
+  overflow: auto;
+}
 
 .genealogy-tree ul {
   padding-top: 10px;
   position: relative;
-  padding-left: 0px;
+  padding-left: 15px;
   display: flex;
 }
 
@@ -3604,7 +3610,8 @@ body {
   box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.25);
   padding: 10px;
   display: flex;
-  gap: 2rem;
+  gap: 0rem;
+  overflow-x: auto;
 }
 
 .market-member .icons img {
@@ -3612,10 +3619,12 @@ body {
   height: 45px;
   border-radius: 50%;
   object-fit: cover;
+  border : 2px solid #00A5E8
 }
 
+
 .market-member .text h3 {
-  font-size: 15px;
+  font-size: 12px;
 }
 
 .warning-box {
@@ -3642,23 +3651,30 @@ body {
 .member-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: .2rem;
   padding: 10px;
   cursor: pointer;
 }
-
-.member-card:hover {
+.member-box{
   border-radius: 5px;
-  padding: 10px;
   background-color: #b8b8b8;
   color: #e9e9e9;
+  margin: 5px;
+  width: calc(100%);
+  height: 80px;
+  padding: 5px;
+  display: flex;
+  gap: .5rem;
 }
 
-.member-card.active {
+.member-box:hover {
   border-radius: 5px;
-  padding: 10px;
-  background-color: var(--main-color);
+  background-color: #00a5e8;
   color: #e9e9e9;
+
+  .icons img {
+    border : 2px solid #ffffff
+  }
 }
 
 .member-card .text {
@@ -5356,7 +5372,7 @@ body {
 
 .package-button {
   display: flex;
-  margin: 70px 15px;
+  margin: 55px 15px;
   gap: 1rem;
   align-items: center;
   justify-content: center;
@@ -5504,7 +5520,7 @@ body {
   margin-left: 1rem;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .position-button {
@@ -5609,13 +5625,18 @@ body {
 
   & .details {
     width: 100%;
-    height: 3.5rem;
+    height: 2.5rem;
     resize: none;
     border: none;
-    border: 1px solid gray;
+    /* border: 1px solid gray; */
     border-radius: 5px;
     outline: none;
     padding: 5px;
+    overflow: hidden;
+    font-size: 10px;
+  }
+  & .details:hover {
+    overflow: auto;
   }
 }
 
@@ -6601,11 +6622,11 @@ body {
   margin-top: 15px;
 }
 
-.card-login form label {
+.title__label {
   font-weight: bold;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--panel-color);
-  margin-left: -240px;
+  margin-left: -270px;
 }
 
 .input-group {
@@ -6628,7 +6649,6 @@ body {
 
 .form-control:focus {
   color: #000;
-
 }
 
 .icon {
@@ -6811,7 +6831,7 @@ body {
   }
 
   .emp-dash-boxes {
-    width: calc(100% - 87%);
+    width: calc(100% - 77%);
   }
 
   .ProductMedium,
@@ -7114,7 +7134,7 @@ body {
   }
 
   .text-sub {
-    font-size: 18px;
+    font-size: 13px;
   }
 
 
@@ -7831,7 +7851,7 @@ body {
     font-weight: bold;
     font-size: 10px;
     color: var(--panel-color);
-    margin-left: -180px;
+    margin-left: -110px;
   }
 
   .input-check {
@@ -8277,7 +8297,6 @@ body {
   .employee-dash-card {
     display: block;
     margin-top: 30px;
-
   }
 
   .emp-dash-boxes {
@@ -8689,7 +8708,7 @@ body {
 
 @media print {
   @page {
-    size: 80mm 236mm; 
+    size: 80mm 240mm; 
   }
 
   span{

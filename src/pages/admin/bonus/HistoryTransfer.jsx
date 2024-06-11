@@ -156,37 +156,30 @@ const columns = [
     width: "180px",
   },
   {
-    name: "ຄະແນນໂບນັດ",
+    name: "ໂບນັດຄ່າແນະນຳ",
     sortable: true,
-    cell: (row) => <p>{row.bonusPV ? row.bonusPV : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{formatPrice(row.recommended) ? formatPrice(row.recommended) : "ບໍ່ມີ"} </p>,
     width: "180px",
   },
   {
-    name: "ຄະແນນໂບນັດທີມ",
+    name: "ໂບນັດບໍລິຫານທິມ",
     sortable: true,
-    cell: (row) => <p>{row.bonusTeamePV ? row.bonusTeamePV : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{formatPrice(row.bonusTeamePV) ? formatPrice(row.bonusTeamePV) : "ບໍ່ມີ"} </p>,
     width: "180px",
   },
   {
-    name: "ລວມໂບນັດ",
+    name: "ໂບນັດຕຳແໜ່ງ",
     sortable: true,
-    cell: (row) => <p>{row.totalBonus ? row.totalBonus : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{formatPrice(row.bonus_postition) ? formatPrice(row.bonus_postition) : "ບໍ່ມີ"} </p>,
     width: "180px",
   },
   {
-    name: "ຄ່າແນະນຳ",
+    name: "ໂບນັດລວມ",
     sortable: true,
-    cell: (row) => <p>{row.recommended ? row.recommended : "ບໍ່ມີ"} ຄະແນນ</p>,
+    cell: (row) => <p>{formatPrice(row.totalBonus) ? formatPrice(row.totalBonus) : "ບໍ່ມີ"} </p>,
     width: "180px",
   },
-  {
-    name: "ໄດ້ຮັບເງິນຄືນ",
-    sortable: true,
-    cell: (row) => (
-      <p>{formatPrice(row.cashback) ? formatPrice(row.cashback) : "ບໍ່ມີ"} ₭</p>
-    ),
-    width: "180px",
-  },
+  
 ];
 
 const header = [
@@ -198,12 +191,11 @@ const header = [
   "ນາມສະກຸນ",
   "ຕຳແນ່ງ",
   "ລູກທີມ",
-  "ຄະແນນ PV",
-  "ຄະແນນທີມ PV",
-  "ໄດ້ຮັບເງິນຄືນ",
-  "ໂບນັດ PV",
-  "ຄ່າແນະນຳ",
-  "ໂບນັດທີມ PV",
+  "ຄະແນນ",
+  "ຄະແນນທີມ",
+  "ໂບນັດນັດຄ່າແນະນຳ",
+  "ໂບນັດບໍລິຫານທີມ",
+  "ໂບນັດຕຳແໜ່ງ",
   "ລວມໂບນັດ",
 ];
 const HistoryTransfer = () => {
@@ -261,6 +253,8 @@ const HistoryTransfer = () => {
   };
 
   // console.log(valueInput)
+
+  // console.log(maintain)
 
   // search
   useEffect(() => {

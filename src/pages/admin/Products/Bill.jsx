@@ -27,9 +27,10 @@ const Bill = () => {
     onBeforePrint: () => console.log("before printing..."),
     onAfterPrint: () =>
       users.role === "super"
-        ? // navigate("/listProducts/saleProducts", { state: { key: 3 } })
-          ""
-        : navigate("/listProducts/saleProducts/users", { state: { key: 3 } }),
+        ? 
+         navigate("/listProducts/saleProducts", { state: { key: 3 } })
+        : 
+          navigate("/listProducts/saleProducts/users", { state: { key: 3 } }),
     removeAfterPrint: true,
     onPrintError: (error) => console.log("Print Error...?", error),
   });

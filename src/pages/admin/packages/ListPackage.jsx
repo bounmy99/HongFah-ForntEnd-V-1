@@ -18,7 +18,7 @@ import FormUpdate from "./FormUpdate";
 import FormCreate from "./FormCreate";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
-import ImageNull from "../../../assets/image/no-image.png"
+import ImageNull from "../../../assets/image/no-image.png";
 
 const ListPackage = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -34,6 +34,18 @@ const ListPackage = () => {
   const [packageEmpty, setPackageEmpty] = useState("");
   const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("");
+
+  const [PerLevel_15, setPerLevel_15] = useState(15);
+  const [PerLevel_35, setPerLevel_35] = useState(35);
+  const [PerLevel_45, setPerLevel_45] = useState(45);
+  const [bonusPerLevel_1, setbonusPerLevel_1] = useState([15]);
+  const [bonusPerLevel_3, setbonusPerLevel_3] = useState([15, 10, 10]);
+  const [bonusPerLevel_5, setbonusPerLevel_5] = useState([15, 10, 10, 5, 5]);
+  
+
+  const bonusPer_Level_1 = bonusPerLevel_1.map(item => item);
+  const bonusPer_Level_3 = bonusPerLevel_3.map(item => item);
+  const bonusPer_Level_5 = bonusPerLevel_5.map(item => item);
 
   useEffect(() => {
     LoadAllPackage();
@@ -89,13 +101,40 @@ const ListPackage = () => {
   };
   // set add value
   const handleChangeAdd = (e) => {
+    if(e.target.files){
+      e.target.files[0] && setFileName(e.target.files[0].name);
+        if (e.target.files) {
+            setImage(URL.createObjectURL(e.target.files[0]));
+        }
+    }
     setPackageAdd({ ...packageAdd, [e.target.name]: e.target.value });
   };
 
-  // insert and update package
+ 
+  const BonusLevel = parseInt(packageAdd?.bonusLevel);
+  const BonusLevel_Edit = parseInt(packageEdit?.bonusLevel);
+
+  // ================== caculator Recommanded ==============
+  const num = parseInt(packageAdd.PV);
+  const result = num * 0.25;
+  const final = result * 1000;
+
+  const num2 = parseInt(packageEdit.PV);
+  const result2 = num2 * 0.25;
+  const final2 = result2 * 1000;
+
+  // ==================== insert and update package ===================
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoadingSave(true);
+    setbonusPerLevel_1([])
+    setbonusPerLevel_3([])
+    setbonusPerLevel_5([])
+    setPerLevel_15([])
+    setPerLevel_35([])
+    setPerLevel_45([])
+    // setFileName([])
+    // setImage([])
 
     const formData = new FormData(e.currentTarget);
     const values = [...formData.values()];
@@ -119,18 +158,29 @@ const ListPackage = () => {
       });
       // setOpenModal(false);
       setLoading(false);
-      setLoadingSave(false)
+      setLoadingSave(false);
       return;
     }
-    const Data = Object.fromEntries(formData);
-    // console.log("Data Modal Form Add", Data);
+    const PackageData = Object.fromEntries(formData);
 
-    // return
+    // const PackageData = ({
+    //   ...Data,
+    //   "bonusPerLevel" : 
+    //     BonusLevel === 1
+    //       ? bonusPerLevel_1
+    //       : BonusLevel === 3
+    //       ? bonusPerLevel_3
+    //       : BonusLevel === 5
+    //       ? bonusPerLevel_5
+    //       : ""
+    // });
+    // console.log("Data Modal Form Add", PackageData);
+    // console.log("Data", Data);
 
     // Check before Save and Update
     packageEdit._id
       ? // update package
-        UpdatePackage(users.token, Data, packageEdit._id)
+        UpdatePackage(users.token, PackageData, packageEdit._id)
           .then((res) => {
             // console.log("Data Edit From Database", res.data);
             if (res.status === 200) {
@@ -181,9 +231,10 @@ const ListPackage = () => {
               navigate("/");
             }
             setLoading(false);
+            setLoadingSave(false);
           })
       : // crete package
-        CreatePackage(users.token, Data)
+        CreatePackage(users.token, PackageData, {})
           .then((res) => {
             try {
               if (res.status === 200) {
@@ -255,7 +306,6 @@ const ListPackage = () => {
             }
           });
     setOpenModal(false);
-
     e.currentTarget.reset();
   };
 
@@ -265,7 +315,6 @@ const ListPackage = () => {
     setLoadingSave(false);
     GetOnePackage(users.token, id)
       .then((res) => {
-        console.log(res.data.data);
         setPackageEdit({ ...packageEdit, ...res.data.data });
       })
       .catch((err) => {
@@ -452,18 +501,8 @@ const ListPackage = () => {
                           </svg>
                         </div>
                         <div className="package-header-content">
-                          {/* <div className="package-headers-img">
-                            { item?.image ?
-                            <img src={item.image} alt={item.image} />
-                            :
-                             <img src={ImageNull} alt={ImageNull} />
-                            }
-                            
-                          </div> */}
                           <div className="package-title">
-                            <h3 >
-                             {item.packageName.substring(0, 10)}
-                            </h3>
+                            <h3>{item.packageName.substring(0, 10)}</h3>
                           </div>
                         </div>
                         <div className="package-header-icon-right">
@@ -486,46 +525,44 @@ const ListPackage = () => {
                         <div className="content-title-image">
                           <div className="content-title">
                             <div className="package-icon">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="19"
-                              height="20"
-                              viewBox="0 0 19 20"
-                              fill="none"
-                            >
-                              <path
-                                d="M15.3604 1.90352L15.898 5.30519L18.9912 6.88265L17.4314 9.96707L19 13.0515L15.8803 14.6289L15.3428 18.0306L11.9147 17.493L9.47356 19.9253L7.02365 17.4578L3.62198 18.0218L3.0756 14.5937L0 13.025L1.56865 9.94063L0.00881261 6.88265L3.10204 5.28757L3.63961 1.91234L7.05009 2.47634L9.5 0L11.9411 2.44109L15.3604 1.90352ZM7.29685 5.56076C6.94626 5.56076 6.61003 5.70003 6.36213 5.94793C6.11422 6.19584 5.97495 6.53206 5.97495 6.88265C5.97495 7.23324 6.11422 7.56947 6.36213 7.81737C6.61003 8.06528 6.94626 8.20455 7.29685 8.20455C7.64743 8.20455 7.98366 8.06528 8.23156 7.81737C8.47947 7.56947 8.61874 7.23324 8.61874 6.88265C8.61874 6.53206 8.47947 6.19584 8.23156 5.94793C7.98366 5.70003 7.64743 5.56076 7.29685 5.56076ZM11.7032 11.7296C11.3526 11.7296 11.0163 11.8689 10.7684 12.1168C10.5205 12.3647 10.3813 12.7009 10.3813 13.0515C10.3813 13.4021 10.5205 13.7383 10.7684 13.9862C11.0163 14.2341 11.3526 14.3734 11.7032 14.3734C12.0537 14.3734 12.39 14.2341 12.6379 13.9862C12.8858 13.7383 13.025 13.4021 13.025 13.0515C13.025 12.7009 12.8858 12.3647 12.6379 12.1168C12.39 11.8689 12.0537 11.7296 11.7032 11.7296ZM6.33627 14.3734L13.9063 6.80334L12.6637 5.56076L5.09369 13.1308L6.33627 14.3734Z"
-                                fill="url(#paint0_linear_1548_3417)"
-                              />
-                              <defs>
-                                <linearGradient
-                                  id="paint0_linear_1548_3417"
-                                  x1="10.5134"
-                                  y1="-2.9888"
-                                  x2="9.5767"
-                                  y2="19.8897"
-                                  gradientUnits="userSpaceOnUse"
-                                >
-                                  <stop stopColor="#0DB3E7" />
-                                  <stop offset="1" stopColor="#028FCE" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="19"
+                                height="20"
+                                viewBox="0 0 19 20"
+                                fill="none"
+                              >
+                                <path
+                                  d="M15.3604 1.90352L15.898 5.30519L18.9912 6.88265L17.4314 9.96707L19 13.0515L15.8803 14.6289L15.3428 18.0306L11.9147 17.493L9.47356 19.9253L7.02365 17.4578L3.62198 18.0218L3.0756 14.5937L0 13.025L1.56865 9.94063L0.00881261 6.88265L3.10204 5.28757L3.63961 1.91234L7.05009 2.47634L9.5 0L11.9411 2.44109L15.3604 1.90352ZM7.29685 5.56076C6.94626 5.56076 6.61003 5.70003 6.36213 5.94793C6.11422 6.19584 5.97495 6.53206 5.97495 6.88265C5.97495 7.23324 6.11422 7.56947 6.36213 7.81737C6.61003 8.06528 6.94626 8.20455 7.29685 8.20455C7.64743 8.20455 7.98366 8.06528 8.23156 7.81737C8.47947 7.56947 8.61874 7.23324 8.61874 6.88265C8.61874 6.53206 8.47947 6.19584 8.23156 5.94793C7.98366 5.70003 7.64743 5.56076 7.29685 5.56076ZM11.7032 11.7296C11.3526 11.7296 11.0163 11.8689 10.7684 12.1168C10.5205 12.3647 10.3813 12.7009 10.3813 13.0515C10.3813 13.4021 10.5205 13.7383 10.7684 13.9862C11.0163 14.2341 11.3526 14.3734 11.7032 14.3734C12.0537 14.3734 12.39 14.2341 12.6379 13.9862C12.8858 13.7383 13.025 13.4021 13.025 13.0515C13.025 12.7009 12.8858 12.3647 12.6379 12.1168C12.39 11.8689 12.0537 11.7296 11.7032 11.7296ZM6.33627 14.3734L13.9063 6.80334L12.6637 5.56076L5.09369 13.1308L6.33627 14.3734Z"
+                                  fill="url(#paint0_linear_1548_3417)"
+                                />
+                                <defs>
+                                  <linearGradient
+                                    id="paint0_linear_1548_3417"
+                                    x1="10.5134"
+                                    y1="-2.9888"
+                                    x2="9.5767"
+                                    y2="19.8897"
+                                    gradientUnits="userSpaceOnUse"
+                                  >
+                                    <stop stopColor="#0DB3E7" />
+                                    <stop offset="1" stopColor="#028FCE" />
+                                  </linearGradient>
+                                </defs>
+                              </svg>
+                            </div>
+                            <div className="package-text">
+                              <h3>ເງື່ອນໄຂໃນການເລື່ອນຂັນ</h3>
+                            </div>
                           </div>
-                          <div className="package-text">
-                            <h3>ເງື່ອນໄຂໃນການເລື່ອນຂັນ</h3>
-                          </div>
-                          </div>
-                          
+
                           <div className="package-header-img">
-                            { item?.image ?
-                            <img src={item.image} alt={item.image} />
-                            :
-                             <img src={ImageNull} alt={ImageNull} />
-                            }
-                            
+                            {item?.image ? (
+                              <img src={item.image} alt={item.image} />
+                            ) : (
+                              <img src={ImageNull} alt={ImageNull} />
+                            )}
                           </div>
-                   
                         </div>
                         <div className="text-sub">
                           <div className="text-sub-left">
@@ -537,52 +574,20 @@ const ListPackage = () => {
                         </div>
                       </div>
                       <div className="package-content">
-                        {/* <div className="content-title">
-                          <div className="package-icon">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="19"
-                              height="20"
-                              viewBox="0 0 19 20"
-                              fill="none"
-                            >
-                              <path
-                                d="M15.3604 1.90352L15.898 5.30519L18.9912 6.88265L17.4314 9.96707L19 13.0515L15.8803 14.6289L15.3428 18.0306L11.9147 17.493L9.47356 19.9253L7.02365 17.4578L3.62198 18.0218L3.0756 14.5937L0 13.025L1.56865 9.94063L0.00881261 6.88265L3.10204 5.28757L3.63961 1.91234L7.05009 2.47634L9.5 0L11.9411 2.44109L15.3604 1.90352ZM7.29685 5.56076C6.94626 5.56076 6.61003 5.70003 6.36213 5.94793C6.11422 6.19584 5.97495 6.53206 5.97495 6.88265C5.97495 7.23324 6.11422 7.56947 6.36213 7.81737C6.61003 8.06528 6.94626 8.20455 7.29685 8.20455C7.64743 8.20455 7.98366 8.06528 8.23156 7.81737C8.47947 7.56947 8.61874 7.23324 8.61874 6.88265C8.61874 6.53206 8.47947 6.19584 8.23156 5.94793C7.98366 5.70003 7.64743 5.56076 7.29685 5.56076ZM11.7032 11.7296C11.3526 11.7296 11.0163 11.8689 10.7684 12.1168C10.5205 12.3647 10.3813 12.7009 10.3813 13.0515C10.3813 13.4021 10.5205 13.7383 10.7684 13.9862C11.0163 14.2341 11.3526 14.3734 11.7032 14.3734C12.0537 14.3734 12.39 14.2341 12.6379 13.9862C12.8858 13.7383 13.025 13.4021 13.025 13.0515C13.025 12.7009 12.8858 12.3647 12.6379 12.1168C12.39 11.8689 12.0537 11.7296 11.7032 11.7296ZM6.33627 14.3734L13.9063 6.80334L12.6637 5.56076L5.09369 13.1308L6.33627 14.3734Z"
-                                fill="url(#paint0_linear_1548_3417)"
-                              />
-                              <defs>
-                                <linearGradient
-                                  id="paint0_linear_1548_3417"
-                                  x1="10.5134"
-                                  y1="-2.9888"
-                                  x2="9.5767"
-                                  y2="19.8897"
-                                  gradientUnits="userSpaceOnUse"
-                                >
-                                  <stop stopColor="#0DB3E7" />
-                                  <stop offset="1" stopColor="#028FCE" />
-                                </linearGradient>
-                              </defs>
-                            </svg>
-                          </div>
-                          <div className="package-text">
-                            <h3>ການຊື້ຕຳແໜ່ງ</h3>
-                          </div>
-                        </div> */}
-                        <div className="text-sub">
-                          {/* <div className="text-sub-left">
-                            <h3>ລາຄາການຊື້ :</h3>
-                          </div> 
-                          <div className="text-sub-right">
-                            <h3>{formatPrice(item.price)} ₭</h3>
-                          </div>*/}
-                        </div>
                         <div className="text-sub">
                           <div className="text-sub-left">
-                            <h3>ຄ່າແນະນຳ :</h3>
+                            <h3>ຮັບໂບນັດແນະນຳ :</h3>
                           </div>
                           <div className="text-sub-right">
                             <h3>{formatPrice(item.recommendedFee)} ₭</h3>
+                          </div>
+                        </div>
+                        <div className="text-sub">
+                          <div className="text-sub-left">
+                            <h3>ຄ່າບໍລິຫານທີມ :</h3>
+                          </div>
+                          <div className="text-sub-right">
+                            <h3>{formatPrice(item.percentShare)} %</h3>
                           </div>
                         </div>
                       </div>
@@ -629,6 +634,14 @@ const ListPackage = () => {
                 setImage={setImage}
                 fileName={fileName}
                 image={image}
+                final2={final2}
+                BonusLevel={BonusLevel}
+                bonusPer_Level_1={bonusPer_Level_1}
+                bonusPer_Level_3={bonusPer_Level_3}
+                bonusPer_Level_5={bonusPer_Level_5}
+                PerLevel_15={PerLevel_15}
+                PerLevel_35={PerLevel_35}
+                PerLevel_45={PerLevel_45}
               />
             </>
           ) : (
@@ -642,6 +655,15 @@ const ListPackage = () => {
                 loadingSave={loadingSave}
                 fileName={fileName}
                 image={image}
+                final={final}
+                BonusLevel={BonusLevel}
+                bonusPer_Level_1={bonusPer_Level_1}
+                bonusPer_Level_3={bonusPer_Level_3}
+                bonusPer_Level_5={bonusPer_Level_5}
+                PerLevel_15={PerLevel_15}
+                PerLevel_35={PerLevel_35}
+                PerLevel_45={PerLevel_45}
+                packageAdd={packageAdd}
               />
             </>
           )}

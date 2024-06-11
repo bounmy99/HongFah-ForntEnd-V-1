@@ -137,36 +137,6 @@ const HistoryTrip = () => {
     <>
       <div className="card-main">
         <div className="list-trip-filter">
-          {/* <div className="trip-filter-date">
-            <div className="date-trip">
-              <div className="datepicker-trip">
-                <i className="bx bx-calendar icons-left-trip"></i>
-                <span className="text-date-trip">ວັນທີ</span>
-                <DatePicker
-                  className="btn-datepicker-trip"
-                  selected={startDate}
-                  onChange={(date) => {
-                    setStartDate(date);
-                  }}
-                />
-                <i className="bx bx-chevron-down icons-right-trip"></i>
-              </div>
-            </div>
-            <div className="date-trip">
-              <div className="datepicker-trip">
-                <i className="bx bx-calendar icons-left-trip"></i>
-                <span className="text-date-trip">ວັນທີ</span>
-                <DatePicker
-                  className="btn-datepicker-trip"
-                  selected={endDate}
-                  onChange={(date) => {
-                    setEndDate(date);
-                  }}
-                />
-                <i className="bx bx-chevron-down icons-right-trip"></i>
-              </div>
-            </div>
-          </div> */}
           <div className="search">
             <div className="input-search">
               <input

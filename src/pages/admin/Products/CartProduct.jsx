@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Empty, Button } from "antd";
+import { useState } from "react";
+import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import CartTable from "../../../components/CartTable";
