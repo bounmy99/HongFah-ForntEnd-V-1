@@ -54,6 +54,9 @@ const ListProducts = () => {
   
 
   // console.log("currentPages",currentPages)
+  // console.log("product.length",product.length)
+
+
   // ================ end pagination antd ===========
 
   useEffect(() => {

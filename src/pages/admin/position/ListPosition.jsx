@@ -156,6 +156,7 @@ const ListPosition = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoadSave(true);
+    setOpenModal(false);
     const formData = new FormData(e.currentTarget);
     const values = [...formData.values()];
     const isEmpty = values.includes("");
@@ -206,6 +207,8 @@ const ListPosition = () => {
               loadPosition();
               setLoadSave(false);
               setOpenModal(false);
+              setPositionEdit([]);
+              // window.location.reload();
             }
           })
           .catch((err) => {
@@ -256,6 +259,8 @@ const ListPosition = () => {
               loadPosition();
               setOpenModal(false);
               setLoadSave(false);
+              setPositionEdit([]);
+              // window.location.reload();
             }
           })
           .catch((err) => {
@@ -443,7 +448,7 @@ const ListPosition = () => {
                     </div>
                   </div>
                 </div>
-                {positionList.length &&
+                {positionList &&
                   positionList.slice(0, visible).map((item, idx) => (
                     <div className="position-card" key={idx}>
                       <div className="position-header">

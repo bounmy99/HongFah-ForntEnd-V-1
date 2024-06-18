@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { GetOneOrderAdmin } from "../../../functions/OrdersAdmin";
@@ -6,6 +6,8 @@ import { Spin, Table, Image } from "antd";
 import NoImage from "../../../assets/image/no-image.png";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../../../functions/FormatPrices";
+import { useReactToPrint } from "react-to-print";
 import Swal from "sweetalert2";
 const DetailProductSale = () => {
   const navigate = useNavigate();
@@ -39,28 +41,33 @@ const DetailProductSale = () => {
       title: "ຈຳນວນ",
       dataIndex: "qty",
       key: "qty",
+      render : (row)=>formatPrice(row)
     },
     {
       title: "ລາຄາ",
       dataIndex: "price",
       key: "price",
+      render : (row)=>formatPrice(row)
     },
     ,
     {
       title: "ຈຳນວນເງິນ",
       dataIndex: "totalPrice",
       key: "totalPrice",
+      render : (row)=>formatPrice(row)
     },
     ,
     {
       title: "ຈຳນວນຄະແນນ",
       dataIndex: "totalPoint",
       key: "totalPoint",
+      render : (row)=>formatPrice(row)
     },
     {
       title: "ເງິນທີ່ໄດ້ຮັບ",
       dataIndex: "totalCashback",
       key: "totalCashback",
+      render : (row)=>formatPrice(row)
     },
   ];
 // load data 
@@ -134,26 +141,26 @@ const DetailProductSale = () => {
                 <p>
                   ປະເພດການຊຳລະ :{" "}
                   <span>
-                    {detail.paymentType ? detail.paymentType : "ບໍ່ມີ"}
+                    { detail?.paymentType == "transfer" ?  "ເງິນໂອນ" : detail?.paymentType == "cash" ? "ເງິນສົດ" : "ບໍ່ມີ"}
                   </span>
                 </p>
                 <p>
                   ເງິນທອນທັງໝົດ :{" "}
                   <span>
-                    {detail.totalCashback ? detail.totalCashback : "ບໍ່ມີ"}
+                    {detail.totalCashback ? formatPrice(detail.totalCashback) : "0"} ກີບ
                   </span>
                 </p>
                 <p>
                   ຄະແນນລວມ :{" "}
-                  <span>{detail.totalPoint ? detail.totalPoint : "ບໍ່ມີ"}</span>
+                  <span>{detail.totalPoint ? formatPrice(detail.totalPoint) : "0"} ຄະແນນ</span>
                 </p>
                 <p>
                   ລາຍຈ່າຍລວມ :{" "}
-                  <span>{detail.totalPrice ? detail.totalPrice : "ບໍ່ມີ"}</span>
+                  <span>{detail.totalPrice ? formatPrice(detail.totalPrice) : "0"} ກິບ</span>
                 </p>
                 <p>
                   ຈຳນວນທັງໝົດ :{" "}
-                  <span>{detail.totalQty ? detail.totalQty : "ບໍ່ມີ"}</span>
+                  <span>{detail.totalQty ?formatPrice( detail.totalQty) : "0"}</span>
                 </p>
                 <p>
                   ສະຖານະ :<span className="detail-status">{detail.status}</span>
@@ -203,7 +210,6 @@ const DetailProductSale = () => {
               <Table
                 columns={columns}
                 pagination={{
-                    total: 2,
                     current: page,
                     pageSize: pageSiize,
                     onChange: (page, pageSiize) => {

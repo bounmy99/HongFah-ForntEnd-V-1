@@ -112,7 +112,6 @@ const ListPackage = () => {
 
  
   const BonusLevel = parseInt(packageAdd?.bonusLevel);
-  const BonusLevel_Edit = parseInt(packageEdit?.bonusLevel);
 
   // ================== caculator Recommanded ==============
   const num = parseInt(packageAdd.PV);
@@ -203,7 +202,7 @@ const ListPackage = () => {
               LoadAllPackage();
               setOpenModal(false);
               setPackageEdit([]);
-              // window.location.reload();
+              window.location.reload();
             }
           })
           .catch((err) => {
@@ -259,6 +258,7 @@ const ListPackage = () => {
                 setLoadingSave(false);
                 setOpenModal(false);
                 setPackageEdit([]);
+                window.location.reload();
               }
             } catch (err) {
               const Toast = Swal.mixin({
@@ -349,7 +349,7 @@ const ListPackage = () => {
     setOpenModal(false);
     setLoading(false);
     setLoadingSave(false);
-    // window.location.reload();
+    window.location.reload();
   };
 
   let openModals = openModal ? "open" : "";
@@ -366,6 +366,7 @@ const ListPackage = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoadingSave(true)
         DeletePackage(users.token, id)
           .then((res) => {
             if (res.status === 200) {
@@ -385,10 +386,29 @@ const ListPackage = () => {
                 title: "ລົບສຳເລັດແລ້ວ",
               });
               LoadAllPackage();
+              setLoadingSave(false)
             }
           })
           .catch((err) => {
-            console.log(err);
+            if(err){
+               const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: "ລົບສຳເລັດແລ້ວ",
+            });
+            }
+           
+            setLoadingSave(false)
           });
       }
     });

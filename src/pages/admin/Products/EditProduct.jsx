@@ -178,6 +178,7 @@ const EditProduct = () => {
 
   // delete product
   const handleDelete = (id) => {
+    
     Swal.fire({
       title: "ຢືນຢັນການລົບ",
       text: "ທ່ານຕ້ອງການລົບລາຍການນີ້ແທ້ບໍ່ ?",
@@ -189,6 +190,7 @@ const EditProduct = () => {
       cancelButtonText: "ຍົກເລິກ",
     }).then((result) => {
       if (result.isConfirmed) {
+        setLoading(true)
         DeleteProduct(users.token, id)
           .then((res) => {
             if (res.status === 200) {

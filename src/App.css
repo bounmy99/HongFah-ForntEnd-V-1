@@ -55,6 +55,10 @@
   text-align: center;
 }
 
+:where(.css-dev-only-do-not-override-p7e5j5).ant-image .ant-image-mask{
+  border-radius: 10px;
+}
+
 /* ==================== spacial class end ================== */
 
 .empty-card {
@@ -2610,7 +2614,13 @@ body {
     }
     h3{
       color : var(--main-color);
-      font-style: 18px;
+      font-size: 20px;
+      margin-top: 25px;
+    }
+    h2{
+      margin-top: 10px;
+      font-size: 18px;
+      color : #4d4d4d;
     }
   }
   .btn-back {
@@ -3302,9 +3312,9 @@ body {
   border-radius: 5px;
   color: #0089be;
   font-size: 20px;
-  position: absolute;
-  top: 0rem;
-  left: 1rem;
+  position: fixed;
+  top: 10.5rem;
+  left: 17.8rem;
   z-index: 1
 }
 .icons-show-hide .btn-zoomOut {
@@ -3318,9 +3328,9 @@ body {
   border-radius: 5px;
   color: #0089be;
   font-size: 20px;
-  position: absolute;
-  top: 3rem;
-  left: 1rem;
+  position: fixed;
+  top: 13.6rem;
+  left: 17.8rem;
   z-index: 1
 }
 .icons-show-hide .btn-focus {
@@ -3334,9 +3344,9 @@ body {
   border-radius: 5px;
   color: #0089be;
   font-size: 20px;
-  position: absolute;
-  top: 6rem;
-  left: 1rem;
+  position: fixed;
+  top: 17rem;
+  left: 17.8rem;
   z-index: 1
 }
 .icons-show-hide .btn-reset-scale {
@@ -3350,10 +3360,9 @@ body {
   border-radius: 5px;
   color: #0089be;
   font-size: 20px;
-  position: absolute;
-  top: 0rem;
-  /* left: 1rem; */
-  right: 0rem;
+  position: fixed;
+  top: 10.5rem;
+  right: 3rem;
   z-index: 1
 }
 
@@ -8708,14 +8717,42 @@ body {
 
 @media print {
   @page {
-    size: 80mm 240mm; 
+    size: 140mm 255mm; 
   }
 
   span{
     font-weight: bolder;
   }
 
-  .detail-cart-top, .detail-cart-bottom{
+  .detail-cart-sale {
+    & .detail-cart-top {
+        & .detail-cart-top-left {
+            & p {
+              font-size: 12px;
+                span {
+                    color: #616362;
+                    font-size: 12px;
+                }
+            }
+        }
+        & .detail-cart-top-right {
+            & p {
+              font-size: 12px;
+                span {
+                    color: #616362;
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table {
+  font-size: 11px;
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-thead >tr>td {
+  font-size: 11px;
+}
+  /* .detail-cart-top, .detail-cart-bottom{
     visibility: hidden;
   }
 
@@ -8724,13 +8761,13 @@ body {
   }
 
   .detail-cart-sale, .print-content{
-    visibility: visible;
+    display: block !important;
     width: 302px;
     padding: 5px;
-  }
+  } */
 
   .logo-images{
-    margin-left: 5rem;
+    margin-left: 1rem;
     margin-bottom: 10px;
     img{
       width: 100px;
@@ -8739,7 +8776,7 @@ body {
     }
     h3{
       color : var(--main-color);
-      font-style: 18px;
+      font-style: 15px;
     }
   }
 }

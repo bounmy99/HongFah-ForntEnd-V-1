@@ -267,6 +267,7 @@ const FormUpdate = ({
                   className="form-modal-control"
                   onChange={handleChangeUpdate}
                   value={PL ? PL : PL === "" ? "" : packageEdit?.percentShare}
+                  // value={packageEdit?.percentShare ? packageEdit?.percentShare : PL ? PL : "" }
                 />
                 <span className="span-text">%</span>
               </div>
@@ -279,6 +280,7 @@ const FormUpdate = ({
                   className="form-modal-control"
                   onChange={handleChangeUpdate}
                   value={BPL ? BPL : BPL === "" ? "" : packageEdit?.bonusPerLevel}
+                  // value={packageEdit?.bonusPerLevel ? packageEdit?.bonusPerLevel : BPL ? BPL : "" }
                 />
                 <span className="span-text"></span>
               </div>

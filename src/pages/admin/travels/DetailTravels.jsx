@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { Empty, Button, Drawer, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -35,6 +35,8 @@ const DetailTravels = () => {
   const [count, setCount] = useState("");
   const [pageSize, setPageSize] = useState(4);
   const [pages, setPages] = useState(1);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     loadData();
@@ -331,7 +333,7 @@ const DetailTravels = () => {
                 onClick={() => navigate("/travels")}
                 className="text-link"
               >
-                <i class="bx bx-chevron-left"></i>
+                <i className="bx bx-chevron-left"></i>
                 ກັບໄປໜ້າກ່ອນ
               </button>
             </div>

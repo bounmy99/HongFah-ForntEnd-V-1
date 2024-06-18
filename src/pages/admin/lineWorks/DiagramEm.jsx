@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import imagePreview from "../../../assets/avatar/image-avatar.jpeg";
 import { GetRootLineWork } from "../../../functions/LineWork";
 import Diagram from "../../../components/Diagram";
-import { Button, Spin } from "antd";
+import { Spin } from "antd";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 const DiagramEm = () => {
