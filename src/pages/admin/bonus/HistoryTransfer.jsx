@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
 import ExportToExcelBonus from "../../../components/ExportToExcelBonus";
+import Loading from "../../../components/Loadding"
 
 // customize style cell of table
 const customStyles = {
@@ -296,7 +297,7 @@ const HistoryTransfer = () => {
  
   return (
     <div className="card-main">
-      <Spin spinning={loading} style={{ marginTop: 80 }}>
+      {/* <Spin spinning={loading} style={{ marginTop: 80 }}> */}
         <div className="orders-button">
           <>
             <button
@@ -395,7 +396,13 @@ const HistoryTransfer = () => {
             </div>
           </div>
 
-          {!maintain ? (
+          {
+          
+          loading ?
+          
+          <Loading paragraph={10} />
+          :
+          !maintain ? (
             <EmptyContent Messages={emptyData ? emptyData : "ບໍ່ມີຂໍ້ມູນ"} />
           )
            : (
@@ -410,7 +417,7 @@ const HistoryTransfer = () => {
             />
           )}
         </div>
-      </Spin>
+      {/* </Spin> */}
     </div>
   );
 };

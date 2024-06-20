@@ -237,10 +237,12 @@ const HistoryProduct = () => {
       });
   }, []);
 
+console.log(successOrders)
+
   return (
     <>
-      {successOrdersEmpty ? (
-          <EmptyContent Messages={successOrdersEmpty} />
+      {successOrdersEmpty || successOrders === null ? (
+          <EmptyContent Messages={successOrdersEmpty ? successOrdersEmpty : "ບໍ່ມີຂໍ້ມູນ"} />
       ) : (
         <div>
           {loading ? (

@@ -41,9 +41,9 @@ const HomeOrders = () => {
           <div className="order-text">
             <h5 className="title">
               {formatPrice(
-                orderOverview.salsePrice ? orderOverview.salsePrice : 0
+                orderOverview?.salsePrice ? orderOverview?.salsePrice : 0
               )}{" "}
-              ລ້ານ
+              
             </h5>
             <h3>ມູນຄ່າລວມ</h3>
           </div>
@@ -67,7 +67,7 @@ const HomeOrders = () => {
         </div>
         <div className="order-boxes order-total">
           <div className="order-text">
-            <h5 className="title">{orderOverview.countOrder}</h5>
+            <h5 className="title">{orderOverview?.countOrder ? orderOverview?.countOrder : 0}</h5>
             <h3>ອໍເດີທັງໝົດ</h3>
           </div>
           <div className="order-icons">
@@ -90,7 +90,7 @@ const HomeOrders = () => {
         </div>
         <div className="order-boxes order-approved">
           <div className="order-text">
-            <h5 className="title">{orderOverview.approved}</h5>
+            <h5 className="title">{orderOverview?.approved ? orderOverview?.approved : 0}</h5>
             <h3>ອໍເດີອະນຸມັດ</h3>
           </div>
           <div className="order-icons">
@@ -113,7 +113,7 @@ const HomeOrders = () => {
         </div>
         <div className="order-boxes order-cancel">
           <div className="order-text">
-            <h5 className="title">{orderOverview.cancel}</h5>
+            <h5 className="title">{orderOverview?.cancel ? orderOverview?.cancel : 0}</h5>
             <h3>ອໍເດີຍົກເລີກ</h3>
           </div>
           <div className="order-icons">

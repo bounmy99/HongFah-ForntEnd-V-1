@@ -6,11 +6,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { formatPrice } from "../../../functions/FormatPrices";
 import Swal from "sweetalert2";
 import moment from "moment";
+import EmptyContent from "../../../components/EmptyContent";
 const CancelOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
   const [cancelOrder, setCancelOrder] = useState([]);
   const [cancelOrderEmpty, setCancelOrderEmpty] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   // customize style cell of table
@@ -137,11 +139,14 @@ const CancelOrders = () => {
 
   // load all cancel orders
   useEffect(() => {
+    setLoading(true)
     GetAllOrders(users.token, "", "", "", "cancel")
       .then((res) => {
         setCancelOrder(res.data.data);
+        setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
         setCancelOrderEmpty("ບໍ່ມີຂໍ້ມູນ");
         const Toast = Swal.mixin({
           toast: true,
@@ -172,6 +177,9 @@ const CancelOrders = () => {
   return (
     <>
       {
+        cancelOrder === null ?
+        <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"}/>
+        :
         <div>
           <TableOrderUser
             cancelOrderEmpty={cancelOrderEmpty}
@@ -181,6 +189,7 @@ const CancelOrders = () => {
             columns={columns}
             customStyles={customStyles}
             data={cancelOrder}
+            loading={loading}
           />
         </div>
       }

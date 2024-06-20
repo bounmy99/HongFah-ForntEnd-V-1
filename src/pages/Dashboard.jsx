@@ -288,7 +288,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mt-3">
-      {users.role === "admin" || users.role === "super" ? (
+      {users?.role === "admin" || users?.role === "super" ? (
         <div className="boxes">
           <Tooltip title="ກົດຄິກໃສ່ເພີ່ມໄປໜ້ານີ້" color="#00A5E8">
             <div
@@ -564,7 +564,7 @@ const Dashboard = () => {
             <div className="title">
               <h3 className="text-purple">
                 {formatPrice(
-                  salsePrices.salsePrice ? salsePrices.salsePrice : 0
+                  salsePrices?.salsePrice ? salsePrices?.salsePrice : 0
                 )}{" "}
                 ກີບ
               </h3>
@@ -580,7 +580,7 @@ const Dashboard = () => {
           <div className="header">
             <div className="title">ສິນຄ້າຂາຍດີ</div>
             <div className="end-filter">
-              {bestSell.length ? <ExportExcel bestSell={bestSell}/> : "" }
+              {bestSell?.length ? <ExportExcel bestSell={bestSell}/> : "" }
               <div className="filter">
                 <span>
                   <svg

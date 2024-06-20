@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 // functions
 import {Table,Image} from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import Loading from '../../../components/Loadding';
 
 const InfoOrders = () => {
     const navigate = useNavigate();
+    const dispatch =  useDispatch();
     const { users } = useSelector((state) => ({ ...state }))
     const { id } = useParams();
     const [page, setPage] = useState(1);
@@ -126,7 +127,7 @@ const InfoOrders = () => {
                      <div className="info-left">
                         <h3>ຊຳລະຜ່ານ BCEL ONE</h3>
                         <div className="image-transfer">
-                           {order.slip && order.slip[0] ? <img src={order.slip && order.slip[0]} alt="" /> : <div className="text-no-image"><h3>ບໍ່ມີຮູບພາບ</h3></div>} 
+                           {order?.slip && order?.slip[0] ? <img src={order?.slip && order?.slip[0]} alt="" /> : <div className="text-no-image"><h3>ບໍ່ມີຮູບພາບ</h3></div>} 
                         </div>
                     </div>
                     <div className="info-right">
@@ -137,14 +138,14 @@ const InfoOrders = () => {
                                     <label htmlFor="name">ຊື່ຜູ້ຮັບ:</label>
                                     <div className="flex">
                                         <i className='bx bx-user'></i>
-                                        <label>{order.orderFor && `${order.orderFor.firstName} ${order.orderFor.lastName}`}</label>
+                                        <label>{order?.orderFor && `${order?.orderFor?.firstName ? order?.orderFor?.firstName : "ບໍ່ມີ"} ${order?.orderFor?.lastName ? order?.orderFor?.lastName : "ບໍ່ມີ"}`}</label>
                                     </div>
                                 </div>
                                 <div className="input-group">
                                     <label htmlFor="name">ລະຫັດສະມາຊິກຜູ້ຮັບ:</label>
                                     <div className="flex">
                                         <i className='bx bx-user'></i>
-                                        <label>{order.orderFor && order.orderFor.userCode }</label>
+                                        <label>{order?.orderFor && order?.orderFor?.userCode ? order?.orderFor?.userCode : "ບໍ່ມີ" }</label>
                                     </div>
                                 </div>
                             </div>
@@ -153,14 +154,14 @@ const InfoOrders = () => {
                                     <label htmlFor="name">ເບີໂທຜູ້ຮັບ:</label>
                                     <div className="flex">
                                         <i className='bx bxs-phone'></i>
-                                        <label>{order.orderFor && order.orderFor.phoneNumber}</label>
+                                        <label>{order?.orderFor && order?.orderFor?.phoneNumber ? order?.orderFor?.phoneNumber : "ບໍ່ມີ"}</label>
                                     </div>
                                 </div>
                                 <div className="input-group">
                                     <label htmlFor="name">ສະຖານທີຈັດສົ່ງ:</label>
                                     <div className="flex">
                                         <i className='bx bx-user'></i>
-                                        <label>{order.delivery && `${order.delivery.address}, ${order.delivery.province}, ${order.delivery.district}, ${order.delivery.village}`}</label>
+                                        <label>{order?.delivery && `${order?.delivery?.address ? order?.delivery?.address : "ບໍ່ມີ"}, ${order?.delivery?.province  ? order?.delivery?.province : "ບໍ່ມີ"}, ${order?.delivery?.district  ? order?.delivery?.district : "ບໍ່ມີ"}, ${order?.delivery?.village  ? order?.delivery?.village : "ບໍ່ມີ"}`}</label>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +172,7 @@ const InfoOrders = () => {
                             </div>
                             <div className="content-detail Card">
                             <Table
-                                   dataSource={order.products}
+                                   dataSource={order?.products}
                                    columns={columns}
                                    pagination={{
                                     current: page,

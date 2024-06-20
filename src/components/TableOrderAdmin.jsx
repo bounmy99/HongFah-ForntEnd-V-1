@@ -221,7 +221,7 @@ const TableOrderAdmin = ({
                   cy="7.27273"
                   r="6.27273"
                   stroke="#00A5E8"
-                  stroke-width="2"
+                  strokeWidth="2"
                 />
                 <line
                   x1="14.5858"
@@ -229,8 +229,8 @@ const TableOrderAdmin = ({
                   x2="11.6364"
                   y2="13.0506"
                   stroke="#00A5E8"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
               </svg>
             </div>

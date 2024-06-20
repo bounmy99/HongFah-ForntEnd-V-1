@@ -391,8 +391,8 @@ const ListProducts = () => {
                             </div>
                             <div className="description">
                               <h5>{`${
-                                items.name && items.name.substring(0, 10)
-                              }.....`}</h5>
+                                items.name && items.name.substring(0, 20)
+                              }`}</h5>
                             </div>
                           </div>
                           <div className="text-bottom">

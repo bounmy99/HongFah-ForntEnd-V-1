@@ -3157,6 +3157,16 @@ body {
   }
 }
 
+.title-package-count{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 5rem;
+
+}
+
 
 .employee-table {
   width: 100%;

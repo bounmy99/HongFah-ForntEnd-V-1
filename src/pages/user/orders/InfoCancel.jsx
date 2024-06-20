@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Table, Image } from "antd";
 import Swal from "sweetalert2";
 import { Link, useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ import Loading from "../../../components/Loadding";
 
 const InfoOrders = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { users } = useSelector((state) => ({ ...state }));
   const { id } = useParams();
   const [order, setOrder] = useState([]);
@@ -112,11 +113,11 @@ const InfoOrders = () => {
                 <Loading paragraph={13}/>
           ) : (
             <>
-              <div className="info-left">
+               <div className="info-left">
                 <h3>ຊຳລະຜ່ານ BCEL ONE</h3>
                 <div className="image-transfer">
-                  {order.slip && order.slip[0] ? (
-                    <img src={order.slip && order.slip[0]} alt="" />
+                  {order?.slip && order?.slip[0] ? (
+                    <img src={order?.slip && order?.slip[0]} alt="" />
                   ) : (
                     <div className="text-no-image">
                       <h3>ບໍ່ມີຮູບພາບ</h3>
@@ -133,8 +134,16 @@ const InfoOrders = () => {
                       <div className="flex">
                         <i className="bx bx-user"></i>
                         <label>
-                          {order.orderFor &&
-                            `${order.orderFor.firstName} ${order.orderFor.lastName}`}
+                          {order?.orderFor &&
+                            `${
+                              order?.orderFor?.firstName
+                                ? order?.orderFor?.firstName
+                                : "ບໍ່ມີ"
+                            } ${
+                              order?.orderFor?.lastName
+                                ? order?.orderFor?.lastName
+                                : "ບໍ່ມີ"
+                            }`}
                         </label>
                       </div>
                     </div>
@@ -143,7 +152,9 @@ const InfoOrders = () => {
                       <div className="flex">
                         <i className="bx bx-user"></i>
                         <label>
-                          {order.orderFor && order.orderFor.userCode}
+                          {order?.orderFor && order?.orderFor?.userCode
+                            ? order?.orderFor?.userCode
+                            : "ບໍ່ມີ"}
                         </label>
                       </div>
                     </div>
@@ -154,7 +165,9 @@ const InfoOrders = () => {
                       <div className="flex">
                         <i className="bx bxs-phone"></i>
                         <label>
-                          {order.orderFor && order.orderFor.phoneNumber}
+                          {order?.orderFor && order?.orderFor?.phoneNumber
+                            ? order?.orderFor?.phoneNumber
+                            : "ບໍ່ມີ"}
                         </label>
                       </div>
                     </div>
@@ -163,8 +176,24 @@ const InfoOrders = () => {
                       <div className="flex">
                         <i className="bx bx-user"></i>
                         <label>
-                          {order.delivery &&
-                            `${order.delivery.address}, ${order.delivery.province}, ${order.delivery.district}, ${order.delivery.village}`}
+                          {order?.delivery &&
+                            `${
+                              order?.delivery?.address
+                                ? order?.delivery?.address
+                                : "ບໍ່ມີ"
+                            }, ${
+                              order?.delivery?.province
+                                ? order?.delivery?.province
+                                : "ບໍ່ມີ"
+                            }, ${
+                              order?.delivery?.district
+                                ? order?.delivery?.district
+                                : "ບໍ່ມີ"
+                            }, ${
+                              order?.delivery?.village
+                                ? order?.delivery?.village
+                                : "ບໍ່ມີ"
+                            }`}
                         </label>
                       </div>
                     </div>
@@ -176,7 +205,7 @@ const InfoOrders = () => {
                   </div>
                   <div className="content-detail Card">
                     <Table
-                      dataSource={order.products}
+                      dataSource={order?.products}
                       columns={columns}
                       pagination={{
                         current: page,

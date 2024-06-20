@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import TableOrderUser from "../../../components/TableOrderUser";
 import { GetAllOrders } from "../../../functions/Orders";
 import { formatPrice } from "../../../functions/FormatPrices";
+import EmptyContent from "../../../components/EmptyContent";
 
 const ListOrders = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -188,6 +189,10 @@ const ListOrders = () => {
 
   return (
     <>
+    {
+      orders === null ?
+      <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
+      :
       <div>
         <TableOrderUser
           Status={"await"}
@@ -200,6 +205,8 @@ const ListOrders = () => {
           loading={loading}
         />
       </div>
+    }
+      
     </>
   );
 };

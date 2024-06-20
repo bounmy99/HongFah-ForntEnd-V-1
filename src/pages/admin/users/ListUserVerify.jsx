@@ -449,10 +449,6 @@ const ListVerify = () => {
 
   return (
     <div className="card-main">
-      {loading ? (
-        <EmptyContent Messages={"ກຳລັງໂຫຼດ...."} />
-      ) : (
-        <>
           <Spin spinning={loadingSearch}>
             <div className="user-table">
               <div className="user-card-header">
@@ -504,13 +500,11 @@ const ListVerify = () => {
                   data={userVerify}
                   customStyles={customStyles}
                   userEmpty={usersEmpty}
+                  loading={loading}
                 />
               )}
             </div>
           </Spin>
-        </>
-      )}
-
       {/* ================================Modal============================= */}
       <div className={`modal-user ${openModals}`}>
         <div className="modal-user-card Card">

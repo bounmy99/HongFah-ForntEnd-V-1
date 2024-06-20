@@ -533,11 +533,7 @@ const ListUserNotVerify = () => {
   };
   return (
     <div className="card-main">
-      {loading ? (
-        <EmptyContent Messages={"ກຳລັງໂຫຼດ...."} />
-      ) : (
-        <>
-          <Spin spinning={loadingSearch}>
+      <Spin spinning={loadingSearch}>
             <div className="user-table">
               <div className="user-card-header">
                 <div className="search">
@@ -590,13 +586,11 @@ const ListUserNotVerify = () => {
                   data={userNotVerify}
                   customStyles={customStyles}
                   userEmpty={userEmpty}
+                  loading={loading}
                 />
               }
             </div>
-          </Spin>
-        </>
-      )}
-
+      </Spin>
       {/* ================================Modal============================= */}
       <div className={`modal-user ${openModals}`}>
         <div className="modal-user-card Card">

@@ -217,7 +217,7 @@ const Headers = () => {
       payload: [],
     });
     navigate("/");
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handToggle = () => {

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
-import { Spin, Tooltip } from "antd";
+import {  Spin,Tooltip } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import DataTables from "../../../components/DataTable";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../../../functions/Users";
 import noImage from "../../../assets/image/no-image.png";
 import EmptyContent from "../../../components/EmptyContent";
+
 
 const ListUsersAll = () => {
   const navigate = useNavigate();
@@ -437,11 +438,7 @@ const ListUsersAll = () => {
 
   return (
     <div className="card-main">
-      {loading ? (
-        <EmptyContent Messages={"ກຳລັງໂຫຼດ...."} />
-      ) : (
-        <>
-          <Spin spinning={loadingSearch}>
+      <Spin spinning={loadingSearch}>
             <div className="user-table">
               <div className="user-card-header">
                 <div className="search">
@@ -492,13 +489,12 @@ const ListUsersAll = () => {
                   data={usersAll}
                   customStyles={customStyles}
                   userEmpty={userEmpty}
+                  loading={loading}
+                  loadingSearch={loadingSearch}
                 />
               )}
             </div>
-          </Spin>
-        </>
-      )}
-
+      </Spin>
       {/* ================================Modal============================= */}
       <div className={`modal-user ${openModals}`}>
         <div className="modal-user-card Card">

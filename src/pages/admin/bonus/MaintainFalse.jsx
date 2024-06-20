@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { GetAllMaintain } from "../../../functions/Bonus";
 import Swal from "sweetalert2"
-// format price
-import {formatPrice} from "../../../functions/FormatPrices"
-import EmptyContent from "../../../components/EmptyContent";
+
+// import EmptyContent from "../../../components/EmptyContent";
+import Loading from "../../../components/Loadding"
 // customize style cell of table
 const customStyles = {
   rows: {
@@ -144,13 +144,13 @@ const columns = [
     width: "180px",
   },
   {
-    name: "ຄ່າແນະນຳ",
+    name: "ໂບນັດຄ່າແນະນຳ",
     sortable: true,
     cell: (row) => <p>{row.recommended ? row.recommended  : "0"} ₭</p>,
     width: "180px",
   },
   {
-    name: "ຄະແນນໂບນັດທີມ",
+    name: "ໂບນັດບໍລິຫານທີມ",
     sortable: true,
     cell: (row) => <p>{row.bonusTeamePV ? row.bonusTeamePV  : "0"} ຄະແນນ</p>,
     width: "180px",
@@ -275,7 +275,8 @@ const MaintainFalse = ({setSelectableRow,valueInput,toggleCleared }) => {
         </div>
       ) : loading ? (
         <>
-          <EmptyContent Messages={"ກຳລັງໂຫຼດ....."} />
+          {/* <EmptyContent Messages={"ກຳລັງໂຫຼດ....."} /> */}
+          <Loading paragraph={10} />
         </>
       ) : (
         <DataTable

@@ -7,10 +7,12 @@ import { formatPrice } from "../../../functions/FormatPrices";
 import { Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
+import EmptyContent from "../../../components/EmptyContent";
 const HistoryOrders = () => {
   const { users} = useSelector((state) => ({ ...state }));
   const [successOrders, setSuccessOrders] = useState([]);
   const [successOrdersEmpty, setSuccessOrdersEmpty] = useState("");
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -186,7 +188,7 @@ const HistoryOrders = () => {
   ];
   // load all success orders
   useEffect(() => {
-
+    setLoading(true)
     dispatch({
       type : "SHOW_BTN_EXPORT",
       payload : true
@@ -194,8 +196,9 @@ const HistoryOrders = () => {
    
     GetAllOrdersExport(users.token, "", "", "", "success")
       .then((res) => {
+        setLoading(false);
         setSuccessOrders(res.data.data);
-        // console.log("Fetch Data",res.data.data)
+        
       })
       .catch((err) => {
         setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
@@ -226,7 +229,11 @@ const HistoryOrders = () => {
   }, []);
 
   return (
-    <>
+    <>{
+
+    successOrders === null ?
+    <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
+    :
       <div>
         <TableOrderUser
           successOrdersEmpty={successOrdersEmpty}
@@ -236,8 +243,10 @@ const HistoryOrders = () => {
           columns={columns}
           customStyles={customStyles}
           data={successOrders}
+          loading={loading}
         />
       </div>
+}
     </>
   );
 };

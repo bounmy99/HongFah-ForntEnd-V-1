@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TableOrderAdmin from "../../../components/TableOrderAdmin";
 import { Tooltip } from "antd";
@@ -17,6 +17,7 @@ const HistoryProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
   // customize style cell of table
   const customStyles = {
     rows: {
@@ -205,7 +206,6 @@ const HistoryProduct = () => {
       }).catch((err) => {
         setLoading(false);
         setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
-
         const Toast = Swal.mixin({
           toast: true,
           position: "top-end",
@@ -234,8 +234,8 @@ const HistoryProduct = () => {
 
   return (
     <>
-      {successOrdersEmpty ? (
-        <EmptyContent Messages={successOrdersEmpty} />
+      {successOrdersEmpty || successOrders === null? (
+        <EmptyContent Messages={successOrdersEmpty ? successOrdersEmpty : "ບໍ່ມີຂໍ້ມູນ"} />
       ) : (
         <div>
           {loading ? (

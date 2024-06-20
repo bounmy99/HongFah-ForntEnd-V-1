@@ -7,9 +7,8 @@ import Swal from "sweetalert2";
 import { GetLineWorkTable, GetRootLineWork } from "../../../functions/LineWork";
 import Loading from "../../../components/Loadding";
 import EmptyContent from "../../../components/EmptyContent";
-import NoImage from "../../../assets/image/no-image.png"
+import NoImage from "../../../assets/image/no-image.png";
 import { LoadingOutlined } from "@ant-design/icons";
-
 
 // customize style cell of table
 const customStyles = {
@@ -144,6 +143,8 @@ const ListLineWork = () => {
   const [positionCount, setPositionCount] = useState();
   const [packageCount, setPackageCount] = useState();
   const [valueSearch, setValueSearch] = useState("");
+
+  console.log(countNode);
 
   // load all line work
   useEffect(() => {
@@ -302,41 +303,58 @@ const ListLineWork = () => {
     <>
       <div className="employee-card">
         {change !== 2 ? (
-          <div className="employee-dash-card">
-            <div className="emp-dash-boxes emp-total">
-              <div className="title">ສະມາຊິກທັງໝົດ</div>
-              <div className="number">
-                <div className="number-left">
-                  <h5>{countNode ? countNode : 0} ຄົນ</h5>
-                </div>
-              </div>
-            </div>
-            {
-              loading ?
-              <p>
-                <LoadingOutlined /> .......
-              </p>
-              
-              :
-            
-            packageCount?.map((p, i) => (
-              <>
-                <div className="emp-dash-boxes emp-new" key={i}>
-                  <div className="number">
-                    <div className="left">
-                      <div className="title-left"> {p.packageName ? p.packageName : "ບໍ່ທັນມີ"}</div>
-                      <h5>{p.count ? p.count : "0"}</h5>
-                    </div>
-                    <div className="right">
-                      <div className="icons">
-                        <img src={p.image ? p.image : NoImage } alt="" className="img-icon" />
-                      </div>
-                    </div>
+          countNode.length ? (
+            <div className="employee-dash-card">
+              <div className="emp-dash-boxes emp-total">
+                <div className="title">ສະມາຊິກທັງໝົດ</div>
+                <div className="number">
+                  <div className="number-left">
+                    <h5>{countNode.length ? countNode : 0} ຄົນ</h5>
                   </div>
                 </div>
-              </>
-            ))}
-          </div>
+              </div>
+              {loading ? (
+                <div className="title-package-count">
+                  <h4>
+                    ກຳລັງ {"  "} <LoadingOutlined /> .......
+                  </h4>
+                </div>
+              ) : packageCount?.length ? (
+                packageCount?.map((p, i) => (
+                  <>
+                    <div className="emp-dash-boxes emp-new" key={i}>
+                      <div className="number">
+                        <div className="left">
+                          <div className="title-left">
+                            {" "}
+                            {p?.packageName ? p?.packageName : "ບໍ່ທັນມີ"}
+                          </div>
+                          <h5>{p?.count ? p?.count : "0"}</h5>
+                        </div>
+                        <div className="right">
+                          <div className="icons">
+                            <img
+                              src={p?.image ? p?.image : NoImage}
+                              alt=""
+                              className="img-icon"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ))
+              ) : (
+                <div className="title-package-count">
+                  <h4>ບໍ່ມີຂໍ້ມູນ</h4>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="title-package-count">
+              <h4>ບໍ່ມີຂໍ້ມູນ</h4>
+            </div>
+          )
         ) : (
           ""
         )}
@@ -346,7 +364,7 @@ const ListLineWork = () => {
               <div className="btn-show">
                 <button
                   type="button"
-                  class={`btn ${change === 1 ? "active" : ""}`}
+                  className={`btn ${change === 1 ? "active" : ""}`}
                   onClick={() => setChang(1)}
                 >
                   ສະແດງຕາມຕາຕະລາງ
