@@ -198,7 +198,6 @@ const HistoryOrders = () => {
       .then((res) => {
         setLoading(false);
         setSuccessOrders(res.data.data);
-        
       })
       .catch((err) => {
         setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
@@ -230,10 +229,6 @@ const HistoryOrders = () => {
 
   return (
     <>{
-
-    successOrders === null ?
-    <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
-    :
       <div>
         <TableOrderUser
           successOrdersEmpty={successOrdersEmpty}

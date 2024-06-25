@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
 import moment from "moment";
+import Loading from "../../../components/Loadding";
 
 const HistoryProduct = () => {
   const { users } = useSelector((state) => ({ ...state }));
@@ -239,7 +240,8 @@ const HistoryProduct = () => {
       ) : (
         <div>
           {loading ? (
-            <EmptyContent Messages={"ກຳລັງໂຫຼດ..."} />
+            // <EmptyContent Messages={"ກຳລັງໂຫຼດ..."} />
+            <Loading paragraph={10} />
           ) : (
             <TableOrderAdmin
               columns={columns}

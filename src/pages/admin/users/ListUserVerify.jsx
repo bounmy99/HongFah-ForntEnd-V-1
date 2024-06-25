@@ -285,8 +285,7 @@ const ListVerify = () => {
     },
     {
       name: "ລະຫັດສະມາຊິກ",
-      selector: (row) => row.userCode,
-      cell: (row) => <p>{row.userCode}</p>,
+      cell: (row) => <p>{row.userCode ? row.userCode : "ບໍ່ມີ"}</p>,
       sortable: true,
       width: "120px",
     },
@@ -294,7 +293,7 @@ const ListVerify = () => {
       name: "ຊື່ແລະນາມສະກຸນ",
       cell: (row) => (
         <div>
-          <p className="posit-gold">{`${row.firstName} ${row.lastName}`}</p>
+          <p className="posit-gold">{`${row.firstName ? row.firstName : "ບໍ່ມີ"} ${row.lastName ? row.lastName : "ບໍ່ມີ"}`}</p>
         </div>
       ),
       sortable: true,
@@ -302,7 +301,6 @@ const ListVerify = () => {
     },
     {
       name: "ເບີໂທ",
-      selector: (row) => row.phoneNumber,
       cell: (row) => (
         row.phoneNumber ?
         <Tooltip title="ກົດໃສ່ເບີໂທເພື່ອໄປທີ່ Whatsapp" color="#00A5E8">
@@ -325,7 +323,7 @@ const ListVerify = () => {
       cell: (row) => (
         <p className="posit-text-acount-name">
           {row.address &&
-            `${row.address.village}, ${row.address.district}, ${row.address.province}`}
+            `${row.address.village ? row.address.village : "ບໍ່ມີ"}, ${row.address.district ? row.address.district : "ບໍ່ມີ"}, ${row.address.province ? row.address.province : "ບໍ່ມີ"}`}
         </p>
       ),
       sortable: true,
@@ -334,8 +332,7 @@ const ListVerify = () => {
     {
       name: "ສະຖານະ",
       sortable: true,
-      selector: (row) => row.role,
-      cell: (row) => <p>{row.role}</p>,
+      cell: (row) => <p>{row.role ? row.role : "ບໍ່ມີ"}</p>,
       width: "100px",
     },
     {

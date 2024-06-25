@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TableOrderAdmin from "../../../components/TableOrderAdmin";
 import { Image, Tooltip } from "antd";
@@ -8,6 +8,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 import { formatPrice } from "../../../functions/FormatPrices";
 import EmptyContent from "../../../components/EmptyContent";
+import Loading from "../../../components/Loadding";
 import moment from "moment";
 
 const HistoryProduct = () => {
@@ -17,7 +18,6 @@ const HistoryProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
 
   // customize style cell of table
   const customStyles = {
@@ -49,7 +49,7 @@ const HistoryProduct = () => {
   const columns = [
     {
       name: "ລະຫັດຜູ້ຂາຍ",
-      selector: (row) => row.adminuserCode ? row.adminuserCode : "ບໍ່ມີ",
+      selector: (row) => (row.adminuserCode ? row.adminuserCode : "ບໍ່ມີ"),
       sortable: true,
       width: "120px",
     },
@@ -81,7 +81,9 @@ const HistoryProduct = () => {
       cell: (row) => (
         <div className="name-product">
           <div className="flex-name">
-            <p>{`${row.customerfirstName ? row.customerfirstName : "ບໍ່ມີ"}`}</p>
+            <p>{`${
+              row.customerfirstName ? row.customerfirstName : "ບໍ່ມີ"
+            }`}</p>
           </div>
         </div>
       ),
@@ -89,46 +91,51 @@ const HistoryProduct = () => {
     },
     {
       name: "ໍຊື່ສິນຄ້າ",
-      selector: (row) => row.productname ? row.productname : "ບໍ່ມີ",
+      selector: (row) => (row.productname ? row.productname : "ບໍ່ມີ"),
       sortable: true,
       width: "130px",
     },
     {
       name: "ລາຄາ",
       sortable: true,
-      selector: (row) => formatPrice(row.productprice) ? formatPrice(row.productprice) : "ບໍ່ມີ",
+      selector: (row) =>
+        formatPrice(row.productprice) ? formatPrice(row.productprice) : "ບໍ່ມີ",
       width: "118px",
     },
-   
+
     {
       name: "ຄະແນນສິນຄ້າ",
-      selector: (row) => row.productpoint ? row.productpoint : "ບໍ່ມີ",
+      selector: (row) => (row.productpoint ? row.productpoint : "ບໍ່ມີ"),
       sortable: true,
       width: "100px",
     },
     {
       name: "ຈຳນວນ",
-      selector: (row) => row.productqty ? row.productqty : "ບໍ່ມີ",
+      selector: (row) => (row.productqty ? row.productqty : "ບໍ່ມີ"),
       sortable: true,
       width: "100px",
     },
     {
       name: "ຈຳນວນລວມ",
-      selector: (row) => row.totalQty ? row.totalQty : "ບໍ່ມີ",
+      selector: (row) => (row.totalQty ? row.totalQty : "ບໍ່ມີ"),
       sortable: true,
       width: "110px",
     },
-   
+
     {
       name: "ລາຄາລວມ",
       sortable: true,
-      selector: (row) => formatPrice(row.totalPrice) ? formatPrice(row.totalPrice) : "ບໍ່ມີ",
+      selector: (row) =>
+        formatPrice(row.totalPrice) ? formatPrice(row.totalPrice) : "ບໍ່ມີ",
       width: "118px",
     },
     {
       name: "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
       sortable: true,
-      selector: (row) => formatPrice(row.totalCashback) ? formatPrice(row.totalCashback) : "ບໍ່ມີ",
+      selector: (row) =>
+        formatPrice(row.totalCashback)
+          ? formatPrice(row.totalCashback)
+          : "ບໍ່ມີ",
       width: "150px",
     },
     {
@@ -162,7 +169,15 @@ const HistoryProduct = () => {
       sortable: true,
       cell: (row) => (
         <div className="status-score-history">
-          {`${row.status ? row.status :<p style={{ color: "#fc1219", fontWeight: "bold", fontSize: 15 }}>ບໍ່ມີ</p> }`}
+          {`${
+            row.status ? (
+              row.status
+            ) : (
+              <p style={{ color: "#fc1219", fontWeight: "bold", fontSize: 15 }}>
+                ບໍ່ມີ
+              </p>
+            )
+          }`}
         </div>
       ),
       width: "162px",
@@ -202,7 +217,7 @@ const HistoryProduct = () => {
   // load data
   useEffect(() => {
     setLoading(true);
-    GetAllOrderSaleExport(users.token,"true")
+    GetAllOrderSaleExport(users.token, "true")
       .then((res) => {
         setLoading(false);
         setSuccessOrders(res.data.data);
@@ -237,18 +252,19 @@ const HistoryProduct = () => {
       });
   }, []);
 
-console.log(successOrders)
+  console.log(successOrders);
 
   return (
     <>
       {successOrdersEmpty || successOrders === null ? (
-          <EmptyContent Messages={successOrdersEmpty ? successOrdersEmpty : "ບໍ່ມີຂໍ້ມູນ"} />
+        <EmptyContent
+          Messages={successOrdersEmpty ? successOrdersEmpty : "ບໍ່ມີຂໍ້ມູນ"}
+        />
       ) : (
         <div>
           {loading ? (
-       
-              <EmptyContent Messages={"loading....."} />
-          
+            // <EmptyContent Messages={"loading....."} />
+            <Loading paragraph={10} />
           ) : (
             <TableOrderAdmin
               columns={columns}

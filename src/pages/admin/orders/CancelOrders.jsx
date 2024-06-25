@@ -177,9 +177,6 @@ const CancelOrders = () => {
   return (
     <>
       {
-        cancelOrder === null ?
-        <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"}/>
-        :
         <div>
           <TableOrderUser
             cancelOrderEmpty={cancelOrderEmpty}

@@ -20,16 +20,16 @@ const Bill = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProduct] = useState([]);
 
-  console.log(detail)
+  // console.log(detail)
 
   const contentToPrint = useRef(null);
   const handlePrint = useReactToPrint({
     documentTitle: "ພິມໃບບິນ",
     onBeforePrint: () => console.log("before printing..."),
-    // onAfterPrint: () =>
-    //   users.role === "super"
-    //     ? navigate("/listProducts/saleProducts", { state: { key: 3 } })
-    //     : navigate("/listProducts/saleProducts/users", { state: { key: 3 } }),
+    onAfterPrint: () =>
+      users.role === "super"
+        ? navigate("/listProducts/saleProducts", { state: { key: 3 } })
+        : navigate("/listProducts/saleProducts/users", { state: { key: 3 } }),
 
     removeAfterPrint: true,
     onPrintError: (error) => console.log("Print Error...?", error),
@@ -341,14 +341,19 @@ const Bill = () => {
                 </p>
               </div>
             </div>
+
+
             <div className="detail-cart-bottom">
               <Table
                 columns={columns}
                 pagination={false}
                 dataSource={products}
                 bordered
+                size="small"
               />
             </div>
+
+
             <div className="detail-cart-top">
               <div className="detail-cart-top-left">
                 <p>

@@ -1,29 +1,31 @@
-import { useState, useEffect } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import TableOrderUser from '../../../components/TableOrderUser';
-import { GetAllOrdersExport } from '../../../functions/Orders';
-import { useDispatch } from 'react-redux';
-import { formatPrice } from "../../../functions/FormatPrices"
-import { Tooltip } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import TableOrderUser from "../../../components/TableOrderUser";
+import { GetAllOrdersExport } from "../../../functions/Orders";
+import { useDispatch } from "react-redux";
+import { formatPrice } from "../../../functions/FormatPrices";
+import { Tooltip } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
 const HistoryOrders = () => {
   const [successOrders, setSuccessOrders] = useState([]);
   const [successOrdersEmpty, setSuccessOrdersEmpty] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let getData = JSON.parse(localStorage.getItem("data"));
+  const [loading, setLoading] = useState(false);
 
-// customize style cell of table
-   const customStyles = {
+  // customize style cell of table
+  const customStyles = {
     rows: {
       style: {
-        minHeight: '72px', // override the row height
+        minHeight: "72px", // override the row height
       },
     },
     headCells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for head cells
-        paddingRight: '8px',
+        paddingLeft: "8px", // override the cell padding for head cells
+        paddingRight: "8px",
         fontSize: "15px",
         justifyContent: "center",
         fontWeight: "bold",
@@ -33,8 +35,8 @@ const HistoryOrders = () => {
     },
     cells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
         justifyContent: "center",
       },
     },
@@ -138,9 +140,7 @@ const HistoryOrders = () => {
       name: "ສະຖານະ",
       sortable: true,
       cell: (row) => (
-        <div className="status-score-history">
-          {`${row.status}`}
-        </div>
+        <div className="status-score-history">{`${row.status}`}</div>
       ),
       width: "162px",
     },
@@ -168,47 +168,59 @@ const HistoryOrders = () => {
       width: "162px",
     },
   ];
-// load all success orders
+  // load all success orders
   useEffect(() => {
-    GetAllOrdersExport(getData.token,"","","", "success").then(res => {
-      setSuccessOrders(res.data.data);
-    }).catch(err => {
-      setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-      Toast.fire({
-        icon: "warning",
-        title: "ບໍ່ມີຂໍ້ມູນ",
-      });
-      
-      if (err.response.data.message === "unauthorized") {
-        dispatch({
-          type: "USER_LOGOUT",
-          payload: null,
+    setLoading(true);
+    GetAllOrdersExport(getData.token, "", "", "", "success")
+      .then((res) => {
+        setLoading(true);
+        setSuccessOrders(res.data.data);
+      })
+      .catch((err) => {
+        setSuccessOrdersEmpty("ບໍ່ມີຂໍ້ມູນ");
+        setLoading(false);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
         });
-        navigate("/");
-      }
-    })
-  }, []);
+        Toast.fire({
+          icon: "warning",
+          title: "ບໍ່ມີຂໍ້ມູນ",
+        });
 
+        if (err.response.data.message === "unauthorized") {
+          dispatch({
+            type: "USER_LOGOUT",
+            payload: null,
+          });
+          navigate("/");
+        }
+      });
+  }, []);
 
   return (
     <>
-          <div>
-            <TableOrderUser  successOrdersEmpty={successOrdersEmpty} Status={"success"} setSuccessOrders={setSuccessOrders}  setSuccessOrdersEmpty={setSuccessOrdersEmpty} columns={columns} customStyles={customStyles} data={successOrders} />
-          </div>
+      <div>
+        <TableOrderUser
+          successOrdersEmpty={successOrdersEmpty}
+          Status={"success"}
+          setSuccessOrders={setSuccessOrders}
+          setSuccessOrdersEmpty={setSuccessOrdersEmpty}
+          columns={columns}
+          customStyles={customStyles}
+          data={successOrders}
+          loading={loading}
+        />
+      </div>
     </>
+  );
+};
 
-  )
-}
-
-export default HistoryOrders
+export default HistoryOrders;

@@ -190,9 +190,6 @@ const ListOrders = () => {
   return (
     <>
     {
-      orders === null ?
-      <EmptyContent Messages={"ບໍ່ມີຂໍ້ມູນ"} />
-      :
       <div>
         <TableOrderUser
           Status={"await"}

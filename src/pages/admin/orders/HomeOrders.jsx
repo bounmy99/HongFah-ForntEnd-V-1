@@ -13,8 +13,6 @@ const HomeOrders = () => {
   const [orderStatus, setOrderStatus] = useState("");
   const [orderOverview, setOrderOverview] = useState("");
 
-  // console.log("btnExport",btnExport)
-
   useEffect(() => {
     setOrderStatus(1);
     if (state) {
@@ -43,7 +41,6 @@ const HomeOrders = () => {
               {formatPrice(
                 orderOverview?.salsePrice ? orderOverview?.salsePrice : 0
               )}{" "}
-              
             </h5>
             <h3>ມູນຄ່າລວມ</h3>
           </div>
@@ -55,7 +52,7 @@ const HomeOrders = () => {
               viewBox="0 0 40 40"
               fill="none"
             >
-              <circle cx="20" cy="20" r="20" fill="#FA5A7D" />
+              <circle cx="20" cy="20" r="20" fill="#BF83FF" />
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -67,7 +64,9 @@ const HomeOrders = () => {
         </div>
         <div className="order-boxes order-total">
           <div className="order-text">
-            <h5 className="title">{orderOverview?.countOrder ? orderOverview?.countOrder : 0}</h5>
+            <h5 className="title">
+              {orderOverview?.countOrder ? orderOverview?.countOrder : 0}
+            </h5>
             <h3>ອໍເດີທັງໝົດ</h3>
           </div>
           <div className="order-icons">
@@ -90,17 +89,13 @@ const HomeOrders = () => {
         </div>
         <div className="order-boxes order-approved">
           <div className="order-text">
-            <h5 className="title">{orderOverview?.approved ? orderOverview?.approved : 0}</h5>
-            <h3>ອໍເດີອະນຸມັດ</h3>
+            <h5 className="title">
+              {orderOverview?.await ? orderOverview?.await : 0}
+            </h5>
+            <h3>ອໍເດີລໍຖ້າ</h3>
           </div>
           <div className="order-icons">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-            >
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
               <circle cx="20" cy="20" r="20" fill="#3CD856" />
               <path
                 fillRule="evenodd"
@@ -113,7 +108,9 @@ const HomeOrders = () => {
         </div>
         <div className="order-boxes order-cancel">
           <div className="order-text">
-            <h5 className="title">{orderOverview?.cancel ? orderOverview?.cancel : 0}</h5>
+            <h5 className="title">
+              {orderOverview?.cancel ? orderOverview?.cancel : 0}
+            </h5>
             <h3>ອໍເດີຍົກເລີກ</h3>
           </div>
           <div className="order-icons">
@@ -124,7 +121,32 @@ const HomeOrders = () => {
               viewBox="0 0 40 40"
               fill="none"
             >
-              <circle cx="20" cy="20" r="20" fill="#BF83FF" />
+              <circle cx="20" cy="20" r="20" fill="#FA5A7D" />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M22 16C22 18.2091 20.2091 20 18 20C15.7908 20 14 18.2091 14 16C14 13.7909 15.7908 12 18 12C20.2091 12 22 13.7909 22 16ZM18 21C14.134 21 11 23.2386 11 26C11 27.1046 11.8954 28 13 28H23C24.1046 28 25 27.1046 25 26C25 23.2386 21.866 21 18 21ZM26 14C26.5523 14 27 14.4477 27 15V16H28C28.5523 16 29 16.4477 29 17C29 17.5523 28.5523 18 28 18H27V19C27 19.5523 26.5523 20 26 20C25.4477 20 25 19.5523 25 19V18H24C23.4477 18 23 17.5523 23 17C23 16.4477 23.4477 16 24 16H25V15C25 14.4477 25.4477 14 26 14Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+        </div>
+        <div className="order-boxes order-success">
+          <div className="order-text">
+            <h5 className="title">
+              {orderOverview?.approved ? orderOverview?.approved : 0}
+            </h5>
+            <h3>ອໍເດີທີ່ສຳເລັດ</h3>
+          </div>
+          <div className="order-icons">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+            >
+              <circle cx="20" cy="20" r="20" fill="#3CD856" />
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

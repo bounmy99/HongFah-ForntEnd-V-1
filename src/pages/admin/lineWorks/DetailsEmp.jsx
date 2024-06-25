@@ -50,8 +50,6 @@ const DetailsEmp = () => {
       });
   }, []);
 
-
-
   console.log(detail);
 
   return (
@@ -99,25 +97,31 @@ const DetailsEmp = () => {
       </p>
       <p>
         <span>ຈຳນວນລູກທີມ : </span>
-        {detail?.children_count ? detail?.children_count : 0 } ຄົນ
+        {detail?.children_count ? detail?.children_count : 0} ຄົນ
       </p>
       {/* <DataTables columns={columns} progressPending={loading} data={detail.children} customStyles={customStyles} /> */}
       <hr />
       <h3>ເດືອນທີ່ແລ້ວ</h3>
       <p>
-        <span>ຈຳນວນຄະແນນ : </span> {detail.lastMonth?.PV_Amount ? formatPrice(detail.lastMonth?.PV_Amount) : "0"}
+        <span>ຈຳນວນຄະແນນ : </span>{" "}
+        {detail.lastMonth?.PV_Amount
+          ? formatPrice(detail.lastMonth?.PV_Amount)
+          : "0"}
       </p>
       <p>
-        <span>lineWork : </span> {detail.lastMonth?.lineWork ? detail.lastMonth?.lineWork : "ບໍ່ມີ"}
+        <span>lineWork : </span>{" "}
+        {detail.lastMonth?.lineWork ? detail.lastMonth?.lineWork : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>ປະເພດ :</span> {detail.lastMonth?.type ? detail.lastMonth?.type : "ບໍ່ມີ"}
+        <span>ປະເພດ :</span>{" "}
+        {detail.lastMonth?.type ? detail.lastMonth?.type : "ບໍ່ມີ"}
       </p>
       <p>
         <span>isActive : </span> {detail.lastMonth?.isActive ? "true" : "false"}
       </p>
       <p>
-        <span>ລະຫັດໄອດີ : </span> {detail.lastMonth?.user_id ? detail.lastMonth?.user_id : "ບໍ່ມີ"}
+        <span>ລະຫັດໄອດີ : </span>{" "}
+        {detail.lastMonth?.user_id ? detail.lastMonth?.user_id : "ບໍ່ມີ"}
       </p>
       <p>
         <span>ວັນທີສ້າງ : </span>
@@ -126,19 +130,25 @@ const DetailsEmp = () => {
       <hr />
       <h3>ເດືອນນີ້</h3>
       <p>
-        <span>ຈຳນວນຄະແນນ : </span> {detail.thisMonth?.PV_Amount ? formatPrice(detail.thisMonth?.PV_Amount) : "0"}
+        <span>ຈຳນວນຄະແນນ : </span>{" "}
+        {detail.thisMonth?.PV_Amount
+          ? formatPrice(detail.thisMonth?.PV_Amount)
+          : "0"}
       </p>
       <p>
-        <span>lineWork : </span> {detail.thisMonth?.lineWork ? detail.thisMonth?.lineWork : "ບໍ່ມີ"}
+        <span>lineWork : </span>{" "}
+        {detail.thisMonth?.lineWork ? detail.thisMonth?.lineWork : "ບໍ່ມີ"}
       </p>
       <p>
-        <span>ປະເພດ :</span> {detail.thisMonth?.type ? detail.thisMonth?.type : "ບໍ່ມີ"}
+        <span>ປະເພດ :</span>{" "}
+        {detail.thisMonth?.type ? detail.thisMonth?.type : "ບໍ່ມີ"}
       </p>
       <p>
         <span>isActive : </span> {detail.thisMonth?.isActive ? "true" : "false"}
       </p>
       <p>
-        <span>ລະຫັດໄອດີ : </span> {detail.thisMonth?.user_id ? detail.thisMonth?.user_id : "ບໍ່ມີ"}
+        <span>ລະຫັດໄອດີ : </span>{" "}
+        {detail.thisMonth?.user_id ? detail.thisMonth?.user_id : "ບໍ່ມີ"}
       </p>
       <p>
         <span>ວັນທີສ້າງ : </span>{" "}
@@ -155,7 +165,10 @@ const DetailsEmp = () => {
         )}
       </div>
       <p>
-        <span>ລະຫັດອ້າງອີກ : </span> {detail.userLineUp?.ReferralCode ? detail.userLineUp?.ReferralCode : "ບໍ່ມີ"}
+        <span>ລະຫັດອ້າງອີກ : </span>{" "}
+        {detail.userLineUp?.ReferralCode
+          ? detail.userLineUp?.ReferralCode
+          : "ບໍ່ມີ"}
       </p>
       <p>
         <span>ຊື່ ແລະ ນາມສະກຸນ : </span>{" "}
@@ -166,7 +179,8 @@ const DetailsEmp = () => {
         } `}
       </p>
       <p>
-        <span>ລະຫັດຜຸ້ໃຊ້ :</span> {detail.userLineUp?.userCode ? detail.userLineUp?.userCode : "ບໍ່ມີ" }
+        <span>ລະຫັດຜຸ້ໃຊ້ :</span>{" "}
+        {detail.userLineUp?.userCode ? detail.userLineUp?.userCode : "ບໍ່ມີ"}
       </p>
     </div>
   );

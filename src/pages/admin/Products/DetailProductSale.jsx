@@ -35,7 +35,7 @@ const DetailProductSale = () => {
     {
       title: "ຊື່",
       dataIndex: "name",
-      key: "name",
+      key: "name"
     },
     {
       title: "ຈຳນວນ",
@@ -218,6 +218,7 @@ const DetailProductSale = () => {
                     },
                   }}
                 dataSource={products}
+                size="small"
               />
             </div>
           </div>

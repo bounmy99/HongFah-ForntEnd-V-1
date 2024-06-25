@@ -23,7 +23,7 @@ const TableOrderUser = ({
   setSuccessOrdersEmpty,
   orderEmpty,
   successOrdersEmpty,
-  cancelOrderEmpty,
+  cancelOrderEmpty
 }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndtDate] = useState();
@@ -181,55 +181,6 @@ const TableOrderUser = ({
     "ວັນທີສັ່ງ",
   ];
 
-  // const handleExport = () => {
-  //   console.log("dataExport", dataExport);
-  //   // return
-  //   if (!dataExport) {
-  //     const Toast = Swal.mixin({
-  //       toast: true,
-  //       position: "top-end",
-  //       showConfirmButton: false,
-  //       timer: 3000,
-  //       timerProgressBar: true,
-  //       didOpen: (toast) => {
-  //         toast.onmouseenter = Swal.stopTimer;
-  //         toast.onmouseleave = Swal.resumeTimer;
-  //       },
-  //     });
-  //     Toast.fire({
-  //       icon: "warning",
-  //       title: "ກະລຸນາເລືອກຂໍ້ມູນກ່ອນ",
-  //     });
-  //     return;
-  //   }
-  //   setDataExport([]);
-  //   const heading = [
-  //     [
-  //       "ລະຫັດໄອດີ",
-  //       "ລະຫັດລູກຄ້າ",
-  //       "ຊື່ລູກຄ້າ",
-  //       "ຊື່ສິນຄ້າ",
-  //       "ລາຄາສິນຄ້າ",
-  //       "ເງິນທີ່ໄດ້ຮັບ",
-  //       "ຄະແນນສິນຄ້າ",
-  //       "ຈຳນວນສິນຄ້າ",
-  //       "ຈຳນວນລວມ",
-  //       "ລາຄາລວມ",
-  //       "ເງິນທີ່ໄດ້ຮັບທັງໝົດ",
-  //       "ຄະແນນທັງໝົດ",
-  //       "ປະເພດການຈ່າຍ",
-  //       "ສະຖານະ",
-  //       "ວັນທີສັ່ງ",
-  //     ],
-  //   ];
-  //   const wb = utils.book_new();
-  //   const ws = utils.json_to_sheet([]);
-  //   utils.sheet_add_aoa(ws, heading);
-  //   utils.sheet_add_json(ws, dataExport, { origin: "A4", skipHeader: true });
-  //   utils.book_append_sheet(wb, ws, "ປະຫວັດການຂາຍ");
-  //   writeFileXLSX(wb, "HistoryProducts.xlsx");
-  //   setToggleCleared(true);
-  // };
 
   return (
     <>

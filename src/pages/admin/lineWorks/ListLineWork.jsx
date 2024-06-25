@@ -144,8 +144,6 @@ const ListLineWork = () => {
   const [packageCount, setPackageCount] = useState();
   const [valueSearch, setValueSearch] = useState("");
 
-  console.log(countNode);
-
   // load all line work
   useEffect(() => {
     setLoading(true);
@@ -303,13 +301,13 @@ const ListLineWork = () => {
     <>
       <div className="employee-card">
         {change !== 2 ? (
-          countNode.length ? (
+          countNode ? (
             <div className="employee-dash-card">
               <div className="emp-dash-boxes emp-total">
                 <div className="title">ສະມາຊິກທັງໝົດ</div>
                 <div className="number">
                   <div className="number-left">
-                    <h5>{countNode.length ? countNode : 0} ຄົນ</h5>
+                    <h5>{countNode ? countNode : 0} ຄົນ</h5>
                   </div>
                 </div>
               </div>
@@ -373,7 +371,7 @@ const ListLineWork = () => {
               <div className="btn-show">
                 <button
                   type="button"
-                  class={`btn ${change === 2 ? "active" : ""}`}
+                  className={`btn ${change === 2 ? "active" : ""}`}
                   onClick={() => setChang(2)}
                 >
                   ສະແດງຕາມແຜນຜັງ
@@ -477,14 +475,27 @@ const ListLineWork = () => {
                       <DiagramEm />
                       {/* <Test /> */}
                       <div className="market-member genealogy-scroll">
-                        <div className="warning-box">
+                        {/* <div className="warning-box">
                           <h5>ໝາຍເຫດ :</h5>
                           <p>
                             ການຈັດລະດັບສະມາຊິກແມ່ນຈະມີການຄຳນວນ ແລະ
                             ອັບເດດທຸກໆທ້າຍເດືອນ
                           </p>
-                        </div>
+                        </div> */}
                         <div className="member-card">
+                          <div className="member-box">
+                            <div className="mark">
+                              <div className="desc__title">
+                                <h5>ໝາຍເຫດ :</h5>
+                              </div>
+                              <div className="desc__text">
+                                <p>
+                                  ການຈັດລະດັບສະມາຊິກແມ່ນຈະມີການຄຳນວນ ແລະ
+                                  ອັບເດດທຸກໆທ້າຍເດືອນ
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                           {positionCount?.map((p, i) => (
                             <>
                               <div className="member-box">

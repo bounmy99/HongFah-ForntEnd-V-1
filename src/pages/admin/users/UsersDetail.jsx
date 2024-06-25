@@ -50,7 +50,7 @@ const UsersDetail = () => {
       });
   }, []);
 
-  console.log(detail);
+  // console.log(detail);
 
   return (
     <>
@@ -78,7 +78,7 @@ const UsersDetail = () => {
               </div>
               <div className="name-users">
                 <h3>
-                  ຊື່ ແລະ ນາມສະກຸນ : {`${detail.firstName} ${detail.lastName}`}
+                  ຊື່ ແລະ ນາມສະກຸນ : {`${detail.firstName ? detail.firstName : "ບໍ່ມີ"} ${detail.lastName ? detail.lastName : "ບໍ່ມີ"}`}
                 </h3>
               </div>
             </div>
@@ -90,37 +90,37 @@ const UsersDetail = () => {
                   </div>
                   <div className="item-name">
                     <p>
-                      ລະຫັດພະນັກງານ : <span>{detail.userCode}</span>
+                      ລະຫັດພະນັກງານ : <span>{detail.userCode ? detail.userCode : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
-                      ເບີໂທ : <span>{detail.phoneNumber}</span>
+                      ເບີໂທ : <span>{detail.phoneNumber ? detail.phoneNumber : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
-                      ສິດເຂົ້າໃຊ້ : <span>{detail.role}</span>
+                      ສິດເຂົ້າໃຊ້ : <span>{detail.role ? detail.role : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
                       ວັນເດືອນປີເກີດ :{" "}
                       <span>
-                        {moment(detail.birthday).format("DD-MM-YYYY")}
+                        {detail.birthday ? moment(detail.birthday).format("DD-MM-YYYY") : "ບໍ່ມີ"}
                       </span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
-                      ອາຍຸ : <span>{detail.age}</span>
+                      ອາຍຸ : <span>{detail.age ? detail.age : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
                       ວັນທີເຂົ້າໃຊ້ :{" "}
                       <span>
-                        {moment(detail.createdAt).format("DD-MM-YYYY")}
+                        {detail.createdAt ? moment(detail.createdAt).format("DD-MM-YYYY") : "ບໍ່ມີ"}
                       </span>
                     </p>
                   </div>
@@ -132,19 +132,19 @@ const UsersDetail = () => {
                   <div className="item-name">
                     <p>
                       ບ້ານ :{" "}
-                      <span>{detail.address && detail.address.village}</span>
+                      <span>{detail.address && detail.address.village ? detail.address.village : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
                       ເມືອງ :{" "}
-                      <span>{detail.address && detail.address.district}</span>
+                      <span>{detail.address && detail.address.district ? detail.address.district : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                   <div className="item-name">
                     <p>
                       ແຂວງ :{" "}
-                      <span>{detail.address && detail.address.province}</span>
+                      <span>{detail.address && detail.address.province ? detail.address.province : "ບໍ່ມີ"}</span>
                     </p>
                   </div>
                 </div>
